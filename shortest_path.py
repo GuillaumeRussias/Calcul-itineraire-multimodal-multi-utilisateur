@@ -11,34 +11,24 @@ def Dj(A,directed=True,start_index=None,predecessor=False):
     """
     return dijkstra(A,directed,start_index,predecessor)
 
-def path_finder(A,start_index,end_index,traject,directed=True):#recursive
-    """inplace function : put in traject the list of vertice visited during the path from start_index to end_index"""
-    dist_matrix,predecessor_matrix=Dj(A,directed,start_index,True)
-    if  start_index==end_index:
-        traject.append(start_index)
-        return 0
-    if end_index<0:
-        print("not connected graph")
-        return 0
-    traject.append(predecessor_matrix[end_index])
-    if traject[-1]==start_index:
-        traject.reverse()
-        return 0
-    else:
-        path_finder(A,start_index,traject[-1],traject,directed)
-
-
-
-
-def shortest_path(A,start_index,end_index,directed=True):
+def path_finder(A,start_index,end_index,directed=True):#recursive
     """returns the list of vertices visited during the path from i to j"""
-    traject=[]
-    path_finder(A,start_index,end_index,traject,directed)
-    traject.append(end_index)
-    return traject
+    path=[]
+    dist_matrix,predecessor_matrix=Dj(A,directed,start_index,True)
+    path.append(predecessor_matrix[end_index])
+    while path[-1]!=start_index and path[-1]>=0:
+        path.append(predecessor_matrix[path[-1]])
+    path.reverse()
+    path.append(end_index)
+    return path
+
+
+
+
+
 
 #test:
 #import numpy as np
 #s=np.sqrt(2)/2
 #A=[[0,1,0,1,s],[1,0,1,0,0],[0,1,0,1,s],[1,0,1,0,0],[s,0,s,0,0]]
-#t=shortest_path(A,2,0)
+#t=path_finder(A,2,2)
