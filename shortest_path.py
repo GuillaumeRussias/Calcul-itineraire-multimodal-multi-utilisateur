@@ -11,7 +11,7 @@ def Dj(A,directed=True,start_index=None,predecessor=False):
     """
     return dijkstra(A,directed,start_index,predecessor)
 
-def path_finder(A,start_index,end_index,directed=True):#recursive
+def path_finder(A,start_index,end_index,directed=True):
     """returns the list of vertices visited during the path from i to j"""
     path=[]
     dist_matrix,predecessor_matrix=Dj(A,directed,start_index,True)
