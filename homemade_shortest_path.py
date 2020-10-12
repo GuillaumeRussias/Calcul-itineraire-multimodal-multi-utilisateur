@@ -1,5 +1,7 @@
 from queue import PriorityQueue as priorQ
-inf=6666666666
+import numpy as np
+
+inf = np.inf
 
 class vertice:
     def __init__(self,index):
