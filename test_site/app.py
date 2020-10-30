@@ -2,6 +2,9 @@ from flask import Flask,render_template,url_for,request, redirect
 
 import folium
 
+#Pour que ça fonctionne ne pas oublier de faire clic droit,
+#"définir le répertoire courant en accord avec le fichier ouvert dans l'éditeur"
+
 app = Flask(__name__)
 
 

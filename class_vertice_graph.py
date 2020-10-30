@@ -94,6 +94,8 @@ class Vertice:
     def __repr__(self):
         return "Vertice "+str(self._index)
 
+    def __lt__(self, other):
+        return self._priority < other._priority
 
 
 class Graph:
