@@ -14,7 +14,7 @@ class Vertice:
         and the coordinates of the vertice. """
         self._index = index
         self._coordinates = coordinates
-        self._neighbours_list = [] # neighbours by default
+        self._neighbours_list = [] # no neighbour by default
         self._priority = inf # priority by default
         self._visited = False # vertice is by default not visited
         self._cost_dijkstra = inf  # cost is by default inf
