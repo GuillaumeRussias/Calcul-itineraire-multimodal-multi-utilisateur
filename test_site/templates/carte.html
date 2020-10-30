@@ -1,0 +1,26 @@
+{% extends "squelette.html" %}
+
+{% block nav%}
+<ul>
+    <li><a href="/accueil">Accueil</a></li>
+    <li><span class="est_sur_la_page">Carte</span></li>
+</ul>
+{% endblock %}
+
+{% block article%}
+<p>Le site est en construction et cette page est un essai d'affichage de la position que rentre l'utilisateur.</p>
+
+<form method = "post" >
+    <fieldset >
+        <legend>Renseignez vos coordonnées</legend> 
+ 
+        <label for="latitude">Latitude</label> : <input type="text" name="latitude" id="latitude" placeholder="Ex : 47.8"/>
+        <label for="longitude">Longitude</label> : <input type="text" name="longitude" id="longitude" placeholder="Ex : -3.9"/>
+
+        <input type="submit" value="Envoyer" />
+ 
+    </fieldset>
+</form>
+
+{% endblock %}
+

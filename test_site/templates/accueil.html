@@ -1,0 +1,31 @@
+{% extends "squelette.html" %}
+
+{% block nav%}
+<ul>
+    <li><span class="est_sur_la_page">Accueil</span></li>
+    <li><a href='/carte'>Carte</a></li>
+</ul>
+{% endblock %}
+
+{% block div%}
+<div id="banniere_image">
+    <img src={{ url_for('static', filename='bandeau.png') }} alt="bandeau" /></a>    
+</div>
+{% endblock %}
+
+
+{% block article%}
+<h1>
+    A quoi sert ce site ?
+</h1>
+<p>Il a pour but de <span class="surligner">faciliter</span> les déplacements impliquant plusieurs utilisateurs.</p>
+<p>                       
+    Vous trouverez deux fonctionnalités : <br/>
+    <ul>
+        <li>Déterminer l'endroit (ex. un cinéma) le plus pratique pour tous les participants et l'itinéraire de chaque participant vers cet endroit.</li>
+        <li>Comment organiser le plus efficacement un trajet à plusieurs utilisateurs avec le même point de départ et différents points d'arrivées.</li>
+    </ul>
+</p>
+{% endblock %}
+
+

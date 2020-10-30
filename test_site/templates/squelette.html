@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="utf-8" />
+        <link rel="stylesheet" href={{ url_for('static', filename='style.css') }}/>
+        <title>Maps</title>
+    </head>
+
+    <body>
+        <div id="bloc_page">
+            <header>
+                <div id="titre_principal">
+                    <div id="logo">
+                        <img src={{ url_for('static', filename='logo.png') }} alt="Logo de maps" />   
+                    </div>
+                    <h1>
+                        Maps
+                    </h1>
+                </div>
+                <nav>
+                    {% block nav %} 
+                    {% endblock %}
+                </nav>
+            </header>
+
+            {% block div%}
+            {% endblock %}
+
+            
+            <section>
+                <article>
+                    {% block article %} 
+                    {% endblock %}
+                </article>
+            </section>
+        </div>
+    </body>
+</html>
