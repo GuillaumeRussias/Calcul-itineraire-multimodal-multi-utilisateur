@@ -1,6 +1,7 @@
 """ The goal of this file is to have all the information on a graph. """
 
 import numpy as np
+import matplotlib.pyplot as plt
 inf = np.inf
 
 #Change this bool according to the situation
@@ -13,12 +14,14 @@ class Vertice:
         """ Entry : index of the vertice in list_of_vertices
         and the coordinates of the vertice. """
         self._index = index
-        self._coordinates = coordinates
-        self._neighbours_list = [] # no neighbour by default
+        self._coordinates = np.array([coordinates[0],coordinates[1]])
+        self._edges_list = [] # no neighbour by default
         self._priority = inf # priority by default
         self._visited = False # vertice is by default not visited
         self._cost_dijkstra = inf  # cost is by default inf
         self._antecedent = -inf # antecedent not defined before using Dijkstra
+
+
 
     @property
     def index(self):
@@ -31,9 +34,9 @@ class Vertice:
         return self._coordinates
 
     @property
-    def neighbours_list(self):
+    def edges_list(self):
         """ Returns the list of neighbour. """
-        return self._neighbours_list
+        return self._edges_list
 
     @property
     def priority(self):
@@ -64,11 +67,17 @@ class Vertice:
     # We suppose that the index and the coordinates never change.
     # The other properties can.
 
-    @neighbours_list.setter
-    def neighbours_list(self,neighbours_list):
-        """ An element of neighbours_list is a tuple
-        (neighbour, cost between self and neighbours). """
-        self._neighbours_list = neighbours_list
+    @edges_list.setter
+    def edges_list(self,edges_list):
+        """ An element of edges_list is an edge """
+        self._edges_list = edges_list
+
+    def neighbours_list(self,list_tuple,id=0):
+        self._edges_list.clear()
+        """interface with old constructor , tuple=(neighbour_vertice,cost) is an element of list_tuple """
+        for tuple in list_tuple:
+            E=Edge(self,tuple[0],id,tuple[1])
+            self._edges_list.append(E)
 
     @priority.setter
     def priority(self,priority):
@@ -86,19 +95,22 @@ class Vertice:
     def antecedent(self,vertice):
         self._antecedent = vertice
 
-    @property.setter
+    @id.setter
     def id(self,id):
         self._id=id
 
     def number_of_neighbours(self):
-        return len(self._neighbours_list)
+        return len(self._edges_list)
 
     def is_linked(self,other):
         """returns True if there is an edge between self and other"""
-        for (neighbour,cost) in self._neighbours_list:
-            if other == neighbour:
+        for edge in self._edges_list:
+            if other == edge.linked[1]:
                 return True
         return False
+
+    def push_edge(self,edge):
+        self._edges_list.append(edge)
 
     def __repr__(self):
         return "Vertice "+str(self._index)
@@ -106,6 +118,29 @@ class Vertice:
     def __lt__(self, other):
         return self._priority < other._priority
 
+class Edge:
+    def __init__(self,vertice1,vertice2,id,given_cost=0):
+        self._linked=[vertice1,vertice2]
+        self._id=id
+        self._euclidian_distance=self.euclidian_cost()
+        self._given_cost=given_cost
+
+    def euclidian_cost(self):
+        return np.sqrt(np.dot(np.transpose(self._linked[0].coordinates),(self._linked[1].coordinates)))
+
+    #ne pas mettre @property ici, on veut une methode pas un attribut
+    def euclidian_distance(self):
+        return self._euclidian_distance
+    #ne pas mettre @property ici, on veut une methode pas un attribut
+    def given_cost(self):
+        return self._given_cost
+        
+    @property
+    def linked(self):
+        return self._linked
+    @property
+    def id(self):
+        return self._id
 
 class Graph:
     """ All the information of a graph are contained here. """
@@ -135,8 +170,8 @@ class Graph:
         for i in range(n):
             laplace_matrix[i][i] = 1
             vertice = self._list_of_vertices[i]
-            for (neighbour,cost) in vertice.neighbours_list:
-                laplace_matrix[i][neighbour.index] = 1
+            for edge in vertice.edges_list:
+                laplace_matrix[i][edge.linked[1].index] = 1
         return laplace_matrix
 
     def pairs_of_vertices(self):
@@ -144,39 +179,35 @@ class Graph:
         Beware ! There might be non-connected vertices in the graph. """
         pairs_of_vertices = []
         for vertice in self._list_of_vertices:
-            for (neighbour,cost) in vertice.neighbours_list:
+            for edge in vertice.edges_list:
                 if non_oriented:
-                    if (vertice,neighbour) and (neighbour,vertice) not in pairs_of_vertices:
-                        pairs_of_vertices.append((vertice,neighbour))
+                    if (vertice,edge.linked[1]) and (edge.linked[1],vertice) not in pairs_of_vertices:
+                        pairs_of_vertices.append((vertice,edge.linked[1]))
                 if not non_oriented:
-                    if (vertice,neighbour) not in pairs_of_vertices:
-                        pairs_of_vertices.append((vertice,neighbour))
+                    if (vertice,edge.linked[1]) not in pairs_of_vertices:
+                        pairs_of_vertices.append((vertice,edge.linked[1]))
         return pairs_of_vertices
 
     def number_of_edges(self):
         return len(self.pairs_of_vertices())
+    def plot(self):
+        plt.clf()
+        for v in self._list_of_vertices:
+            plt.scatter(v.coordinates[0],v.coordinates[1])
+        plt.show()
+
 
 
 
 
 #test
-# vertice0 = Vertice(0,(0,0))
-# vertice1 = Vertice(1,(0,0))
-# vertice2 = Vertice(2,(0,0))
-# vertice3 = Vertice(3,(0,0))
-# vertice0.neighbours_list = [(vertice1,0),(vertice2,0),(vertice3,0)]
-# vertice1.neighbours_list = [(vertice0,0),(vertice2,0)]
-# vertice2.neighbours_list = [(vertice0,0),(vertice1,0)]
-# vertice3.neighbours_list = [(vertice0,0)]
-#
-# graph_test = Graph([vertice0,vertice1,vertice2,vertice3])
+vertice0 = Vertice(0,(0,0))
+vertice1 = Vertice(1,(0,0))
+vertice2 = Vertice(2,(0,0))
+vertice3 = Vertice(3,(0,0))
+vertice0.neighbours_list([(vertice1,0),(vertice2,0),(vertice3,0)])
+vertice1.neighbours_list([(vertice0,0),(vertice2,0)])
+vertice2.neighbours_list([(vertice0,0),(vertice1,0)])
+vertice3.neighbours_list([(vertice0,0)])
 
-
-
-
-
-
-
-
-
-
+graph_test = Graph([vertice0,vertice1,vertice2,vertice3])

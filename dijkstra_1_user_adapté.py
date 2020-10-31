@@ -4,7 +4,7 @@ from class_vertice_graph import *
 #"définir le répertoire courant en accord avec le fichier ouvert dans l'éditeur"
 from queue import PriorityQueue as priorQ
 
-def homemade_dijkstra(graph,start_index):
+def homemade_dijkstra(graph,start_index,type_cost=Edge.given_cost):
     PQ = priorQ()#initialisation file de priorité
     start_vertice = graph.list_of_vertices[start_index]
     start_vertice.priority = 0
@@ -16,7 +16,9 @@ def homemade_dijkstra(graph,start_index):
     while PQ.empty() == False:
         top_vertice = PQ.get()
         #withdraws the upper element of the queue (lowest priority)
-        for (v,cost_between) in top_vertice.neighbours_list :
+        for edge in top_vertice.edges_list :
+            v=edge.linked[1]
+            cost_between=type_cost(edge)
             if v.visited == False : #verifies if not visited yet
 
                 new_cost = top_vertice.cost_dijkstra + cost_between
@@ -34,10 +36,10 @@ def homemade_dijkstra(graph,start_index):
                 #on met v dans la file de priorite avec la priorite cost
                 PQ.put(v)
 
-def Homemade_path_finder(graph,start_index,end_index):
+def Homemade_path_finder(graph,start_index,end_index,type_cost=Edge.given_cost):
     """ Returns the list of vertices visited during the path from i to j. """
 
-    homemade_dijkstra(graph,start_index)
+    homemade_dijkstra(graph,start_index,type_cost)
     path = [end_index]
     while path[-1] != start_index:
         path.append(graph.list_of_vertices[path[-1]].antecedent.index)
@@ -51,12 +53,14 @@ vertice2 = Vertice(2,(0,0))
 vertice3 = Vertice(3,(0,0))
 vertice4 = Vertice(4,(0,0))
 vertice5 = Vertice(5,(0,0))
-vertice0.neighbours_list = [(vertice1,1),(vertice2,2)]
-vertice1.neighbours_list = [(vertice3,1)]
-vertice2.neighbours_list = [(vertice4,3)]
-vertice3.neighbours_list = [(vertice5,4),(vertice4,1)]
-vertice4.neighbours_list = [(vertice5,1)]
+vertice0.neighbours_list([(vertice1,1),(vertice2,2)])
+vertice1.neighbours_list([(vertice3,1)])
+vertice2.neighbours_list([(vertice4,3)])
+vertice3.neighbours_list([(vertice5,4),(vertice4,1)])
+vertice4.neighbours_list([(vertice5,1)])
 
 graph_test = Graph([vertice0,vertice1,vertice2,vertice3,vertice4,vertice5])
+
+
 
 
