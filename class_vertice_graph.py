@@ -55,6 +55,11 @@ class Vertice:
         """ Returns the antecedent of the vertice. """
         return self._antecedent
 
+    @property
+    def id(self):
+        """"returns the id"""
+        return self._id
+
 
     # We suppose that the index and the coordinates never change.
     # The other properties can.
@@ -80,6 +85,10 @@ class Vertice:
     @antecedent.setter
     def antecedent(self,vertice):
         self._antecedent = vertice
+
+    @property.setter
+    def id(self,id):
+        self._id=id
 
     def number_of_neighbours(self):
         return len(self._neighbours_list)
@@ -114,6 +123,10 @@ class Graph:
     def number_of_vertices(self):
         """ Returns the number of vertices. """
         return self._number_of_vertices
+
+    def push_vertice(self,vertice):
+        self._list_of_vertices.append(vertice)
+        self._number_of_vertices+=1
 
     def laplace_matrix(self):
         """ Returns the laplace matrix. """
