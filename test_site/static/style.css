@@ -15,27 +15,6 @@ header
     height: 100px;
 }
 
-#titre_principal
-{
-    display: flex;
-    flex-direction: column;
-    width: 10%;
-    background-color:whitesmoke;
-}
-
-#logo
-{
-    display:flex;
-    justify-content: center;
-    align-items: center;
-    padding-top: 10%;
-}
-
-#logo img
-{
-    width: 30%;
-}
-
 header h1
 {
     font-size: 2em;
@@ -65,20 +44,6 @@ nav li
     margin-right: 30px;
 }
 
-nav a
-{
-    font-size: 1.3em;
-    color: #181818;
-    padding-bottom: 3px;
-    text-decoration: none;
-}
-
-nav a:hover
-{
-    color: #16139e;
-    border-bottom: 3px solid #16139e;
-}
-
 #banniere_image img
 {
     width: 100%;
@@ -91,14 +56,6 @@ nav a:hover
 {
     font-weight: bold;
     color: #16139e;
-}
-
-nav .est_sur_la_page
-{
-    font-size: 1.3em;
-    color: #16139e;
-    border-bottom: 3px solid #16139e;
-    padding-bottom: 3px;
 }
 
 .jumbotron {
