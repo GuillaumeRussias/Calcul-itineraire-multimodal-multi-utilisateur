@@ -56,7 +56,7 @@ def link_with_station_data(anonymous_Graph,adress_station="base_donnee/datas/Ref
     referentiel_gares=data.emplacement_gares(adress_station)
     coords,id,names=referentiel_gares.get_important_data()
     for i in range(anonymous_Graph.number_of_vertices):
-        i_min,min=get_index_of_optimal_station(half_Graph[i],coords)
+        i_min,min=get_index_of_optimal_station(anonymous_Graph[i],coords)
         anonymous_Graph[i].gare_name=names[i_min][1]
         anonymous_Graph[i].id=id[i_min][1]
         anonymous_Graph[i].index=i
