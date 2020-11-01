@@ -18,10 +18,6 @@
         <div id="bloc_page">
             <header>
                 <nav class="navbar sticky-top navbar-expand-lg navbar-light">
-                    <a class="navbar-brand" href="#">
-                        <img src={{ url_for('static', filename='maps_logo1.png') }} width="30" height="30" class="d-inline-block align-top" alt="Maps_logo">
-                        Maps
-                      </a>
                     {% block nav%}
                     {% endblock %}
                 </nav>
@@ -29,8 +25,7 @@
 
             {% block div%}
             {% endblock %}
-
-            
+ 
             <section>
                 <article>
                     {% block article %} 
@@ -42,7 +37,7 @@
     <footer class="text-muted">
         <div class="container">
         <p class="float-right">
-            <a href="#">Back to top</a>
+            <a href="#">Retour en haut</a>
         </p>
         </div>
     </footer>

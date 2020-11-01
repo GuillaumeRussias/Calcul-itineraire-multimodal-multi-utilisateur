@@ -100,3 +100,10 @@ nav .est_sur_la_page
     border-bottom: 3px solid #16139e;
     padding-bottom: 3px;
 }
+
+.jumbotron {
+  padding-top: 3rem;
+  padding-bottom: 3rem;
+  margin-bottom: 0;
+  background-color: #fff;
+}
