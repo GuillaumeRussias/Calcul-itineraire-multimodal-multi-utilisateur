@@ -1,10 +1,15 @@
 {% extends "squelette.html" %}
 
 {% block nav%}
-<ul>
-    <li><a href="/accueil">Accueil</a></li>
-    <li><span class="est_sur_la_page">Carte</span></li>
-</ul>
+<a class="navbar-brand" href="/accueil">Accueil</a>
+<button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+    <span class="navbar-toggler-icon"></span>
+</button>
+<div class="collapse navbar-collapse" id="navbarNavDropdown">
+    <div class="navbar-nav">
+        <a class="nav-link" href="#">Carte</a>
+    </div>
+</div>
 {% endblock %}
 
 {% block article%}
