@@ -12,6 +12,7 @@ def inclusion_test(list1,list2):
     return True
 
 def garder_plus_grands_elements_sens_inclusion(list_bidim):
+    #retourne la liste bidim avec ces plus grands éléments au sens de l'inclusion
     n=len(list_bidim)
     s=0
     i=0
