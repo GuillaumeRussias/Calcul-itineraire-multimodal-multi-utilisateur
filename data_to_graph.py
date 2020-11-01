@@ -4,6 +4,7 @@ epsilon=10**(-3)
 print("epsilon",epsilon)
 
 def put_edge(index_gare,mission,Graph,name,color):
+    """Fonction appellee par create_half_graph_gtfs, on les separe pour plus de lisibilite mais elles forment un tout """
     gare=mission[index_gare]
     garep=mission[index_gare+1]
     v=cvg.Vertice(0,(gare[0],gare[1]))
@@ -20,6 +21,7 @@ def put_edge(index_gare,mission,Graph,name,color):
     Graph.push_vertice_without_doublons(vp)
 
 def create_half_graph_gtfs(adress_gtfs="base_donnee/datas/lignes-gtfs.json"):
+    """Utilise la base de donnee gtfs pour cree un graph de vertices anonymes relies entre eux selon les donnees de la base """
     lignes_gtfs=data.lignes_gtfs(adress_gtfs)
     coords,line_names,line_colors,line_types=lignes_gtfs.get_important_data()
     #Coord_gares[i][1]=Ensemble des missions de la ligne i
@@ -35,6 +37,7 @@ def create_half_graph_gtfs(adress_gtfs="base_donnee/datas/lignes-gtfs.json"):
     return Graph
 
 def get_index_of_optimal_station(vertice,coords,type_cost=cvg.Edge.square_euclidian_cost):
+    """Pour enlenver l'anonymat de vertice, on cherche parmis coords le point le plus proche selon type_cost, et on retourn l'indice et la valeur de l'optimum """
     v=cvg.Vertice(0,(coords[0][1][0],coords[0][1][1]))
     e=cvg.Edge(v,vertice,0)
     min=type_cost(e)
@@ -48,16 +51,17 @@ def get_index_of_optimal_station(vertice,coords,type_cost=cvg.Edge.square_euclid
             i_min=index
     return i_min,min
 
-def link_with_station_data(half_Graph,adress_station="base_donnee/datas/Referenciel_gares/emplacement-des-gares-idf.json"):
+def link_with_station_data(anonymous_Graph,adress_station="base_donnee/datas/Referenciel_gares/emplacement-des-gares-idf.json"):
+    """on déshanonymise le graph en interpollant les id et noms de station avec une base de donnee idfm"""
     referentiel_gares=data.emplacement_gares(adress_station)
     coords,id,names=referentiel_gares.get_important_data()
-    for i in range(half_Graph.number_of_vertices):
+    for i in range(anonymous_Graph.number_of_vertices):
         i_min,min=get_index_of_optimal_station(half_Graph[i],coords)
-        half_Graph[i].gare_name=names[i_min][1]
-        half_Graph[i].id=id[i_min][1]
-        half_Graph[i].index=i
-        if min>epsilon:
-            print(half_Graph[i].gare_name,half_Graph[i].get_lines_connected(),half_Graph[i].coordinates)
+        anonymous_Graph[i].gare_name=names[i_min][1]
+        anonymous_Graph[i].id=id[i_min][1]
+        anonymous_Graph[i].index=i
+        if min>epsilon:#tolerance du minimum
+            print(anonymous_Graph[i].gare_name,anonymous_Graph[i].get_lines_connected(),anonymous_Graph[i].coordinates)
 
 
 
