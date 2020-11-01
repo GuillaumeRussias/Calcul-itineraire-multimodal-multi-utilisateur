@@ -24,6 +24,7 @@ class Vertice:
         #database
         self._id=None
         self.gare_name=None
+        self.color=None
 
 
 
@@ -128,6 +129,8 @@ class Edge:
         self._id=id
         self._euclidian_distance=self.euclidian_cost()
         self._given_cost=given_cost
+        #data_base
+        self.color=None
 
     def euclidian_cost(self):
         return np.sqrt(np.dot(np.transpose(self._linked[0].coordinates),(self._linked[1].coordinates)))
@@ -167,6 +170,25 @@ class Graph:
         self._list_of_vertices.append(vertice)
         self._number_of_vertices+=1
 
+    def push_vertice_without_doublons(self,vertice):
+        bool,index=self.is_vertice_in_graph_based_on_xy(vertice)
+        if bool==False:
+            self.push_vertice(vertice)
+        else:
+            for edge in vertice.edges_list:
+                if edge not in self._list_of_vertices[index].edges_list:
+                    self._list_of_vertices[index].push_edge(edge)
+
+
+
+
+    def is_vertice_in_graph_based_on_xy(self,vertice):
+        for i in range(self._number_of_vertices):
+            v=self._list_of_vertices[i]
+            if v.coordinates[0]==vertice.coordinates[0] and v.coordinates[1]==vertice.coordinates[1]:
+                return True,i
+        return False,None
+
     def laplace_matrix(self):
         """ Returns the laplace matrix. """
         n = self._number_of_vertices
@@ -197,9 +219,16 @@ class Graph:
     def plot(self):
         plt.clf()
         for v in self._list_of_vertices:
-            plt.scatter(v.coordinates[0],v.coordinates[1])
+            c="#"+v.color
+            plt.scatter(v.coordinates[0],v.coordinates[1],color=c)
             for e in v.edges_list:
-                plt.plot([e.linked[0].coordinates[0],e.linked[1].coordinates[0]],[e.linked[0].coordinates[1],e.linked[1].coordinates[1]])
+                c="#"+e.color
+                x=e.linked[0].coordinates[0]
+                y=e.linked[0].coordinates[1]
+                dx=e.linked[1].coordinates[0]-x
+                dy=e.linked[1].coordinates[1]-y
+                plt.plot([x,x+dx],[y,y+dy],color=c)
+                #plt.arrow(x,y,dx,dy)
         plt.show()
 
 
