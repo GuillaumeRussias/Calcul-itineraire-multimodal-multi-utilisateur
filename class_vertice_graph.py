@@ -27,6 +27,12 @@ class Vertice:
         self.color=None
 
 
+    def get_lines_connected(self):
+        list_of_line=[]
+        for edge in self._edges_list:
+            if edge.id not in list_of_line:
+                list_of_line.append(edge.id)
+        return list_of_line
 
     @property
     def index(self):
@@ -127,17 +133,16 @@ class Edge:
     def __init__(self,vertice1,vertice2,id,given_cost=0):
         self._linked=[vertice1,vertice2]
         self._id=id
-        self._euclidian_distance=self.euclidian_cost()
         self._given_cost=given_cost
         #data_base
         self.color=None
 
-    def euclidian_cost(self):
-        return np.sqrt(np.dot(np.transpose(self._linked[0].coordinates),(self._linked[1].coordinates)))
 
     #ne pas mettre @property ici, on veut une methode pas un attribut
-    def euclidian_distance(self):
-        return self._euclidian_distance
+    def euclidian_cost(self):
+        return np.sqrt(self.square_euclidian_cost())
+    def square_euclidian_cost(self):
+        return np.dot(np.transpose(self._linked[0].coordinates-self._linked[1].coordinates),(self._linked[0].coordinates-self._linked[1].coordinates))
     #ne pas mettre @property ici, on veut une methode pas un attribut
     def given_cost(self):
         return self._given_cost
@@ -180,14 +185,26 @@ class Graph:
                     self._list_of_vertices[index].push_edge(edge)
 
 
-
-
     def is_vertice_in_graph_based_on_xy(self,vertice):
         for i in range(self._number_of_vertices):
             v=self._list_of_vertices[i]
             if v.coordinates[0]==vertice.coordinates[0] and v.coordinates[1]==vertice.coordinates[1]:
                 return True,i
         return False,None
+
+    def is_vertice_in_graph_based_on_xy_with_tolerance(self,vertice,epsilon):
+        for i in range(self._number_of_vertices):
+            v=self._list_of_vertices[i]
+            if ((v.coordinates[0]-vertice.coordinates[0])**2)+((v.coordinates[1]-vertice.coordinates[1])**2)<epsilon:
+                return True,i
+        return False,None
+
+
+    def __getitem__(self, key):#implement instance[key]
+        if key>=0 and key<self._number_of_vertices:
+            return self._list_of_vertices[key]
+        else :
+            raise IndexError
 
     def laplace_matrix(self):
         """ Returns the laplace matrix. """

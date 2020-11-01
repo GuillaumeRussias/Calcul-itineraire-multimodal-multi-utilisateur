@@ -171,7 +171,7 @@ class emplacement_gares(IDFM):
     def __init__(self,file_adress):
         super().__init__(file_adress)
 
-    def get_important_data():
+    def get_important_data(self):
         coords=self.get_values_of_keys("coordinates")
         id=self.get_values_of_keys("gares_id")
         names=self.get_values_of_keys("nom_gare")
@@ -205,7 +205,7 @@ class lignes_gtfs(IDFM):
         list_types=copy.deepcopy(line_types)
         list_name=copy.deepcopy(line_names)
         for i in range(len(list_types)):
-            if list_types[i][1] in ["Bus","bus","Subway","subway","Tram","tram"] or list_name[i][1] not in ["A","B","C","D","E"] :
+            if list_types[i][1] in ["Bus","bus"] or list_name[i][1] in ["TER"] :
                 del line_names[i-s]
                 del coords[i-s]
                 del line_colors[i-s]
