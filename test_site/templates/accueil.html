@@ -1,15 +1,29 @@
 {% extends "squelette.html" %}
 
 {% block nav%}
-<ul>
-    <li><span class="est_sur_la_page">Accueil</span></li>
-    <li><a href='/carte'>Carte</a></li>
-</ul>
+<a class="navbar-brand" href="#">Accueil</a>
+<button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+    <span class="navbar-toggler-icon"></span>
+</button>
+<div class="collapse navbar-collapse" id="navbarNavDropdown">
+    <div class="navbar-nav">
+        <a class="nav-link" href="/carte">Carte</a>
+    </div>
+</div>
 {% endblock %}
 
 {% block div%}
 <div id="banniere_image">
-    <img src={{ url_for('static', filename='bandeau.png') }} alt="bandeau" /></a>    
+    <section class="jumbotron text-center">
+        <div class="container">
+          <h1>Calcul d'itinéraires multimodaux</h1>
+          <p class="lead text-muted">Cet outil a été développé dans le cadre d'un projet MOPSI et permet de calculer des itinéraires prenant en compte les préférences de plusieurs utilisateurs de manière simultanée.</p>
+          <p>
+            <a href="/carte" class="btn btn-primary my-2">Lancer une recherche</a>
+          </p>
+          <img src={{ url_for('static', filename='bandeau.png') }} alt="bandeau" /></a>    
+        </div>
+    </section>
 </div>
 {% endblock %}
 
