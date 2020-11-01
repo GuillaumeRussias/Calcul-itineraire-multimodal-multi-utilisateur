@@ -21,6 +21,10 @@ class Vertice:
         self._cost_dijkstra = inf  # cost is by default inf
         self._antecedent = -inf # antecedent not defined before using Dijkstra
 
+        #database
+        self._id=None
+        self.gare_name=None
+
 
 
     @property
@@ -134,7 +138,7 @@ class Edge:
     #ne pas mettre @property ici, on veut une methode pas un attribut
     def given_cost(self):
         return self._given_cost
-        
+
     @property
     def linked(self):
         return self._linked
@@ -194,6 +198,8 @@ class Graph:
         plt.clf()
         for v in self._list_of_vertices:
             plt.scatter(v.coordinates[0],v.coordinates[1])
+            for e in v.edges_list:
+                plt.plot([e.linked[0].coordinates[0],e.linked[1].coordinates[0]],[e.linked[0].coordinates[1],e.linked[1].coordinates[1]])
         plt.show()
 
 
