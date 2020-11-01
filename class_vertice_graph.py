@@ -109,7 +109,9 @@ class Vertice:
     @id.setter
     def id(self,id):
         self._id=id
-
+    @index.setter
+    def index(self,index):
+        self._index=index
     def number_of_neighbours(self):
         return len(self._edges_list)
 

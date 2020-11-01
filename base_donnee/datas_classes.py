@@ -212,7 +212,10 @@ class lignes_gtfs(IDFM):
                 del line_types[i-s]
                 s+=1
         assert(len(coords)==len(line_names) and len(line_colors)==len(line_types) and len(coords)==len(line_names)),"Important error in lignes_gtfs(IDFM) data exploitation"
+        #on garde les plus grandes missions au sens de l'inclusion
+        #tres utile, ex: pour le RER D le nombre de mission passe de 136 a 6 !
         lignes_gtfs.coords_treatment(coords)
+
         return coords,line_names,line_colors,line_types
 
     @staticmethod
