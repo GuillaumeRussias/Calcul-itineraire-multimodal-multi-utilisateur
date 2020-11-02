@@ -2,6 +2,7 @@
 
 import numpy as np
 import matplotlib.pyplot as plt
+import exceptions
 inf = np.inf
 
 #Change this bool according to the situation
@@ -81,7 +82,10 @@ class Vertice:
     @edges_list.setter
     def edges_list(self,edges_list):
         """ An element of edges_list is an edge """
-        self._edges_list = edges_list
+        for e in edges_list:
+            exceptions.check_pertinent_edge(self,e)
+        else:
+            self._edges_list=edges_list
 
     def neighbours_list(self,list_tuple,id=0):
         self._edges_list.clear()
@@ -122,8 +126,13 @@ class Vertice:
                 return True
         return False
 
-    def push_edge(self,edge):
+    def push_edge(self,edge,coords_verif=False):
+        if coords_verif:
+            exceptions.check_pertinent_edge_coords_verif(self,edge)
+        else:
+            exceptions.check_pertinent_edge(self,edge)
         self._edges_list.append(edge)
+
 
     def __repr__(self):
         return "Vertice "+str(self._index)
@@ -149,6 +158,8 @@ class Edge:
     #ne pas mettre @property ici, on veut une methode pas un attribut
     def given_cost(self):
         return self._given_cost
+    def __repr__(self):
+        return "Edge ["+str(self._linked[0].index)+","+str(self._linked[1].index)+"] !oriented!"
 
     @property
     def linked(self):
@@ -185,7 +196,7 @@ class Graph:
         else:
             for edge in vertice.edges_list:
                 if edge not in self._list_of_vertices[index].edges_list:
-                    self._list_of_vertices[index].push_edge(edge)
+                    self._list_of_vertices[index].push_edge(edge,True)
 
 
     def is_vertice_in_graph_based_on_xy(self,vertice):
@@ -254,6 +265,12 @@ class Graph:
 
 
 
+#test2
+vertice0 = Vertice(0,(0,0))
+vertice1 = Vertice(1,(0,0))
+e=Edge(vertice0,vertice1,9,100)
+vertice0.edges_list=[e]
+print("done")
 
 
 #test
