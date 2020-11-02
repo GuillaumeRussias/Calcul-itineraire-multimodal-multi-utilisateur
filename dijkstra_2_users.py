@@ -35,4 +35,3 @@ def chose_end_index(graph,start_1_index,start_2_index):
     return min(sum, key = lambda t: t[1])[0]
 
 
-

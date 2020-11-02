@@ -155,7 +155,6 @@ class Edge:
         #data_base
         self.color=None
 
-
     #ne pas mettre @property ici, on veut une methode pas un attribut
     def euclidian_cost(self):
         return np.sqrt(self.square_euclidian_cost())
@@ -268,6 +267,7 @@ class Graph:
                 dy=e.linked[1].coordinates[1]-y
                 plt.plot([x,x+dx],[y,y+dy],color=c)
                 #plt.arrow(x,y,dx,dy)
+        plt.axis = 'off'
         plt.show()
 
 
