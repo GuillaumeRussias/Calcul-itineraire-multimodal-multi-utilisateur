@@ -22,17 +22,17 @@ def all_path_finder(graph,start_1_index,start_2_index):
     list_of_path = [] #(end_index,cost_of_path)
     for index in range(graph.number_of_vertices):
         if index != start_1_index and index != start_2_index :
-            print("index possible = ",index)
             possible_path = Homemade_path_finder(graph,start_1_index,index)
             list_of_path.append((index,cost_of_path(graph,possible_path)))
+    return list_of_path
 
 def chose_end_index(graph,start_1_index,start_2_index):
     user_1 = all_path_finder(graph,start_1_index,start_2_index)
     user_2 = all_path_finder(graph,start_2_index,start_1_index)
-    sum = [(index,option_1[1] + option_2[1]) for (index, option_1) in user_1 and (index,option_2) in user_2]
-    # return min(sum)[0]
-
-
+    sum = []
+    for i in range (len(user_1)):
+        sum.append((user_1[i][0],user_1[i][1]+user_2[i][1]))
+    return min(sum, key = lambda t: t[1])[0]
 
 
 
