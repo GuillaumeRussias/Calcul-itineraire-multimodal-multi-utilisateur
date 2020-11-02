@@ -265,12 +265,7 @@ class Graph:
 
 
 
-#test2
-vertice0 = Vertice(0,(0,0))
-vertice1 = Vertice(1,(0,0))
-e=Edge(vertice0,vertice1,9,100)
-vertice0.edges_list=[e]
-print("done")
+
 
 
 #test
