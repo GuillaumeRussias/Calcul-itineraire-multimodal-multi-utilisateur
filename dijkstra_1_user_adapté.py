@@ -5,6 +5,13 @@ from class_vertice_graph import *
 from queue import PriorityQueue as priorQ
 
 def homemade_dijkstra(graph,start_index,type_cost=Edge.given_cost):
+
+    for vertice in graph.list_of_vertices :
+        vertice.visited = False
+        vertice.priority = inf
+        vertice.cost_dijkstra = inf
+        vertice.antecedent = -inf
+
     PQ = priorQ()#initialisation file de priorité
     start_vertice = graph.list_of_vertices[start_index]
     start_vertice.priority = 0
@@ -53,20 +60,12 @@ vertice2 = Vertice(2,(0,0))
 vertice3 = Vertice(3,(0,0))
 vertice4 = Vertice(4,(0,0))
 vertice5 = Vertice(5,(0,0))
-edge1 = Edge(vertice0,vertice1,1,1)
-edge2 = Edge(vertice0,vertice2,2,2)
-edge3 = Edge(vertice1,vertice3,3,1)
-edge4 = Edge(vertice2,vertice4,4,3)
-edge5 = Edge(vertice3,vertice5,5,4)
-edge6 = Edge(vertice4,vertice5,6,1)
-edge7 = Edge(vertice3,vertice4,7,1)
-vertice0.edges_list = [edge1,edge2]
-vertice1.edges_list = [edge1,edge3]
-vertice2.edges_list = [edge2,edge4]
-vertice3.edges_list = [edge5,edge3,edge7]
-vertice4.edges_list = [edge6,edge4,edge7]
-vertice5.edges_list = [edge5,edge6]
-
+vertice0.neighbours_list([(vertice1,1),(vertice2,2)])
+vertice1.neighbours_list([(vertice3,1),(vertice0,1)])
+vertice2.neighbours_list([(vertice4,3),(vertice0,2)])
+vertice3.neighbours_list([(vertice5,4),(vertice4,1),(vertice1,1)])
+vertice4.neighbours_list([(vertice5,1),(vertice3,1),(vertice2,3)])
+vertice5.neighbours_list([(vertice3,4),(vertice4,1)])
 
 graph_test = Graph([vertice0,vertice1,vertice2,vertice3,vertice4,vertice5])
 

@@ -253,31 +253,3 @@ class Graph:
         plt.show()
 
 
-
-
-
-#test
-# vertice0 = Vertice(0,(0,0))
-# vertice1 = Vertice(1,(0,0))
-# vertice2 = Vertice(2,(0,0))
-# vertice3 = Vertice(3,(0,0))
-# vertice4 = Vertice(4,(0,0))
-# vertice5 = Vertice(5,(0,0))
-# edge1 = Edge(vertice0,vertice1,1,1)
-# edge2 = Edge(vertice0,vertice2,2,2)
-# edge3 = Edge(vertice1,vertice3,3,1)
-# edge4 = Edge(vertice2,vertice4,4,3)
-# edge5 = Edge(vertice3,vertice5,5,4)
-# edge6 = Edge(vertice4,vertice5,6,1)
-# edge7 = Edge(vertice3,vertice4,7,1)
-# vertice0.edges_list = [edge1,edge2]
-# vertice1.edges_list = [edge1,edge3]
-# vertice2.edges_list = [edge2,edge4]
-# vertice3.edges_list = [edge5,edge3,edge7]
-# vertice4.edges_list = [edge6,edge4,edge7]
-# vertice5.edges_list = [edge5,edge6]
-#
-#
-#
-#
-# graph_test = Graph([vertice0,vertice1,vertice2,vertice3,vertice4,vertice5])
