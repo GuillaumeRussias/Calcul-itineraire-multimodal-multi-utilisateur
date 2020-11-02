@@ -29,7 +29,7 @@ class Vertice:
 
 
     def get_lines_connected(self):
-        list_of_line=[]
+        list_of_line = []
         for edge in self._edges_list:
             if edge.id not in list_of_line:
                 list_of_line.append(edge.id)
@@ -80,77 +80,77 @@ class Vertice:
     # The other properties can.
 
     @edges_list.setter
-    def edges_list(self,edges_list):
+    def edges_list(self, edges_list):
         """ An element of edges_list is an edge """
         for e in edges_list:
-            exceptions.check_pertinent_edge(self,e)
+            exceptions.check_pertinent_edge(self, e)
         else:
-            self._edges_list=edges_list
+            self._edges_list = edges_list
 
-    def neighbours_list(self,list_tuple,id=0):
+    def neighbours_list(self, list_tuple, id=0):
         self._edges_list.clear()
         """interface with old constructor , tuple=(neighbour_vertice,cost) is an element of list_tuple """
         for tuple in list_tuple:
-            E=Edge(self,tuple[0],id,tuple[1])
+            E = Edge(self, tuple[0], id, tuple[1])
             self._edges_list.append(E)
 
     @priority.setter
-    def priority(self,priority):
+    def priority(self, priority):
         self._priority = priority
 
     @visited.setter
-    def visited(self,bool):
+    def visited(self, bool):
         self._visited = bool
 
     @cost_dijkstra.setter
-    def cost_dijkstra(self,d):
+    def cost_dijkstra(self, d):
         self._cost_dijkstra = d
 
     @antecedent.setter
-    def antecedent(self,vertice):
+    def antecedent(self, vertice):
         self._antecedent = vertice
 
     @id.setter
-    def id(self,id):
-        self._id=id
+    def id(self, id):
+        self._id = id
     @index.setter
-    def index(self,index):
-        self._index=index
+    def index(self, index):
+        self._index = index
     def number_of_neighbours(self):
         return len(self._edges_list)
 
-    def is_linked(self,other):
+    def is_linked(self, other):
         """returns True if there is an edge between self and other"""
         for edge in self._edges_list:
             if other == edge.linked[1]:
                 return True
         return False
 
-    def push_edge(self,edge,coords_verif=False):
+    def push_edge(self, edge, coords_verif=False):
         if coords_verif:
-            exceptions.check_pertinent_edge_coords_verif(self,edge)
+            exceptions.check_pertinent_edge_coords_verif(self, edge)
         else:
-            exceptions.check_pertinent_edge(self,edge)
+            exceptions.check_pertinent_edge(self, edge)
         self._edges_list.append(edge)
 
 
-    def cost_between(self,other):
+    def cost_between(self, other):
         for edge in self.edges_list:
-            [vertice,vertice_voisin] = edge.linked
+            [vertice, vertice_voisin] = edge.linked
             if vertice_voisin == other:
                 return edge.given_cost
 
 
     def __repr__(self):
-        return "Vertice "+str(self._index)
+        return f"Vertice {str(self._index)}"
 
     def __lt__(self, other):
         return self._priority < other._priority
 
 class Edge:
-    def __init__(self,vertice1,vertice2,id,given_cost=0):
-        self._linked=[vertice1,vertice2]
-        self._id=id
+    def __init__(self, vertice1, vertice2, id, given_cost=0):
+        self._linked = [vertice1,vertice2]
+        self._id = id
         self._given_cost = given_cost
         #data_base
         self.color=None
@@ -165,7 +165,7 @@ class Edge:
     def given_cost(self):
         return self._given_cost
     def __repr__(self):
-        return "Edge ["+str(self._linked[0].index)+","+str(self._linked[1].index)+"] !oriented!"
+        return f"Edge [{str(self._linked[0].index)}, {str(self._linked[1].index)}] !oriented!"
 
     @property
     def linked(self):
@@ -193,11 +193,11 @@ class Graph:
 
     def push_vertice(self,vertice):
         self._list_of_vertices.append(vertice)
-        self._number_of_vertices+=1
+        self._number_of_vertices += 1
 
-    def push_vertice_without_doublons(self,vertice):
-        bool,index=self.is_vertice_in_graph_based_on_xy(vertice)
-        if bool==False:
+    def push_vertice_without_doublons(self, vertice):
+        bool,index = self.is_vertice_in_graph_based_on_xy(vertice)
+        if bool == False:
             self.push_vertice(vertice)
         else:
             for edge in vertice.edges_list:
@@ -207,21 +207,21 @@ class Graph:
 
     def is_vertice_in_graph_based_on_xy(self,vertice):
         for i in range(self._number_of_vertices):
-            v=self._list_of_vertices[i]
-            if v.coordinates[0]==vertice.coordinates[0] and v.coordinates[1]==vertice.coordinates[1]:
+            v = self._list_of_vertices[i]
+            if v.coordinates[0] == vertice.coordinates[0] and v.coordinates[1] == vertice.coordinates[1]:
                 return True,i
         return False,None
 
-    def is_vertice_in_graph_based_on_xy_with_tolerance(self,vertice,epsilon):
+    def is_vertice_in_graph_based_on_xy_with_tolerance(self, vertice, epsilon):
         for i in range(self._number_of_vertices):
-            v=self._list_of_vertices[i]
-            if ((v.coordinates[0]-vertice.coordinates[0])**2)+((v.coordinates[1]-vertice.coordinates[1])**2)<epsilon:
-                return True,i
-        return False,None
+            v = self._list_of_vertices[i]
+            if ((v.coordinates[0] - vertice.coordinates[0])**2) + ((v.coordinates[1] - vertice.coordinates[1])**2) < epsilon:
+                return True, i
+        return False, None
 
 
     def __getitem__(self, key):#implement instance[key]
-        if key>=0 and key<self._number_of_vertices:
+        if key >= 0 and key < self._number_of_vertices:
             return self._list_of_vertices[key]
         else :
             raise IndexError
@@ -244,11 +244,11 @@ class Graph:
         for vertice in self._list_of_vertices:
             for edge in vertice.edges_list:
                 if non_oriented:
-                    if (vertice,edge.linked[1]) and (edge.linked[1],vertice) not in pairs_of_vertices:
-                        pairs_of_vertices.append((vertice,edge.linked[1]))
+                    if (vertice, edge.linked[1]) and (edge.linked[1], vertice) not in pairs_of_vertices:
+                        pairs_of_vertices.append((vertice, edge.linked[1]))
                 if not non_oriented:
-                    if (vertice,edge.linked[1]) not in pairs_of_vertices:
-                        pairs_of_vertices.append((vertice,edge.linked[1]))
+                    if (vertice, edge.linked[1]) not in pairs_of_vertices:
+                        pairs_of_vertices.append((vertice, edge.linked[1]))
         return pairs_of_vertices
 
     def number_of_edges(self):
@@ -257,16 +257,16 @@ class Graph:
     def plot(self):
         plt.clf()
         for v in self._list_of_vertices:
-            c="#"+v.color
-            plt.scatter(v.coordinates[0],v.coordinates[1],color=c)
+            c = f"#{v.color}"
+            plt.scatter(v.coordinates[0], v.coordinates[1], color=c)
             for e in v.edges_list:
-                c="#"+e.color
-                x=e.linked[0].coordinates[0]
-                y=e.linked[0].coordinates[1]
-                dx=e.linked[1].coordinates[0]-x
-                dy=e.linked[1].coordinates[1]-y
-                plt.plot([x,x+dx],[y,y+dy],color=c)
-                #plt.arrow(x,y,dx,dy)
+                c = f"#{e.color}"
+                x = e.linked[0].coordinates[0]
+                y = e.linked[0].coordinates[1]
+                dx = e.linked[1].coordinates[0] - x
+                dy = e.linked[1].coordinates[1] - y
+                plt.plot([x,x+dx], [y,y+dy], color=c)
+                # plt.arrow(x,y,dx,dy)
         plt.axis = 'off'
         plt.show()
 
