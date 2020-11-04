@@ -85,7 +85,6 @@ def create_half_graph_trace_ligne(adress_ligne="base_donnee/datas/traces-du-rese
 def link_with_color(Graph,adress_color="base_donnee/datas/lignes-gtfs.json"):
     donnees= data.lignes_gtfs(adress_color)
     dict_nom_color=donnees.get_color_and_name()
-    print(dict_nom_color.keys())
     for v in Graph:
         nom=v.get_lines_connected()[0]
         v.color=dict_nom_color[nom]
@@ -100,7 +99,7 @@ def link_with_color(Graph,adress_color="base_donnee/datas/lignes-gtfs.json"):
 #G = create_half_graph_gtfs()
 #link_with_station_data(G)
 #G.plot()
-G=create_half_graph_trace_ligne()
-link_with_station_data(G)
-link_with_color(G)
+#G=create_half_graph_trace_ligne()
+#link_with_station_data(G)
+#link_with_color(G)
 #G.plot_dev()
