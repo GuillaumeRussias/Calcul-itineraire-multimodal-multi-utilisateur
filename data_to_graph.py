@@ -61,10 +61,46 @@ def link_with_station_data(anonymous_Graph, adress_station="base_donnee/datas/Re
         anonymous_Graph[i].id = id[i_min][1]
         anonymous_Graph[i].index = i
         if min > epsilon: #tolerance du minimum
-            print(anonymous_Graph[i].gare_name, anonymous_Graph[i].get_lines_connected(), anonymous_Graph[i].coordinates)
+            print(anonymous_Graph[i].gare_name, anonymous_Graph[i].get_lines_connected(), anonymous_Graph[i].coordinates, min)
+
+def create_half_graph_trace_ligne(adress_ligne="base_donnee/datas/traces-du-reseau-ferre-idf.json"):
+    lignes=data.trace_lignes_idf(adress_ligne)
+    liaisons_developpes,cout_liaison,ligne_liaison=lignes.get_important_data()
+    Graph = cvg.Graph([])
+    for i in range (len(liaisons_developpes)):
+        v  = cvg.Vertice(0,liaisons_developpes[i][1][0])
+        vp = cvg.Vertice(0,liaisons_developpes[i][1][-1])
+        e  = cvg.Edge(v,vp,ligne_liaison[i][1],cout_liaison[i][1])
+        e.connection_with_displayable = i
+        ep = cvg.Edge(vp,v,ligne_liaison[i][1],cout_liaison[i][1])
+        ep.connection_with_displayable = i
+        v.push_edge(e)
+        vp.push_edge(ep)
+        Graph.push_vertice_without_doublons(v)
+        Graph.push_vertice_without_doublons(vp)
+        Graph.push_diplayable_edge(liaisons_developpes[i][1])
+    #Graph.plot_dev()
+    return Graph
+
+def link_with_color(Graph,adress_color="base_donnee/datas/lignes-gtfs.json"):
+    donnees= data.lignes_gtfs(adress_color)
+    dict_nom_color=donnees.get_color_and_name()
+    print(dict_nom_color.keys())
+    for v in Graph:
+        nom=v.get_lines_connected()[0]
+        v.color=dict_nom_color[nom]
+        for e in v.edges_list:
+            nom=e.id
+            e.color=dict_nom_color[nom]
 
 
 
-G = create_half_graph_gtfs()
+
+
+#G = create_half_graph_gtfs()
+#link_with_station_data(G)
+#G.plot()
+G=create_half_graph_trace_ligne()
 link_with_station_data(G)
-G.plot()
+link_with_color(G)
+#G.plot_dev()

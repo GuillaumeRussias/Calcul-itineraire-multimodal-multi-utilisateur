@@ -2,6 +2,7 @@
 
 import numpy as np
 import matplotlib.pyplot as plt
+import copy
 import exceptions
 inf = np.inf
 
@@ -150,10 +151,11 @@ class Vertice:
 class Edge:
     def __init__(self, vertice1, vertice2, id, given_cost=0):
         self._linked = [vertice1,vertice2]
-        self._id = id
+        self.id = id
         self._given_cost = given_cost
         #data_base
         self.color=None
+        self.connection_with_displayable=None
 
     #ne pas mettre @property ici, on veut une methode pas un attribut
     def euclidian_cost(self):
@@ -170,9 +172,7 @@ class Edge:
     @property
     def linked(self):
         return self._linked
-    @property
-    def id(self):
-        return self._id
+
 
 class Graph:
     """ All the information of a graph are contained here. """
@@ -180,7 +180,10 @@ class Graph:
         """ Entry : the list of vertices. """
         self._list_of_vertices = list_of_vertices
         self._number_of_vertices = len(list_of_vertices)
+        self.connection_table_edge_and_diplayable_edge=[]
 
+    def push_diplayable_edge(self,bidim_array):
+        self.connection_table_edge_and_diplayable_edge.append(copy.deepcopy(bidim_array))
     @property
     def list_of_vertices(self):
         """ Returns the list of vertices. """
@@ -270,7 +273,18 @@ class Graph:
         plt.axis = 'off'
         plt.show()
 
-
-
-
-
+    def plot_dev(self):
+        plt.clf()
+        for v in self._list_of_vertices:
+            c = f"#{v.color}"
+            plt.scatter(v.coordinates[0], v.coordinates[1], color=c)
+            for e in v.edges_list:
+                c = f"#{e.color}"
+                for i in range(len(self.connection_table_edge_and_diplayable_edge[e.connection_with_displayable])-1):
+                    x = self.connection_table_edge_and_diplayable_edge[e.connection_with_displayable][i][0]
+                    y = self.connection_table_edge_and_diplayable_edge[e.connection_with_displayable][i][1]
+                    dx = self.connection_table_edge_and_diplayable_edge[e.connection_with_displayable][i+1][0]-x
+                    dy = self.connection_table_edge_and_diplayable_edge[e.connection_with_displayable][i+1][1]-y
+                    plt.plot([x,x+dx], [y,y+dy], color=c)
+        plt.axis = 'off'
+        plt.show()
