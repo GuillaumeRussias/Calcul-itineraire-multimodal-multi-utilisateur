@@ -1,5 +1,5 @@
 from base_donnee import exceptions
-
+#import exceptions
 
 class Tree:
     """a structure of tree"""
