@@ -23,10 +23,12 @@ class Vertice:
         self._cost_dijkstra = inf  # cost is by default inf
         self._antecedent = -inf # antecedent not defined before using Dijkstra
 
+
         #database
-        self._id = None
-        self.gare_name = None
-        self.color = None
+        self._id = None #identifiant idfm de la gare
+        self.gare_name = None #nom de la gare
+        self.color = None #couleur de la gare
+        self.is_a_station= True # boolean True, si le noeud est veritablement une gare. False sinon
 
 
     def get_lines_connected(self):
@@ -151,11 +153,11 @@ class Vertice:
 class Edge:
     def __init__(self, vertice1, vertice2, id, given_cost=0):
         self._linked = [vertice1,vertice2]
-        self.id = id
-        self._given_cost = given_cost
+        self.id = id #identifiant de la liaison. ici id=nom de la ligne a laqualle appartient la liaison
+        self._given_cost = given_cost #cout de deplacement de la liason donne par l'utilisateur ou la base de donnee
         #data_base
-        self.color=None
-        self.connection_with_displayable=None
+        self.color=None #couleur de la liason
+        self.connection_with_displayable=None #indice de la liason developpee( trace reel) dans la table de connection connection_table_edge_and_diplayable_edge de la classe graph
 
     #ne pas mettre @property ici, on veut une methode pas un attribut
     def euclidian_cost(self):

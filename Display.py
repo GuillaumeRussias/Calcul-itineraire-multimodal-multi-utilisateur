@@ -18,24 +18,38 @@ map = folium.Map(
     tiles='Stamen Toner',
     zoom_start=10)
 
-def change_convention(G):
+def change_convention(G):#(x,y)=(y,x)
     for dev_edge in G.connection_table_edge_and_diplayable_edge:
         for h in range(len(dev_edge)):
-            a=dev_edge[h][0]
-            dev_edge[h][0]=dev_edge[h][1]
-            dev_edge[h][1]=a
+            dev_edge[h][0],dev_edge[h][1] = dev_edge[h][1],dev_edge[h][0]
+
+def condition_station_display(vertex,Line_to_display,Skip=True):
+    if Skip:
+        return vertex.is_a_station
+    for nom_de_ligne in vertex.get_lines_connected():
+        if nom_de_ligne in Line_to_display:
+            return vertex.is_a_station
+    return False
+
+def condition_edge_display(edge,Line_to_display,Skip=True):
+    if Skip:
+        return True
+    return edge.id in Line_to_display
 
 def plot_part_of_graph(map,Line_to_display,G):
     change_convention(G)
     rad=40
     for v in G:
-        c = f"#{v.color}"
-        x = v.coordinates[1]
-        y = v.coordinates[0]
-        folium.Circle(radius=rad,location=[x,y],popup=v.gare_name,color=c,fill_color=c,fill_opacity=0.8,fill=True).add_to(map)
+        if condition_station_display(v,Line_to_display,False):
+            c = f"#{v.color}"
+            x = v.coordinates[1]
+            y = v.coordinates[0]
+            folium.Circle(radius=rad,location=[x,y],popup=v.gare_name,color=c,fill_color=c,fill_opacity=0.8,fill=True).add_to(map)
         for e in v.edges_list:
-            c = f"#{e.color}"
-            folium.PolyLine(G.connection_table_edge_and_diplayable_edge[e.connection_with_displayable],color=c,opacity=0.6).add_to(map)
+            if condition_edge_display(e,Line_to_display,False):
+                c = f"#{e.color}"
+                line = G.connection_table_edge_and_diplayable_edge[e.connection_with_displayable]
+                folium.PolyLine(line,color=c,opacity=0.6).add_to(map)
 
 plot_part_of_graph(map,Line_to_display,G)
 
