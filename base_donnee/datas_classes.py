@@ -146,11 +146,16 @@ class lignes_gtfs(IDFM):
         lignes_gtfs.coords_treatment(coords)
 
         return coords,line_names,line_colors,line_types
+
+class referenciel_lignes(IDFM):
+    def __init__(self,file_adress):
+        super().__init__(file_adress)
     def get_color_and_name(self):
+        #self.get_keys_short(6)
         """retourne un dictionnaire liant nom de ligne et couleur """
-        line_names=self.get_values_of_keys("route_short_name")
-        line_colors=self.get_values_of_keys("route_color")
-        line_types=self.get_values_of_keys("route_type")
+        line_names=self.get_values_of_keys("shortname_line")
+        line_colors=self.get_values_of_keys("colourweb_hexa")
+        line_types=self.get_values_of_keys("transportmode")
         s=0
         for i in range(len(line_types)):
             if line_types[i][1] in ["Bus","bus"] :
@@ -172,7 +177,6 @@ class lignes_gtfs(IDFM):
         for i in range(len(line_names)):
             dict[check_nom(line_names[i][1])]=line_colors[i][1]
         return dict
-
 
 
 

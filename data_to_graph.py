@@ -1,6 +1,7 @@
 import class_vertice_graph as cvg
 import base_donnee.datas_classes as data
-epsilon = 10**(-6)
+import numpy as np
+epsilon = 10**(-8)
 print("epsilon", epsilon)
 
 def put_edge(index_gare, mission, Graph, name, color):
@@ -65,7 +66,8 @@ def link_with_station_data(anonymous_Graph, adress_station="base_donnee/datas/Re
         anonymous_Graph[i].index = i
         if min > epsilon: #tolerance du minimum
             anonymous_Graph[i].is_a_station = False
-            print("Fourche detectee",anonymous_Graph[i].gare_name, anonymous_Graph[i].get_lines_connected(), anonymous_Graph[i].coordinates, min)
+            anonymous_Graph[i].gare_name = anonymous_Graph[i].gare_name + ": Not a station but a vertex near it"
+            #print("Fourche detectee",anonymous_Graph[i].gare_name, anonymous_Graph[i].get_lines_connected(), anonymous_Graph[i].coordinates, min)
 
 def create_half_graph_trace_ligne(adress_ligne="base_donnee/datas/traces-du-reseau-ferre-idf.json"):
     lignes=data.trace_lignes_idf(adress_ligne)
@@ -86,15 +88,49 @@ def create_half_graph_trace_ligne(adress_ligne="base_donnee/datas/traces-du-rese
     #Graph.plot_dev()
     return Graph
 
-def link_with_color(Graph,adress_color="base_donnee/datas/lignes-gtfs.json"):
-    donnees= data.lignes_gtfs(adress_color)
+def distance_metre(v1,v2):
+    #conversion
+    x1 , x2 = v1.coordinates[0]*73340 , v2.coordinates[0]*73340
+    y1 , y2 = v1.coordinates[1]*111300 , v2.coordinates[1]*111300
+    d = (x1-x2)**2 + (y1-y2)**2
+    return np.sqrt(d)
+
+def link_with_color(Graph,adress_color="base_donnee/datas/referentiel-des-lignes.json"):
+    donnees= data.referenciel_lignes(adress_color)
     dict_nom_color=donnees.get_color_and_name()
+    dict_nom_color["RER Walk"]='708090'
     for v in Graph:
         nom=v.get_lines_connected()[0]
         v.color=dict_nom_color[nom]
         for e in v.edges_list:
             nom=e.id
             e.color=dict_nom_color[nom]
+
+
+
+
+def link_neighboured_stations(Graph,radius):
+    n=len(Graph.connection_table_edge_and_diplayable_edge)
+    print(n)
+    s=0
+    for i in range(Graph.number_of_vertices):
+        for j in range(i+2,Graph.number_of_vertices):
+            vi,vj=Graph[i],Graph[j]
+            d=distance_metre(vi,vj)
+            if d<radius and vi.is_a_station and vj.is_a_station:
+                ei  = cvg.Edge(vi,vj,"RER Walk",d*4)
+                ei.connection_with_displayable = s+n
+                ej = cvg.Edge(vj,vi,"RER Walk",d*4)
+                ej.connection_with_displayable = s+n
+                Graph[i].push_edge(ei)
+                Graph[j].push_edge(ej)
+                Graph.push_diplayable_edge([[vi.coordinates[0],vi.coordinates[1]],[vj.coordinates[0],vj.coordinates[1]]])
+                s+=1
+    n=len(Graph.connection_table_edge_and_diplayable_edge)
+    print(n)
+
+
+
 
 
 
