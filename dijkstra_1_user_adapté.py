@@ -19,8 +19,11 @@ def homemade_dijkstra(graph,start_index,type_cost=Edge.given_cost):
     start_vertice.visited = True
     PQ.put(start_vertice)
     # vertice de départ : priorité 0, coût 0 et déja visité
-
+    n=0
     while PQ.empty() == False:
+        n+=1
+        if n%100000==0:
+            print(n)
         top_vertice = PQ.get()
         # withdraws the upper element of the queue (lowest priority)
         for edge in top_vertice.edges_list :
@@ -53,7 +56,8 @@ def Homemade_path_finder(graph, start_index, end_index, type_cost=Edge.given_cos
     path.reverse()
     return path
 
-# Test
+# Test"
+"""
 vertice0 = Vertice(0, (0,0))
 vertice1 = Vertice(1, (0,0))
 vertice2 = Vertice(2, (0,0))
@@ -68,3 +72,4 @@ vertice4.neighbours_list([(vertice5,1), (vertice3,1), (vertice2,3)])
 vertice5.neighbours_list([(vertice3,4), (vertice4,1)])
 
 graph_test = Graph([vertice0,vertice1,vertice2,vertice3,vertice4,vertice5])
+"""
