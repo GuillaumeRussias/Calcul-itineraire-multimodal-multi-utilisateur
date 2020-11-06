@@ -109,6 +109,7 @@ def link_with_color(Graph,adress_color="base_donnee/datas/referentiel-des-lignes
     donnees= data.referenciel_lignes(adress_color)
     dict_nom_color=donnees.get_color_and_name()
     dict_nom_color["RER Walk"]='708090'
+    print(dict_nom_color)
     for v in Graph:
         nom=v.get_lines_connected()[0]
         v.color=dict_nom_color[nom]
@@ -129,9 +130,9 @@ def link_neighboured_stations(Graph,radius):
             vi,vj=Graph[i],Graph[j]
             d=distance_metre(vi,vj)
             if d<radius and vi.is_a_station and vj.is_a_station:
-                ei  = cvg.Edge(vi,vj,"RER Walk",d*4)
+                ei  = cvg.Edge(vi,vj,"RER Walk",d)
                 ei.connection_with_displayable = s+n
-                ej = cvg.Edge(vj,vi,"RER Walk",d*4)
+                ej = cvg.Edge(vj,vi,"RER Walk",d)
                 ej.connection_with_displayable = s+n
                 Graph[i].push_edge(ei)
                 Graph[j].push_edge(ej)

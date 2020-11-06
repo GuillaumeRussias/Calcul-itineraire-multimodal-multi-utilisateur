@@ -5,6 +5,7 @@ import flask
 import folium
 import shortest_path as path #fonctionne tres bien (blibliotheque scipy.csgraph)
 import homemade_shortest_path as hpath #Beaucoup trop lent ou alors ne converge pas ?
+import class_vertice_graph as cvg
 
 map = folium.Map(
 #lat lon folium inversee avec idfm
@@ -26,7 +27,7 @@ if __name__ == '__main__':
     j=266
 
     print("finding traject",G[i].gare_name , "to", G[j].gare_name)
-    A=G.A_matrix()
+    A=G.A_matrix(type_cost=cvg.Edge.customized_cost1)
     path=path.path_finder(A, i, j)
     #path=hpath.Homemade_path_finder(A, i, j)
     #path=Dj.Homemade_path_finder(G, i, j)

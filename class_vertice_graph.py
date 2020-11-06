@@ -84,10 +84,10 @@ class Vertice:
                 return edge.given_cost"""
 
     def __repr__(self):
-        return f"Vertice {str(self._index)}"
+        return f"Vertice {str(self.index)}"
 
     def __lt__(self, other):
-        return self._priority < other._priority
+        return self.priority < other.priority
 
 class Edge:
     def __init__(self, vertice1, vertice2, id, given_cost=0):
@@ -105,6 +105,21 @@ class Edge:
         return np.sqrt(self.square_euclidian_cost())
     def square_euclidian_cost(self):
         return np.dot(np.transpose(self.linked[0].coordinates-self.linked[1].coordinates),(self.linked[0].coordinates-self.linked[1].coordinates))
+    def customized_cost1(self):
+        V_metro = 25.1 / 3.6 #vitesse moyenne en km/h /3.6 -> vitesse moyenne en m/s
+        V_train = 49.6 / 3.6
+        V_tram = 18 / 3.6
+        V_pieton = 4 / 3.6
+        if self.id in ["A","B","C","D","E","H","I","J","K","L","M","N","P","R","U","TER","GL"]:
+            return self._given_cost/V_train
+        if self.id in [str(i) for i in range(1,15)]+["ORL","CDG","3b","7b"]:
+            return self._given_cost/V_metro
+        if self.id in ["T"+str(i) for i in range(1,12)]+["T3A","T3B","FUN"]:
+            return self._given_cost/V_tram
+        if self.id in ["RER Walk"]:
+            return self._given_cost/V_pieton
+        raise ValueError(" Dans customized_cost1 " +self.id+" non pris en compte dans le calcul de distance")
+
 
     #ne pas mettre @property ici, on veut une methode pas un attribut
     def given_cost(self):
