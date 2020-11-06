@@ -22,6 +22,8 @@ class Vertice:
         self.visited = False # vertice is by default not visited
         self.cost_dijkstra = inf  # cost is by default inf
         self.antecedent = -inf # antecedent not defined before using Dijkstra
+        #implemente apres passage par panda
+        self.index_edges_list = []#seulement implemente apres passage par panda
 
 
         #database
@@ -97,7 +99,7 @@ class Edge:
         #data_base
         self.color=None #couleur de la liason
         self.connection_with_displayable=None #indice de la liason developpee( trace reel) dans la table de connection connection_table_edge_and_diplayable_edge de la classe graph
-
+        self.index=None
     def set_given_cost(self,cost):
         self._given_cost=cost
     #ne pas mettre @property ici, on veut une methode pas un attribut
@@ -125,7 +127,7 @@ class Edge:
     def given_cost(self):
         return self._given_cost
     def __repr__(self):
-        return f"Edge [{str(self._linked[0].index)}, {str(self._linked[1].index)}] !oriented!"
+        return f"Edge [{str(self.linked[0].index)}, {str(self.linked[1].index)}] !oriented!"
 
 
 
@@ -136,11 +138,14 @@ class Graph:
         self.list_of_vertices = list_of_vertices
         self.number_of_vertices = len(list_of_vertices)
         self.connection_table_edge_and_diplayable_edge=[]
+        self.list_of_edges=[]
         self.number_of_edges=0
 
     def push_diplayable_edge(self,bidim_array):
         self.connection_table_edge_and_diplayable_edge.append(copy.deepcopy(bidim_array))
         self.number_of_edges+=1
+    def push_edge(self,e):
+        self.list_of_edges.append(e)
 
 
     def push_vertice(self,vertice):
@@ -230,6 +235,9 @@ class Graph:
             for e in v.edges_list:
                 e.linked[0]=v
                 e.linked[1]=self[self.search_index_by_coordinates(e.linked[1].coordinates)]
+        for e in self.list_of_edges:
+            e.linked[0]=self[self.search_index_by_coordinates(e.linked[0].coordinates)]
+            e.linked[1]=self[self.search_index_by_coordinates(e.linked[1].coordinates)]
 
 
     def plot(self):

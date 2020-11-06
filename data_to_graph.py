@@ -1,6 +1,7 @@
 import class_vertice_graph as cvg
 import base_donnee.datas_classes as data
 import numpy as np
+import base_donnee.File_management as File_management
 epsilon = 10**(-8)
 
 #old
@@ -87,13 +88,17 @@ def create_half_graph_trace_ligne(adress_ligne="base_donnee/datas/traces-du-rese
         vp = cvg.Vertice(0,liaisons_developpes[i][1][-1])
         e  = cvg.Edge(v,vp,ligne_liaison[i][1],cout_liaison[i][1])
         e.connection_with_displayable = i
+        e.index = len(Graph.list_of_edges)
         ep = cvg.Edge(vp,v,ligne_liaison[i][1],cout_liaison[i][1])
         ep.connection_with_displayable = i
+        ep.index = len(Graph.list_of_edges)+1
         v.push_edge(e)
         vp.push_edge(ep)
         Graph.push_vertice_without_doublons(v)
         Graph.push_vertice_without_doublons(vp)
         Graph.push_diplayable_edge(liaisons_developpes[i][1])
+        Graph.push_edge(e)
+        Graph.push_edge(ep)
     #Graph.plot_dev()
     return Graph
 
@@ -109,7 +114,6 @@ def link_with_color(Graph,adress_color="base_donnee/datas/referentiel-des-lignes
     donnees= data.referenciel_lignes(adress_color)
     dict_nom_color=donnees.get_color_and_name()
     dict_nom_color["RER Walk"]='708090'
-    print(dict_nom_color)
     for v in Graph:
         nom=v.get_lines_connected()[0]
         v.color=dict_nom_color[nom]
@@ -132,13 +136,44 @@ def link_neighboured_stations(Graph,radius):
             if d<radius and vi.is_a_station and vj.is_a_station:
                 ei  = cvg.Edge(vi,vj,"RER Walk",d)
                 ei.connection_with_displayable = s+n
+                ei.index = len(Graph.list_of_edges)
                 ej = cvg.Edge(vj,vi,"RER Walk",d)
                 ej.connection_with_displayable = s+n
+                ej.index = len(Graph.list_of_edges)+1
                 Graph[i].push_edge(ei)
                 Graph[j].push_edge(ej)
                 Graph.push_diplayable_edge([[vi.coordinates[0],vi.coordinates[1]],[vj.coordinates[0],vj.coordinates[1]]])
+                Graph.push_edge(ei)
+                Graph.push_edge(ej)
                 s+=1
 
+def load(adress="base_donnee/"):
+    """Load the graph in pickle format """
+    PandaV = File_management.pandas.read_pickle(adress+'datas/PandaV.pkl')
+    PandaE = File_management.pandas.read_pickle(adress+'datas/PandaE.pkl')
+    PandadevE = File_management.pandas.read_pickle(adress+'datas/PandadevE.pkl')
+    G=cvg.Graph([])
+    for i in range(PandaV['index'].count()):
+        v = cvg.Vertice(index=PandaV['index'][i],coordinates=PandaV['coordinates'][i])
+        v.gare_name = PandaV['gare_name'][i]
+        v.color = PandaV['color'][i]
+        v.is_a_station = PandaV['is_a_station'][i]
+        v.id = PandaV['id'][i]
+        v.index_edges_list = PandaV['index_edges_list'][i]
+        G.push_vertice(v)
+
+    for i in range(PandaE['index'].count()):
+        e = cvg.Edge(vertice1=G[PandaE['index_linked[0]'][i]], vertice2=G[PandaE['index_linked[1]'][i]], id=PandaE['id'][i], given_cost=PandaE['given_cost'][i])
+        e.color = PandaE['color'][i]
+        e.index = PandaE['index'][i]
+        e.connection_with_displayable = PandaE['connection_with_displayable'][i]
+        G[PandaE['index_linked[0]'][i]].push_edge(e)
+        G.push_edge(e)
+
+    for i in range(PandadevE['connection_with_displayable'].count()):
+        G.push_diplayable_edge(PandadevE['connection_table_edge_and_diplayable_edge'][i])
+
+    return G
 
 
 
@@ -150,4 +185,9 @@ def graph_creator():
     link_neighboured_stations(G,200)
     link_with_color(G)
     print("[loading completed] : Number of vertices : " +str(G.number_of_vertices)+" Number of edges : "+str(G.number_of_edges))
+    print('Exporting Graph')
+    File_management.save(G,'base_donnee/')
+    print('Export finished')
     return G
+#G=graph_creator()
+#G=load()

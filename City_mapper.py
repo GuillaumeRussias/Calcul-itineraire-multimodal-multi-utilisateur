@@ -22,7 +22,7 @@ def find_gare(G,gare):
             return v.index
 
 if __name__ == '__main__':
-    G=buildGraph.graph_creator()
+    G=buildGraph.load()
     i=find_gare(G,"NOISY-CHAMPS")
     j=266
 

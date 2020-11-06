@@ -92,7 +92,7 @@ def plot_on_web():
  return map._repr_html_()
 
 if __name__ == '__main__':
-    G=buildGraph.graph_creator()
+    G=buildGraph.load()
     Line_to_display=["A","B","C","D","E"]#useless if skip=True
     plot_part_of_graph(map,Line_to_display,G,Skip=True)
     app.run(debug=True)
