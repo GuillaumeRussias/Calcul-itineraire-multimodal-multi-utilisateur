@@ -2,6 +2,7 @@ import json
 import copy
 from base_donnee import tree
 from base_donnee import tools
+import matplotlib.pyplot as plt
 
 #import tree
 #import tools
@@ -115,7 +116,7 @@ class emplacement_gares(IDFM):
 
     def get_important_data(self):
         coords=self.get_values_of_keys("coordinates")
-        id=self.get_values_of_keys("gares_id")
+        id=self.get_values_of_keys("id_ref_zdl")
         names=self.get_values_of_keys("nom_gare")
         assert(len(coords)==len(id) and len(id)==len(names)),"Important error in  emplacement_gares(IDFM) data exploitation"
         return coords,id,names
@@ -176,6 +177,7 @@ class referenciel_lignes(IDFM):
             return nom
         for i in range(len(line_names)):
             dict[check_nom(line_names[i][1])]=line_colors[i][1]
+        dict["GL"]=dict["TER"]
         return dict
 
 
@@ -186,19 +188,71 @@ class referenciel_lignes(IDFM):
             #coords[i][1]=ensemble missions sur la ligne. On veut garder les missions les plus grandes  au sens de l'inclusion
             tools.garder_plus_grands_elements_sens_inclusion(coords[i][1])
 
+def plot_mult(mult_array):
+    lineString=[]
+    xline=[]
+    yline=[]
+    col=["red","black","blue"]
+    s=0
+    r=100
+    for twoarray in mult_array:
+        for x,y in twoarray:
+            lineString.append([x,y])
+            xline.append(x)
+            yline.append(y)
+            plt.scatter(xline[-1],yline[-1],color=col[s],s=r-20*s)
+        s+=1
+def plot_line(line):
+    xline=[]
+    yline=[]
+    for x,y in line:
+        xline.append(x)
+        yline.append(y)
+    plt.plot(xline,yline)
+
+
 class trace_lignes_idf(IDFM):
     def __init__(self,file_adress):
         super().__init__(file_adress)
+    @staticmethod
+    def MultiLine_to_Line(MultiLine,name):
+        """Traite les 3 segments qui sont en MultiLineString au lieu d'etre en LineString """
+        Line=[]
+        if name=="LIGNE P":
+            for line in MultiLine:
+                Line+=line
+            return Line
+        if name=="T6":
+            for line in MultiLine:
+                Line+=line[::-1]
+            return Line[::-1]
+        if name=="T2":
+            s=0
+            for line in MultiLine:
+                Line+=line[::-1]*(s==0)+line*(s==1)
+                s+=1
+            return Line[::-1]
+
+
+
+
     def get_important_data(self):
         liaisons_developpees=self.get_values_of_keys("coordinates")
         cout_liaison=self.get_values_of_keys("shape_leng")
         ligne_liaison=self.get_values_of_keys("indice_lig")
         type_liason=self.get_values_of_keys("type") #multiline array ou line array
         real_name_of_line=self.get_values_of_keys("res_com")
+
         s=0
         nom=copy.deepcopy(ligne_liaison)
         for i in range(len(type_liason)):
-            if type_liason[i][1] in ["MultiLineString"] or nom[i][1] in ["GL","TER"]:
+            if type_liason[i][1] in ["MultiLineString"] and nom[i][1] not in ["GL","TER"]:
+                #plot_mult(liaisons_developpees[i-s][1])
+                """Ce cas correspond a trois donnees pathologiques dans la base (sur plus de 1000 donnees), on fait appel a une fonction pour reparer ces donnes au cas par cas"""
+                liaisons_developpees[i-s][1]=trace_lignes_idf.MultiLine_to_Line(liaisons_developpees[i-s][1],real_name_of_line[i-s][1])
+                #print("***********************",real_name_of_line[i-s][1],liaisons_developpees[i-s][1])
+                #plot_line(liaisons_developpees[i-s][1])
+            if  nom[i][1] in ["GL","TER"]:
                 del liaisons_developpees[i-s]
                 del cout_liaison[i-s]
                 del ligne_liaison[i-s]
@@ -207,9 +261,10 @@ class trace_lignes_idf(IDFM):
         for i in range(len(cout_liaison)):
             if real_name_of_line[i][1] in ["T1","T2","T3A","T3B","T4","T5","T6","T7","T8","T9"]:
                 ligne_liaison[i][1] = real_name_of_line[i][1]
-
+        plt.show()
         assert(len(liaisons_developpees)==len(cout_liaison) and len(cout_liaison)==len(ligne_liaison)),"Important error in trace_lignes_(IDFM) data exploitation"
         return liaisons_developpees,cout_liaison,ligne_liaison
+
 
 
 

@@ -24,7 +24,8 @@ def find_gare(G,gare):
 if __name__ == '__main__':
     G=buildGraph.load()
     i=find_gare(G,"NOISY-CHAMPS")
-    j=266
+    j=find_gare(G,"Funiculaire Montmarte Station Haute")
+    #find_gare(G,"Mairie de Saint-Ouen: Not a station but a vertex near it")
 
     print("finding traject",G[i].gare_name , "to", G[j].gare_name)
     A=G.A_matrix(type_cost=cvg.Edge.customized_cost1)

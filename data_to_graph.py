@@ -4,46 +4,6 @@ import numpy as np
 import base_donnee.File_management as File_management
 epsilon = 10**(-8)
 
-#old
-"""
-def put_edge(index_gare, mission, Graph, name, color,index):
-    Fonction appelee par create_half_graph_gtfs, on les separe pour plus de lisibilite mais elles forment un tout
-    gare = mission[index_gare]
-    garep = mission[index_gare+1]
-    v = cvg.Vertice(index,(gare[0],gare[1]))
-    vp = cvg.Vertice(index,(garep[0],garep[1]))
-    e = cvg.Edge(v,vp,name)
-    ep = cvg.Edge(vp,v,name)
-    e.color = color
-    ep.color = color
-    v.color = color
-    vp.color = color
-    v.push_edge(e)
-    vp.push_edge(ep)
-    if Graph.push_vertice_without_doublons(v): #il y'a eu push ,on incrémente index
-        index+=1
-    Graph[-1].index=len(Graph)-1
-    if Graph.push_vertice_without_doublons(vp): #il y'a eu push ,on incrémente index
-        index+=1
-    Graph[-1].index=len(Graph)-1
-    return index
-#old
-def create_half_graph_gtfs(adress_gtfs="base_donnee/datas/lignes-gtfs.json"):
-    Utilise la base de donnee gtfs pour cree un graph de vertices anonymes relies entre eux selon les donnees de la base
-    lignes_gtfs = data.lignes_gtfs(adress_gtfs)
-    coords, line_names, line_colors, line_types = lignes_gtfs.get_important_data()
-    #Coord_gares[i][1]=Ensemble des missions de la ligne i
-    #Ensemble de missions[j]= Enemble des coordonnees gares deservies dans l ordre par la mission j
-    Graph = cvg.Graph([])
-    for index_ligne in range(len(line_names)):
-        ligne = coords[index_ligne][1]
-        name = line_names[index_ligne][1]
-        color = line_colors[index_ligne][1]
-        for mission in ligne:
-            for index_gare in range(0, len(mission)-1):
-                put_edge(index_gare, mission, Graph, name, color,0)
-    return Graph
-"""
 def get_index_of_optimal_station(vertice,coords,type_cost=cvg.Edge.square_euclidian_cost):
     """Pour enlenver l'anonymat de vertice, on cherche parmis coords le point le plus proche selon type_cost, et on retourn l'indice et la valeur de l'optimum """
     v = cvg.Vertice(0, (coords[0][1][0], coords[0][1][1]))
@@ -121,19 +81,22 @@ def link_with_color(Graph,adress_color="base_donnee/datas/referentiel-des-lignes
             nom=e.id
             e.color=dict_nom_color[nom]
 
-
-
+def link_Montmartre_condition(vi,vj):
+    if vi.gare_name=="Funiculaire Montmarte Station Basse" and vj.gare_name=="Anvers":
+        return True
+    if vj.gare_name=="Funiculaire Montmarte Station Basse" and vi.gare_name=="Anvers":
+        return True
+    return False
 
 def link_neighboured_stations(Graph,radius):
     print("...Creating walking transfers between stations")
     s=0
     n=len(Graph.connection_table_edge_and_diplayable_edge)
-    assert(n==Graph.number_of_edges)
     for i in range(Graph.number_of_vertices):
         for j in range(i+2,Graph.number_of_vertices):
             vi,vj=Graph[i],Graph[j]
             d=distance_metre(vi,vj)
-            if d<radius and vi.is_a_station and vj.is_a_station:
+            if (d<radius and vi.is_a_station and vj.is_a_station) or link_Montmartre_condition(vi,vj):
                 ei  = cvg.Edge(vi,vj,"RER Walk",d)
                 ei.connection_with_displayable = s+n
                 ei.index = len(Graph.list_of_edges)
@@ -148,7 +111,7 @@ def link_neighboured_stations(Graph,radius):
                 s+=1
 
 def load(adress="base_donnee/"):
-    """Load the graph in pickle format """
+    """Load the graph in pickle format generate by function file_management.save(G,adress)"""
     PandaV = File_management.pandas.read_pickle(adress+'datas/PandaV.pkl')
     PandaE = File_management.pandas.read_pickle(adress+'datas/PandaE.pkl')
     PandadevE = File_management.pandas.read_pickle(adress+'datas/PandadevE.pkl')
@@ -176,7 +139,6 @@ def load(adress="base_donnee/"):
     return G
 
 
-
 def graph_creator():
     """Function to call in order to get a graph """
     print("[loading] graph from IDFM data base...")
@@ -189,5 +151,7 @@ def graph_creator():
     File_management.save(G,'base_donnee/')
     print('Export finished')
     return G
-#G=graph_creator()
-#G=load()
+
+if __name__ == '__main__':
+    G=graph_creator()
+    #G=load()

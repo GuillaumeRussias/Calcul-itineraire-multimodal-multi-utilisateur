@@ -122,7 +122,15 @@ class Edge:
             return self._given_cost/V_pieton
         raise ValueError(" Dans customized_cost1 " +self.id+" non pris en compte dans le calcul de distance")
 
-
+    def __eq__(self,other):
+        """2 edges are equal iff same cordinates and same id """
+        boul0 = self.linked[0].coordinates[0]==other.linked[0].coordinates[0] and self.linked[0].coordinates[1]==other.linked[0].coordinates[1]
+        boul1 = self.linked[1].coordinates[0]==other.linked[1].coordinates[0] and self.linked[1].coordinates[1]==other.linked[1].coordinates[1]
+        boulid = self.id==other.id
+        return boul0 and boul1 and boulid
+    def __ne__(self,other):
+        """2 edges are not equal iff they are not equal  :) """
+        return (self==other)==False
     #ne pas mettre @property ici, on veut une methode pas un attribut
     def given_cost(self):
         return self._given_cost
@@ -139,13 +147,20 @@ class Graph:
         self.number_of_vertices = len(list_of_vertices)
         self.connection_table_edge_and_diplayable_edge=[]
         self.list_of_edges=[]
+        self.number_of_disp_edges=0
         self.number_of_edges=0
 
     def push_diplayable_edge(self,bidim_array):
         self.connection_table_edge_and_diplayable_edge.append(copy.deepcopy(bidim_array))
-        self.number_of_edges+=1
+        self.number_of_disp_edges+=1
     def push_edge(self,e):
+        self.number_of_edges+=1
         self.list_of_edges.append(e)
+
+    def push_edge_without_doublons(e):
+        if e not in self.list_of_edges:
+            self.number_of_edges+=1
+            self.list_of_edges.append(e)
 
 
     def push_vertice(self,vertice):
@@ -153,10 +168,12 @@ class Graph:
         self.number_of_vertices += 1
 
     def push_vertice_without_doublons(self, vertice):
-        bool,index = self.is_vertice_in_graph_based_on_xy(vertice)
+        bool,index = self.is_vertice_in_graph_based_on_xy_with_tolerance(vertice,10**(-8))
+        #bool,index = self.is_vertice_in_graph_based_on_xy(vertice)
         if bool == False:
             self.push_vertice(vertice)
         else:
+            vertice.coordinates=self.list_of_vertices[index].coordinates
             for edge in vertice.edges_list:
                 if edge not in self.list_of_vertices[index].edges_list:
                     self.list_of_vertices[index].push_edge(edge,True)
@@ -221,7 +238,9 @@ class Graph:
         return pairs_of_vertices
 
     def number_of_edges(self):
-        return len(self.pairs_of_vertices())
+        a=self.pairs_of_vertices()
+        assert self.number_of_edges==len(a), "problem in Graph.pairs_of_vertices"
+        return self.number_of_edges
 
     def search_index_by_coordinates(self,coord):
         """search the index of vertice at coordinates: """
