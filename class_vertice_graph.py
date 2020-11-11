@@ -157,7 +157,7 @@ class Graph:
         self.number_of_edges+=1
         self.list_of_edges.append(e)
 
-    def push_edge_without_doublons(e):
+    def push_edge_without_doublons(self, e):
         if e not in self.list_of_edges:
             self.number_of_edges+=1
             self.list_of_edges.append(e)
