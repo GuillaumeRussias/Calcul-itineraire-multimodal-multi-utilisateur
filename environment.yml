@@ -1,0 +1,15 @@
+name: mopsi
+channels:
+  - defaults
+dependencies:
+  - numpy
+  - scipy
+  - flask
+  - matplotlib
+  - folium
+  - branca
+  - requests
+  - pandas
+  - openpyxl
+prefix: C:\Path\to\conda\envs\mopsi
+
