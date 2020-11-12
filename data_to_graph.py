@@ -138,6 +138,10 @@ def load(adress="base_donnee/"):
 
     return G
 
+def load_station_names(adress="base_donnee/"):
+    """returns a Panda serie of every station names """
+    PandaV = File_management.pandas.read_pickle(adress+'datas/PandaV.pkl')
+    return PandaV[PandaV['is_a_station']]['gare_name']#on enleve les vertices qui ne sont pas des stations
 
 def graph_creator():
     """Function to call in order to get a graph """
@@ -155,3 +159,4 @@ def graph_creator():
 if __name__ == '__main__':
     G=graph_creator()
     #G=load()
+    #L=load_station_names()
