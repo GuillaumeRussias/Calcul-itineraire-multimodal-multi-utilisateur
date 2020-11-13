@@ -23,7 +23,7 @@ def get_index_of_optimal_station(vertice,coords,type_cost=cvg.Edge.square_euclid
 
 
 def link_with_station_data(anonymous_Graph, adress_station="base_donnee/datas/Referenciel_gares/emplacement-des-gares-idf.json"):
-    """on déshanonymise le graph en interpollant les id et noms de station avec une base de donnee idfm"""
+    """on désanonymise le graphe en interpollant les id et noms de station avec une base de donnee idfm"""
     print("...naming annonymous edges and vertices with safe interpolation on coords (epsilon = " +str(epsilon)+")")
     referentiel_gares = data.emplacement_gares(adress_station)
     coords, id, names = referentiel_gares.get_important_data()

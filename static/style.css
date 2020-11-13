@@ -66,9 +66,13 @@ nav li
 }
 
 * { box-sizing: border-box; }
+
 body {
   font: 16px Arial;
 }
+
+/* Autocomplete */ 
+
 .autocomplete {
   /*the container must be positioned relative:*/
   position: relative;
