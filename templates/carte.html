@@ -10,26 +10,20 @@
 {% endblock %}
 
 {% block article%}
-<p>Le site est en construction et cette page est un essai d'affichage de la position que rentre l'utilisateur.</p>
 
-<form class="form-inline active-pink-3 active-pink-4">
-    <legend>Choisissez votre destination</legend>
+<form method="POST" class="form-inline active-pink-3 active-pink-4">
+    <legend>Rechercher un itinéraire</legend>
     <div class="autocomplete" style="width:300px;">
         <i class="fas fa-search" aria-hidden="true"></i>
-        <label for="Destination"></label><input class="form-control form-control-sm ml-3 w-75" type="text" placeholder="Search" aria-label="Search" id="Search">
+        <label for="origine"></label><input class="form-control form-control-sm ml-3 w-75" type="text" name="origine" placeholder="Vous êtes" aria-label="Search" id="Search">
+        <div><br/></div>
+        <label for="destination"></label><input class="form-control form-control-sm ml-3 w-75" type="text" name="destination" placeholder="Vous allez" aria-label="Search" id="Search">      
     </div>
-</form>
 
-<form method = "post" >
-    <fieldset >
-        <legend>Renseignez vos coordonnées</legend> 
-            
-        <label for="latitude">Latitude</label> : <input type="text" name="latitude" id="latitude" placeholder="Ex : 47.8"/>
-        <label for="longitude">Longitude</label> : <input type="text" name="longitude" id="longitude" placeholder="Ex : -3.9"/>
-
-        <input type="submit" value="Envoyer" />
+    <input type="submit" value="Envoyer" />
  
-    </fieldset>
+
 </form>
+
 
 {% endblock %}

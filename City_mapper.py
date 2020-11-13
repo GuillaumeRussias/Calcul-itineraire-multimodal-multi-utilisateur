@@ -23,8 +23,8 @@ def find_gare(G,gare):
 
 if __name__ == '__main__':
     G=buildGraph.load()
-    i=find_gare(G,"NOISY-CHAMPS")
-    j=find_gare(G,"Funiculaire Montmarte Station Haute")
+    i=find_gare(G,"La Défense - Grande Arche")
+    j=find_gare(G,"Louise Michel")
     #find_gare(G,"Mairie de Saint-Ouen: Not a station but a vertex near it")
 
     print("finding traject",G[i].gare_name , "to", G[j].gare_name)
@@ -41,4 +41,4 @@ if __name__ == '__main__':
     @app2.route('/')
     def plot_on_web():
      return map._repr_html_()
-    app2.run(debug=True)
+    app2.run(debug=False)
