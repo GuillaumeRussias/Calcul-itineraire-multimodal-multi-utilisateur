@@ -57,7 +57,7 @@ def Homemade_path_finder(graph, start_index, end_index, type_cost=Edge.given_cos
     return path
 
 # Test"
-"""
+
 vertice0 = Vertice(0, (0,0))
 vertice1 = Vertice(1, (0,0))
 vertice2 = Vertice(2, (0,0))
@@ -72,4 +72,9 @@ vertice4.neighbours_list([(vertice5,1), (vertice3,1), (vertice2,3)])
 vertice5.neighbours_list([(vertice3,4), (vertice4,1)])
 
 graph_test = Graph([vertice0,vertice1,vertice2,vertice3,vertice4,vertice5])
-"""
+
+print(Homemade_path_finder(graph_test,0,5))
+
+import cProfile
+import re
+cProfile.run('Homemade_path_finder(graph_test,0,5)')
