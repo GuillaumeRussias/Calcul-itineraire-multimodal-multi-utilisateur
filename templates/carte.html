@@ -11,6 +11,8 @@
 
 {% block article%}
 
+<br><br/>
+
 <form method="POST" class="form-inline active-pink-3 active-pink-4">
     <legend>Rechercher un itinéraire</legend>
     <div class="autocomplete" style="width:300px;">
@@ -21,9 +23,16 @@
     </div>
 
     <input type="submit" value="Envoyer" />
- 
-
 </form>
+
+<br><br/>
+
+<iframe id="affichage carte"
+    title="Affichage carte"
+    width="600"
+    height="600"
+    src = '/affichagecarte'>
+</iframe>
 
 
 {% endblock %}

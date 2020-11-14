@@ -31,8 +31,31 @@ def accueil():
     return render_template("accueil.html")
 
 
+@app.route('/affichagecarte/')
+def affiche():
+    return render_template("macarte.html")
+
+@app.route('/affichagecarteactualisee/')
+def afficheactualisee():
+    return render_template("macarteactualisee.html")
+
+
+@app.route('/itineraire/')
+def itineraire():
+    return render_template("itineraire.html")
+
+
 @app.route('/carte/', methods=['GET', 'POST'])
 def carte():
+
+    #On initialise la carte
+    map = folium.Map(
+    #lat lon folium inversee avec idfm
+        location=(48.852186, 2.339754),
+        tiles='Stamen Toner',
+        zoom_start=10)
+    map.save('templates/macarte.html')
+
     if request.method == "GET":
         liste_stations = [station for station in load_station_names()]
         return render_template("carte.html",liste_stations = json.dumps(liste_stations))
@@ -54,7 +77,10 @@ def carte():
 
         Display.plot_a_course(map,path,G)
 
-        return map._repr_html_()
+        map.save('templates/macarteactualisee.html')
+
+        return redirect(url_for ('itineraire'))
+
 
 
 if __name__ == "__main__":

@@ -14,7 +14,6 @@ map = folium.Map(
     zoom_start=10)
 
 
-
 app2 = flask.Flask(__name__)
 def find_gare(G,gare):
     for v in G :
@@ -37,6 +36,7 @@ if __name__ == '__main__':
         print(G[i].gare_name)
 
     Display.plot_a_course(map,path,G)
+
 
     @app2.route('/')
     def plot_on_web():

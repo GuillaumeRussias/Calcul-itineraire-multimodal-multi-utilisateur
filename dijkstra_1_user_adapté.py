@@ -58,23 +58,23 @@ def Homemade_path_finder(graph, start_index, end_index, type_cost=Edge.given_cos
 
 # Test"
 
-vertice0 = Vertice(0, (0,0))
-vertice1 = Vertice(1, (0,0))
-vertice2 = Vertice(2, (0,0))
-vertice3 = Vertice(3, (0,0))
-vertice4 = Vertice(4, (0,0))
-vertice5 = Vertice(5, (0,0))
-vertice0.neighbours_list([(vertice1,1), (vertice2,2)])
-vertice1.neighbours_list([(vertice3,1), (vertice0,1)])
-vertice2.neighbours_list([(vertice4,3), (vertice0,2)])
-vertice3.neighbours_list([(vertice5,4), (vertice4,1), (vertice1,1)])
-vertice4.neighbours_list([(vertice5,1), (vertice3,1), (vertice2,3)])
-vertice5.neighbours_list([(vertice3,4), (vertice4,1)])
-
-graph_test = Graph([vertice0,vertice1,vertice2,vertice3,vertice4,vertice5])
-
-print(Homemade_path_finder(graph_test,0,5))
-
-import cProfile
-import re
-cProfile.run('Homemade_path_finder(graph_test,0,5)')
+# vertice0 = Vertice(0, (0,0))
+# vertice1 = Vertice(1, (0,0))
+# vertice2 = Vertice(2, (0,0))
+# vertice3 = Vertice(3, (0,0))
+# vertice4 = Vertice(4, (0,0))
+# vertice5 = Vertice(5, (0,0))
+# vertice0.neighbours_list([(vertice1,1), (vertice2,2)])
+# vertice1.neighbours_list([(vertice3,1), (vertice0,1)])
+# vertice2.neighbours_list([(vertice4,3), (vertice0,2)])
+# vertice3.neighbours_list([(vertice5,4), (vertice4,1), (vertice1,1)])
+# vertice4.neighbours_list([(vertice5,1), (vertice3,1), (vertice2,3)])
+# vertice5.neighbours_list([(vertice3,4), (vertice4,1)])
+#
+# graph_test = Graph([vertice0,vertice1,vertice2,vertice3,vertice4,vertice5])
+#
+# print(Homemade_path_finder(graph_test,0,5))
+#
+# import cProfile
+# import re
+# cProfile.run('Homemade_path_finder(graph_test,0,5)')

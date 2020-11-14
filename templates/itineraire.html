@@ -1,0 +1,34 @@
+{% extends "squelette.html" %}
+
+{% block nav%}
+<div class="navbar-nav">
+    <a class="nav-link" href="/accueil">Accueil</a>
+</div>
+<div class="navbar-nav">
+    <a class="nav-link" href="/carte">Carte</a>
+</div>
+{% endblock %}
+
+{% block article%}
+
+<br/>
+
+<div id = "carte-et-itinéraire">
+
+    <div>
+        <iframe id="affichage carte"
+            title="Affichage carte"
+            width="600"
+            height="600"
+            src = '/affichagecarteactualisee'>
+        </iframe>
+    </div>
+
+ 
+
+</div>
+
+
+
+
+{% endblock %}
