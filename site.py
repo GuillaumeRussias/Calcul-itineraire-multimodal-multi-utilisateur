@@ -24,6 +24,7 @@ def find_gare(G,gare):
         if v.is_a_station and v.gare_name==gare:
             return v.index
 
+liste_gares_itineraire = []
 
 @app.route('/')
 @app.route('/accueil/')
@@ -42,7 +43,7 @@ def afficheactualisee():
 
 @app.route('/itineraire/')
 def itineraire():
-    return render_template("itineraire.html")
+    return render_template("itineraire.html",feuille_route = liste_gares_itineraire)
 
 
 @app.route('/carte/', methods=['GET', 'POST'])
@@ -61,6 +62,10 @@ def carte():
         return render_template("carte.html",liste_stations = json.dumps(liste_stations))
 
     if request.method == 'POST':
+
+        #On initialise la liste des gares parcourues
+        #liste_gares_itineraire = []
+
         origine = request.form['origine']
         destination = request.form['destination']
 
@@ -73,13 +78,16 @@ def carte():
         path = path_finder(A, i, j)
 
         for i in path:
-            print(G[i].gare_name)
+            liste_gares_itineraire.append(G[i].gare_name)
 
         Display.plot_a_course(map,path,G)
 
         map.save('templates/macarteactualisee.html')
 
         return redirect(url_for ('itineraire'))
+
+
+
 
 
 

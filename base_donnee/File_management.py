@@ -29,7 +29,7 @@ def save(G,adress=""):
         E_attributes['id'].append(e.id)
         E_attributes['connection_with_displayable'].append(e.connection_with_displayable)
 
-    assert(G.number_of_disp_edges==len(G.connection_table_edge_and_diplayable_edge)),"Risque de déreglemment de la table"
+    assert(G.number_of_disp_edges==len(G.connection_table_edge_and_diplayable_edge)),"Risque de déreglement de la table"
     devE_attributes['connection_with_displayable']=[i for i in range(G.number_of_disp_edges)]
     devE_attributes['connection_table_edge_and_diplayable_edge']=G.connection_table_edge_and_diplayable_edge
 

@@ -118,8 +118,3 @@ input[type=submit] {
   background-color: DodgerBlue !important;
   color: #ffffff;
 }
-
-.carte-et-itinéraire{
-  display : flex;
-  flex-wrap: nowrap;
-}

@@ -13,19 +13,29 @@
 
 <br/>
 
-<div id = "carte-et-itinéraire">
-
-    <div>
-        <iframe id="affichage carte"
-            title="Affichage carte"
-            width="600"
-            height="600"
-            src = '/affichagecarteactualisee'>
-        </iframe>
+<div class = container>
+    <div class = row>
+        <div class=col-auto mr-auto>
+            <iframe id="affichage carte"
+                title="Affichage carte"
+                width="600"
+                height="600"
+                src = '/affichagecarteactualisee'>
+            </iframe>
+        </div>
+    
+        <div class=col-auto ml-auto>
+            <p>
+                <p>
+                    Voici votre itinéraire :
+                </p> 
+                {% for gare in feuille_route %}
+                {{gare}} <br/>
+                {% endfor %}
+            </p>   
+        </div>
+    
     </div>
-
- 
-
 </div>
 
 
