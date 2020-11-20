@@ -11,5 +11,6 @@ dependencies:
   - requests
   - pandas
   - openpyxl
+  - networkx
 prefix: C:\Path\to\conda\envs\mopsi
 

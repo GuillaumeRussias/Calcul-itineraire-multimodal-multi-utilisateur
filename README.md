@@ -8,3 +8,5 @@ Le site en question est pour le moment développé en interne, afin de le lancer
 
 ##### Technologies utilisées
 Le back-end est écrit en `flask` (utilisation du moteur de templates `jinja`). Le front-end utilise des outils `bootstrap`.
+
+
