@@ -135,7 +135,6 @@ def displayable_edges_of_single_fer_line(trace,grp_route,part_PandaE_same_line,P
             Vdep = get_optimal_vertex((2.7272,48.7465),G.nodes)
             Varr = get_optimal_vertex((2.7295,48.7447),G.nodes)
             G.add_edge(Vdep,Varr,weight = 1,index = None)
-        print("begining path_finder in order to put reference to diplayable edges ")
         for jndex in part_PandaE_same_line.index:
             idep = part_PandaE_same_line["departure_stop_index"][jndex]
             iarr = part_PandaE_same_line["arrival_stop_index"][jndex]
@@ -149,24 +148,84 @@ def displayable_edges_of_single_fer_line(trace,grp_route,part_PandaE_same_line,P
                 if e != None :
                     L.append(e)
             total_dict[jndex]=L
-        print("end path_finder")
     return total_dict
 
-def link_PandaE_with_disp_edges(PandaE,PandaV,color):
-    dict={}
-    trace=data.trace_fer()
-    trace=data.trace_fer(copy=trace.merge_double_key(color,"extcode","route_id"))
-    grouped=trace.group_by_line()
+def FER_link_PandaE_with_disp_edges(PandaE,PandaV,color):
+    dict={}#dict[index of an edge]=list of index of displayable edges in trace
+    trace=data.trace_fer().Data_Frame
+    trace=data.trace_fer(copy=data.gtfs(df = trace.merge(color,left_on="extcode",right_on="route_id")))
+    grouped=trace.group_by_line() #we regroup displayable edges in group of same lines : ex : RER D, T6, FUN
     for route_id,grp_route in grouped:
-        print("traitement ligne "+route_id)
+        print("traitement Fer",route_id)
         part_PandaE = PandaE[PandaE["route_id"].map(lambda c: c == route_id)]
         dict.update(displayable_edges_of_single_fer_line(trace,grp_route,part_PandaE,PandaV,route_id))
-    disp_edge=pandas.Series(dict,name="list_of_disp_edge_index")
+    disp_edge=pandas.Series(dict,name="list_of_disp_edge_index",dtype=object)
     PandaE=pandas.concat([PandaE, disp_edge],axis=1)
     return PandaE,trace.Data_Frame
 
+def BUS_trace_to_graph(Geo_shape):
+    G=nx.Graph()
+    type = Geo_shape["type"][0]
+    Ligne = Geo_shape["coordinates"]
+    if type=="LineString":
+        for i in range (len(Ligne)-1):
+            bool1,v1=data.is_vertice_in_list_based_on_coords_with_epsilon(tuple(Ligne[i]),G.nodes,eps=1)
+            bool2,v2=data.is_vertice_in_list_based_on_coords_with_epsilon(tuple(Ligne[i+1]),G.nodes,eps=1)
+            G.add_edge(v1,v2)
+    else : #=multiLineString
+        for subLigne in Ligne :
+            for i in range (len(subLigne)-1):
+                bool1,v1=data.is_vertice_in_list_based_on_coords_with_epsilon(tuple(subLigne[i]),G.nodes,eps=1)
+                bool2,v2=data.is_vertice_in_list_based_on_coords_with_epsilon(tuple(subLigne[i+1]),G.nodes,eps=1)
+                G.add_edge(v1,v2)
+    return G
+
+
+def BUS_link_PandaE_with_disp_edges(PandaE,PandaV):
+    dict={}#dict[index of an edge]=index in line_to_display
+    Line_to_display=[] #list of nodes ->beautifull path
+    len_Line_to_display = 0
+
+    ref_lig = data.ref_lig()
+    trace = data.trace_bus()
+    trace = trace.get_connected_table(ref_lig)
+    line_group = PandaE.groupby("route_id")
+    for route_id,line in line_group :
+        index_ligne_trace = trace[trace["ExternalCode_Line"].map(lambda c: c==route_id)]
+        if index_ligne_trace.empty:
+            continue
+        print("traitement Bus",route_id)
+        index_ligne_trace = index_ligne_trace.index[0]
+        ligne_trace = trace["Geo Shape"][index_ligne_trace]
+        G = BUS_trace_to_graph(ligne_trace)        #construction du graph
+        physic_edges = line.groupby(line.apply(lambda c:(c["departure_stop_index"],c["arrival_stop_index"]),axis=1))
+        for tuple,physic_edge in physic_edges :
+            dep = tuple[0]
+            arr = tuple[1]
+            Vdep = [PandaV["stop_lon"][dep],PandaV["stop_lat"][dep]]
+            Varr = [PandaV["stop_lon"][arr],PandaV["stop_lat"][arr]]
+            depopt,arropt=get_optimal_vertex(Vdep,G.nodes),get_optimal_vertex(Varr,G.nodes)
+            try :
+                path = nx.shortest_path(G,source=depopt,target=arropt)
+            except nx.exception.NetworkXNoPath as ex: #path not find , pas tres grave :(
+                print(ex)
+                path = [Vdep,Varr]
+            Line_to_display.append([list(p) for p in path])
+            len_Line_to_display += 1
+            for jndex in physic_edge.index :
+                dict[jndex]= len_Line_to_display - 1
+    disp_edge_index=pandas.Series(dict,name="disp_edge_index_bus",dtype=object)
+    disp_edge_bus=pandas.Series(Line_to_display,name="Disp_edge_Bus",dtype=object)
+    PandaE = pandas.concat([PandaE,disp_edge_index],axis=1)
+    print("end traitement bus")
+    return  PandaE , disp_edge_bus
+
+
+
+
 def stop_index(PandaE,PandaV):
     grp_edges=PandaE.groupby("departure_stop_id")
+    #dict_dep={"index":[],"departure_stop_index":[],"route_id" = []}
     dict_dep={"index":[],"departure_stop_index":[]}
     dict_arr={"index":[],"arrival_stop_index":[]}
     for dep_id,edge in grp_edges:
@@ -178,6 +237,7 @@ def stop_index(PandaE,PandaV):
             id_v=None
         dict_dep["index"]+=edge.index.to_list()
         dict_dep["departure_stop_index"]+=[id_v for i in edge.index]
+        #dict_dep["route_id"] += edge["route_id"].to_list()
     grp_edges=PandaE.groupby("arrival_stop_id")
     for arr_id,edge in grp_edges:
         f = lambda c : c == arr_id
@@ -192,53 +252,69 @@ def stop_index(PandaE,PandaV):
     return stop_index
 
 def create_transfer_edges(PandaV,transferts):
-    def find_index_in_pandaV(stop_id):
+    grp_edges=transferts.groupby("from_stop_id")
+    dict_dep={"index":[],"from_stop_id":[],"min_transfer_time":[]}
+    dict_arr={"index":[],"to_stop_id":[]}
+    for dep_id,edge in grp_edges:
+        f = lambda c : c == dep_id
         try :
-            i=PandaV[PandaV["gtfs_id"].map(lambda c:c==stop_id)].index[0]
-        except IndexError:
-            #ce stop_point n'est pas renseigne dans pandaV
-            i=-1
-        return i
-    transferts["from_stop_id"]=transferts["from_stop_id"].map(find_index_in_pandaV)
-    transferts["to_stop_id"]=transferts["to_stop_id"].map(find_index_in_pandaV)
-    #on enleve les None
-    transferts=transferts[transferts["from_stop_id"].map(lambda c:c!=-1)]
-    transferts=transferts[transferts["to_stop_id"].map(lambda c:c!=-1)]
-    return transferts[["from_stop_id","to_stop_id","min_transfer_time"]]
+            id_v=PandaV[PandaV["gtfs_id"].map(f)].index[0]
+        except :
+            id_v= -1
+        dict_dep["index"]+=edge.index.to_list()
+        dict_dep["from_stop_id"]+=[id_v for i in edge.index]
+        dict_dep["min_transfer_time"]+=edge["min_transfer_time"].to_list()
+    grp_edges=transferts.groupby("to_stop_id")
+    for arr_id,edge in grp_edges:
+        f = lambda c : c == arr_id
+        try :
+            id_v=PandaV[PandaV["gtfs_id"].map(f)].index[0]
+        except :
+            id_v= -1
+        dict_arr["index"]+=edge.index.to_list()
+        dict_arr["to_stop_id"]+=[id_v for i in edge.index]
+    stop_index=pandas.DataFrame(dict_dep).merge(pandas.DataFrame(dict_arr),on="index",sort=True)
+    stop_index=stop_index[stop_index["from_stop_id"]!= -1]
+    stop_index=stop_index[stop_index["to_stop_id"]!= -1]
+    return stop_index[["from_stop_id","to_stop_id","min_transfer_time"]]
 
 def create_pandas_table_fast(link,missions,color):
     missions = missions.Data_Frame
     link = link.Data_Frame
     transferts = data.transfers().Data_Frame
+    color = color.Data_Frame
+    print("creating edges")
     PandaE = create_edges(missions)
+    print("creating vertices")
     PandaV = create_vertice_alt(PandaE,link)
+    print("making references")
     Stop_index = stop_index(PandaE,PandaV)
+    print("concatenation")
     PandaE = pandas.concat([PandaE,Stop_index],axis=1)
+    print("creating transfers")
     transferts = create_transfer_edges(PandaV,transferts)
-    PandaE , Pandadisp_edges = link_PandaE_with_disp_edges(PandaE,PandaV,color)
+    print("creating displayable edges")
+    PandaE , Pandadisp_edges = FER_link_PandaE_with_disp_edges(PandaE,PandaV,color)
+    PandaE , Pandadisp_edge_bus = BUS_link_PandaE_with_disp_edges(PandaE,PandaV)
     Pandadisp_edges.rename(columns={"Geo Shape":"2D_line"},inplace=True)
-    return PandaE,PandaV,Pandadisp_edges,transferts
+    return PandaE,PandaV,Pandadisp_edges,transferts , Pandadisp_edge_bus
 
 
 
 def create_color(color):
-    color=color.Data_Frame
+    color = color.Data_Frame
     color["route_short_name"]=color['agency_name']+' '+color['route_short_name']
     color=color[["route_short_name","route_color","route_text_color","route_id"]]
     return color
 
-def convert_in_date_time(hhmmss,date):
-    #hhmmss string format hh:mm:ss
-    return date+datetime.date(year=0,month=0,day=0,hour=int(hhmmss[0:2]),min=int(hhmmss[3:5]),sec=int(hhmmss[6:8]))
 
 
-
-
-RAIL_AGENCIES=["RER","TRAIN","TRAM","TRAMWAY","METRO","Navette"]
+RAIL_AGENCIES=["RER","TRAIN","TRAM","TRAMWAY","METRO","Navette","SAVAC","SQYBUS"]
+BUS = ["SAVAC"]
 DATE=datetime.datetime.now()
 g_real_name=['T4', 'RER B', 'RER D', 'T2', 'LIGNE R', 'LIGNE H', 'LIGNE P', 'RER C', 'TER', 'T1', 'LIGNE J', 'LIGNE L', 'CDGVAL', 'LIGNE N', 'RER A', 'LIGNE K', 'M8', 'M6', 'M1', 'RER E', 'M9', 'LIGNE U', 'M10', 'M4', 'M12', 'ORLYVAL', 'M13', 'M2', 'M5', 'M7', 'M3bis', 'M3', 'M14', 'M7bis', 'M11', 'T7', 'T8', 'T6', 'T3A', 'T3B', 'T5', 'T11', 'FUNICULAIRE MONTMARTRE']
 
-def Graph_files_creator(agencies=RAIL_AGENCIES,date_creation=DATE,bool_excel=True,bool_pickle=True):
+def Graph_files_creator(agencies=RAIL_AGENCIES,date_creation=DATE,bool_excel=False,bool_pickle=True):
     #pre configuration des datas charges
     print("configuration gtfs data")
     selected_routes=data.get_routes_of_an_agency(line_agencies=agencies)
@@ -248,18 +324,20 @@ def Graph_files_creator(agencies=RAIL_AGENCIES,date_creation=DATE,bool_excel=Tru
     print( "end configuration gtfs data")
     #creation des tables :
     print( "creating graph files")
-    PandaE,PandaV,PandaDisp_edges,transferts=create_pandas_table_fast(link=link_gtfs_idfm,missions=missions,color=color)
+    print("Jour de la semaine : Attention au dimanche ", date_creation.weekday())
     PandaC=create_color(color)
+    PandaE,PandaV,PandaDisp_edges,transferts,Pandadisp_edge_bus=create_pandas_table_fast(link=link_gtfs_idfm,missions=missions,color=color)
     #compression avant exportation (suppression champs inutiles)
-    PandaE=PandaE[["departure_stop_index","arrival_stop_index","departure_time","arrival_time","route_id","list_of_disp_edge_index"]]
+    PandaE=PandaE[["departure_stop_index","arrival_stop_index","departure_time","arrival_time","route_id","list_of_disp_edge_index","disp_edge_index_bus"]]
     PandaV=PandaV[["gtfs_id","idfm_zde","station_name","stop_lat","stop_lon"]]
     if bool_excel :
-        print( "exporting graph files in excel format")
-        PandaE.to_excel("base_donnee/datas/gtfs_E.xlsx")
-        PandaV.to_excel("base_donnee/datas/gtfs_V.xlsx")
-        PandaDisp_edges.to_excel("base_donnee/datas/gtfs_PandaDispEdges.xlsx")
-        PandaC.to_excel("base_donnee/datas/gtfs_Color.xlsx")
-        transferts.to_excel("base_donnee/datas/gtfs_transferts.xlsx")
+        print( "exporting graph files in excel format (very long)")
+        PandaE.to_excel("base_donnee/datas/graph_files/gtfs_E.xlsx")
+        PandaV.to_excel("base_donnee/datas/graph_files/gtfs_V.xlsx")
+        PandaDisp_edges.to_excel("base_donnee/datas/graph_files/gtfs_PandaDispEdges.xlsx")
+        PandaC.to_excel("base_donnee/datas/graph_files/gtfs_Color.xlsx")
+        transferts.to_excel("base_donnee/datas/graph_files/gtfs_transferts.xlsx")
+        Pandadisp_edge_bus.to_excel("base_donnee/datas/graph_files/gtfs_PandaDispEdgesBus.xlsx")
     if bool_pickle:
         print( "exporting graph files in pickle format")
         PandaE.to_pickle("base_donnee/datas/graph_files/gtfs_E.pkl")
@@ -267,5 +345,11 @@ def Graph_files_creator(agencies=RAIL_AGENCIES,date_creation=DATE,bool_excel=Tru
         PandaDisp_edges.to_pickle("base_donnee/datas/graph_files/gtfs_PandaDispEdges.pkl")
         PandaC.to_pickle("base_donnee/datas/graph_files/gtfs_Color.pkl")
         transferts.to_pickle("base_donnee/datas/graph_files/gtfs_transferts.pkl")
+        Pandadisp_edge_bus.to_pickle("base_donnee/datas/graph_files/gtfs_PandaDispEdgesBus.pkl")
+    print("exporting station name in excel format")
+    PandaV = PandaV["station_name"]
+    PandaV.to_excel("base_donnee/datas/graph_files/station_name.xlsx")
 
-Graph_files_creator(agencies=RAIL_AGENCIES)
+Graph_files_creator(agencies=["ALL"])
+temps_exec=datetime.datetime.now()
+print(temps_exec-DATE)

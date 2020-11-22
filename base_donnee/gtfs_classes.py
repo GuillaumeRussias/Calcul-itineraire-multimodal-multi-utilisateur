@@ -71,10 +71,14 @@ if __name__ == '__main__':
     FOLDERS="datas/IDFM_gtfs/"
     REFLEX="datas/Reflex/REFLEX.csv"
     TRACE_FER="datas/Trace/traces-du-reseau-ferre-idf.csv"
+    TRACE_BUS="datas/Trace/bus_lignes.csv"
+    REF_LIG="datas/Trace/referentiel-des-lignes.csv"
 else:
     FOLDERS="base_donnee/datas/IDFM_gtfs/"
     REFLEX="base_donnee/datas/Reflex/REFLEX.csv"
     TRACE_FER="base_donnee/datas/Trace/traces-du-reseau-ferre-idf.csv"
+    TRACE_BUS="base_donnee/datas/Trace/bus_lignes.csv"
+    REF_LIG="base_donnee/datas/Trace/referentiel-des-lignes.csv"
 
 ADRESS={"agency":FOLDERS+"agency.txt",
 "calendar_dates":FOLDERS+"calendar_dates.txt",
@@ -86,7 +90,9 @@ ADRESS={"agency":FOLDERS+"agency.txt",
 "transfers":FOLDERS+"transfers.txt",
 "trips":FOLDERS+"trips.txt",
 "reflex":REFLEX,
-"trace_fer":TRACE_FER }
+"trace_fer":TRACE_FER,
+"trace_bus":TRACE_BUS,
+"ref_lig":REF_LIG }
 
 print("Importing gtfs datas")
 DATA={"agency":gtfs(adress=ADRESS["agency"]),
@@ -99,7 +105,9 @@ DATA={"agency":gtfs(adress=ADRESS["agency"]),
 "transfers":gtfs(adress=ADRESS["transfers"]),
 "trips":gtfs(adress=ADRESS["trips"],low_memory=False),
 "reflex":gtfs(adress=ADRESS["reflex"],separator="|"),
-"trace_fer":gtfs(adress=ADRESS["trace_fer"],separator=";")
+"trace_fer":gtfs(adress=ADRESS["trace_fer"],separator=";"),
+"trace_bus":gtfs(adress=ADRESS["trace_bus"],separator=";"),
+"ref_lig":gtfs(adress=ADRESS["ref_lig"],separator=";")
 }
 print("import done")
 
@@ -197,9 +205,7 @@ def is_vertice_in_list_based_on_coords_with_epsilon(v,l,eps=10*2):
         if d<min:
             min=d
             vmin=m
-    if min <= eps : #si cette distance est inferieure a epsilon, on considere que v appartient a l
-        if min>0:
-            print("min<eps detecte")
+    if min <= eps : #si cette distance est inferieure a epsilon, on considere que v appartient a
         return True,vmin
     return False,v
 
@@ -256,48 +262,27 @@ class trace_fer(gtfs):
             G.add_edge( v1 , v2 , weight = grp_route["SHAPE_Leng"][i] , index = i )
         return G
 
-    def build_adjacent_matrix(self,grp_route):
-        if grp_route.empty:
-            raise KeyError("empty dataframe after research on route_id")
-        dict_of_vertices={} #{v1:index}
-        list=[] #[(v1,v2,i)]
-        index=0
-        for i in grp_route.index :
-            V1 = tuple(grp_route["Geo Shape"][i][0])
-            V2 = tuple(grp_route["Geo Shape"][i][-1])
-            keys= dict_of_vertices.keys()
-            bool1,v1=is_vertice_in_list_based_on_coords_with_epsilon(V1,keys)
-            bool2,v2=is_vertice_in_list_based_on_coords_with_epsilon(V2,keys)
-            list.append((v1,v2,i))
-            if bool1==False:
-                dict_of_vertices[V1] = index
-                index += 1
-            if bool2==False:
-                dict_of_vertices[V2] = index
-                index += 1
-        A = np.zeros((index,index),dtype = float)
-        B = np.zeros((index,index),dtype = int)
-        keys= dict_of_vertices.keys()
-        for array in list :
-            V1 = array[0]
-            V2 = array[1]
-            i = array[2]
-            k = dict_of_vertices[V1]
-            l = dict_of_vertices[V2]
-            distance = grp_route["SHAPE_Leng"][i]
-            A[k,l] = distance
-            A[l,k] = distance
-            B[l,k] = i
-            B[k,l] = i
-        return dict_of_vertices,A,B
+class ref_lig(gtfs):
+    def __init__(self,copy=DATA["ref_lig"]):
+        super().__init__(df=copy.Data_Frame)
 
+class trace_bus(gtfs):
+    def __init__(self,copy=DATA["trace_bus"]):
+        super().__init__(df=copy.Data_Frame)
+    def get_connected_table(self,ref_lig):
+        self = self.merge(ref_lig,key="ID_GroupOfLines")
+        self = self.select_columns(columns=["ExternalCode_Line","Geo Shape"])
+        to_return = self.Data_Frame
+        to_return["Geo Shape"] = to_return["Geo Shape"].map(lambda c : pandas.read_json(c))
+        return to_return
 
 
 
 def get_routes_of_an_agency(line_agencies=["RER"]):
     Agency=agency()
     Agency=Agency.clean(Columns_to_select=["agency_id","agency_name"])
-    Agency=Agency.select_lines(column="agency_name",criterion_values=line_agencies)
+    if line_agencies[0]!="ALL" :
+        Agency=Agency.select_lines(column="agency_name",criterion_values=line_agencies)
 
     Routes=routes()
     Routes=Routes.clean(Columns_to_select=["agency_id","route_short_name","route_id","route_color","route_text_color"])
