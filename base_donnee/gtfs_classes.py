@@ -2,11 +2,27 @@ import pandas
 import datetime
 import numpy as np
 import networkx as nx
+import io
+import zipfile
+import requests
 
+GTFS_URL = "https://data.iledefrance-mobilites.fr/api/datasets/1.0/offre-horaires-tc-gtfs-idf/images/736ca2f956a1b6cc102649ed6fd56d45"
 
 ##### Rappel langue du gtfs
 #cf doc RATP : il est super
 
+def download_url(zip_file_url,path):
+    print("Downloading files")
+    r = requests.get(zip_file_url, stream=True)
+    if r.ok:
+        print("Download finished succesfully")
+        print("unzipping files in", path)
+        z = zipfile.ZipFile(io.BytesIO(r.content))
+        z.extractall(path)
+        print("Download process finished")
+        return True
+    print("an unexpected error occured, please check the doxnloading url")
+    return False
 
 
 class gtfs:
@@ -94,21 +110,37 @@ ADRESS={"agency":FOLDERS+"agency.txt",
 "trace_bus":TRACE_BUS,
 "ref_lig":REF_LIG }
 
+
+def import_gtfs(ADRESS):
+    DATA={"agency":gtfs(adress=ADRESS["agency"]),
+    "calendar_dates":gtfs(adress=ADRESS["calendar_dates"]),
+    "calendar":gtfs(adress=ADRESS["calendar"]),
+    "routes":gtfs(adress=ADRESS["routes"]),
+    "stop_extensions":gtfs(adress=ADRESS["stop_extensions"]),
+    "stop_times":gtfs(adress=ADRESS["stop_times"]),
+    "stops":gtfs(adress=ADRESS["stops"]),
+    "transfers":gtfs(adress=ADRESS["transfers"]),
+    "trips":gtfs(adress=ADRESS["trips"],low_memory=False),
+    "reflex":gtfs(adress=ADRESS["reflex"],separator="|"),
+    "trace_fer":gtfs(adress=ADRESS["trace_fer"],separator=";"),
+    "trace_bus":gtfs(adress=ADRESS["trace_bus"],separator=";"),
+    "ref_lig":gtfs(adress=ADRESS["ref_lig"],separator=";")
+    }
+    return DATA
+
+
 print("Importing gtfs datas")
-DATA={"agency":gtfs(adress=ADRESS["agency"]),
-"calendar_dates":gtfs(adress=ADRESS["calendar_dates"]),
-"calendar":gtfs(adress=ADRESS["calendar"]),
-"routes":gtfs(adress=ADRESS["routes"]),
-"stop_extensions":gtfs(adress=ADRESS["stop_extensions"]),
-"stop_times":gtfs(adress=ADRESS["stop_times"]),
-"stops":gtfs(adress=ADRESS["stops"]),
-"transfers":gtfs(adress=ADRESS["transfers"]),
-"trips":gtfs(adress=ADRESS["trips"],low_memory=False),
-"reflex":gtfs(adress=ADRESS["reflex"],separator="|"),
-"trace_fer":gtfs(adress=ADRESS["trace_fer"],separator=";"),
-"trace_bus":gtfs(adress=ADRESS["trace_bus"],separator=";"),
-"ref_lig":gtfs(adress=ADRESS["ref_lig"],separator=";")
-}
+try :
+    DATA = import_gtfs(ADRESS)
+except FileNotFoundError :
+    print("gtfs files not found, do you want to download it ? y/n")
+    if input()=="y" :
+        bool = download_url(GTFS_URL,FOLDERS)
+        if bool :
+            DATA = import_gtfs(ADRESS)
+        else :
+            raise FileNotFoundError
+
 print("import done")
 
 
