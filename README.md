@@ -9,4 +9,9 @@ Le site en question est pour le moment développé en interne, afin de le lancer
 ##### Technologies utilisées
 Le back-end est écrit en `flask` (utilisation du moteur de templates `jinja`). Le front-end utilise des outils `bootstrap`.
 
+#### Consignes pour le gtfs :
+La base gtfs n'est pas encore interfacée avec le site, vous pouvez faire un test en lançant gtfs_city_mapper.py .
+il faut au préalable télécharger le module networkx : les commandes conda/pip install fonctionnent. 
+Enfin si vous parvenez à lire les pkl, vous pouvez vous épargnez de lancer la précompilation avec data_to_graph_gtfs.py
+sinon il faut lancer data_to_graph_gtfs.py, ce programme va télécharger le gtfs si la base est manquante et la compiler en fichiers pickle. prévoir un temps d'éxecution conséquent
 
