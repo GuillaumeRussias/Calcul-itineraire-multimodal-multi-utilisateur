@@ -18,7 +18,7 @@ sinon il faut lancer data_to_graph_gtfs.py, ce programme va télécharger le gtf
 # Installation du code compilé:
 - (1)
     - **Sur windows** : télécharger au préalable le compilateur msvc : https://visualstudio.microsoft.com/fr/visual-cpp-build-tools/ (laisser toutes les instructions par défaut).
-    - **Sur mac et linux** : aller directement étape (3). (testé sur linux , supposé pour mac).
+    - **Sur mac et linux** : aller directement étape (2). (testé sur linux , supposé pour mac).
 
 - (2)
     - **Avec anaconda** : AnacondaPrompt -> activer un environnement -> aller dans le répertoire du projet -> `pip install ./compiled_graph`  ou  `python -m pip install ./compiled_graph`.
