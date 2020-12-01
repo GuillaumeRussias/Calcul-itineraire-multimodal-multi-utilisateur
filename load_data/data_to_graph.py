@@ -1,4 +1,12 @@
-import class_vertice_graph as cvg
+import sys, os, inspect
+currentdir = os.path.dirname(os.path.abspath(inspect.getfile(inspect.currentframe())))
+parentdir = os.path.dirname(currentdir)
+sys.path.insert(0, parentdir)
+
+
+
+
+import python_graph.class_vertice_graph as cvg
 import base_donnee.datas_classes as data
 import numpy as np
 import base_donnee.File_management as File_management
@@ -22,7 +30,7 @@ def get_index_of_optimal_station(vertice,coords,type_cost=cvg.Edge.square_euclid
 
 
 
-def link_with_station_data(anonymous_Graph, adress_station="base_donnee/datas/Referenciel_gares/emplacement-des-gares-idf.json"):
+def link_with_station_data(anonymous_Graph, adress_station=parentdir+"/base_donnee/datas/Referenciel_gares/emplacement-des-gares-idf.json"):
     """on désanonymise le graphe en interpollant les id et noms de station avec une base de donnee idfm"""
     print("...naming annonymous edges and vertices with safe interpolation on coords (epsilon = " +str(epsilon)+")")
     referentiel_gares = data.emplacement_gares(adress_station)
@@ -38,7 +46,7 @@ def link_with_station_data(anonymous_Graph, adress_station="base_donnee/datas/Re
             #print("Fourche detectee",anonymous_Graph[i].gare_name, anonymous_Graph[i].get_lines_connected(), anonymous_Graph[i].coordinates, min)
     anonymous_Graph.set_right_edges()
 
-def create_half_graph_trace_ligne(adress_ligne="base_donnee/datas/traces-du-reseau-ferre-idf.json"):
+def create_half_graph_trace_ligne(adress_ligne=parentdir+"/base_donnee/datas/traces-du-reseau-ferre-idf.json"):
     print("...Extracting annonymous edges and vertices")
     lignes=data.trace_lignes_idf(adress_ligne)
     liaisons_developpes,cout_liaison,ligne_liaison=lignes.get_important_data()
@@ -69,7 +77,7 @@ def distance_metre(v1,v2):
     d = (x1-x2)**2 + (y1-y2)**2
     return np.sqrt(d)
 
-def link_with_color(Graph,adress_color="base_donnee/datas/referentiel-des-lignes.json"):
+def link_with_color(Graph,adress_color=parentdir+"/base_donnee/datas/referentiel-des-lignes.json"):
     print("...Coloring stations and lines")
     donnees= data.referenciel_lignes(adress_color)
     dict_nom_color=donnees.get_color_and_name()
@@ -110,7 +118,7 @@ def link_neighboured_stations(Graph,radius):
                 Graph.push_edge(ej)
                 s+=1
 
-def load(adress="base_donnee/"):
+def load(adress=parentdir+"/base_donnee/"):
     """Load the graph in pickle format generate by function file_management.save(G,adress)"""
     PandaV = File_management.pandas.read_pickle(adress+'datas/PandaV.pkl')
     PandaE = File_management.pandas.read_pickle(adress+'datas/PandaE.pkl')
@@ -138,7 +146,7 @@ def load(adress="base_donnee/"):
 
     return G
 
-def load_station_names(adress="base_donnee/"):
+def load_station_names(adress=parentdir+"/base_donnee/"):
     """returns a Panda serie of every station names """
     PandaV = File_management.pandas.read_pickle(adress+'datas/PandaV.pkl')
     return PandaV[PandaV['is_a_station']]['gare_name']#on enleve les vertices qui ne sont pas des stations
@@ -152,7 +160,7 @@ def graph_creator():
     link_with_color(G)
     print("[loading completed] : Number of vertices : " +str(G.number_of_vertices)+" Number of edges : "+str(G.number_of_edges))
     print('Exporting Graph')
-    File_management.save(G,'base_donnee/')
+    File_management.save(G,parentdir+"/base_donnee/")
     print('Export finished')
     return G
 

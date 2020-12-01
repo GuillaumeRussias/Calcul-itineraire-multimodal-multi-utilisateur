@@ -1,11 +1,19 @@
-import data_to_graph as buildGraph
-import Display
-import dijkstra_1_user_adapté as Dj #Beaucoup trop lent ou alors ne converge pas ?
+import sys, os, inspect
+currentdir = os.path.dirname(os.path.abspath(inspect.getfile(inspect.currentframe())))
+parentdir = os.path.dirname(currentdir)
+sys.path.insert(0, parentdir)
+
+
+
+
+import load_data.data_to_graph as buildGraph
+import display_on_map.Display as Display
+import python_graph.dijkstra_1_user_adapté as Dj #Beaucoup trop lent ou alors ne converge pas ?
 import flask
 import folium
-import shortest_path as path #fonctionne tres bien (blibliotheque scipy.csgraph)
-import homemade_shortest_path as hpath #Beaucoup trop lent ou alors ne converge pas ?
-import class_vertice_graph as cvg
+import python_graph.shortest_path as path #fonctionne tres bien (blibliotheque scipy.csgraph)
+import python_graph.homemade_shortest_path as hpath #Beaucoup trop lent ou alors ne converge pas ?
+import python_graph.class_vertice_graph as cvg
 
 map = folium.Map(
 #lat lon folium inversee avec idfm

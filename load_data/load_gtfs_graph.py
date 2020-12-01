@@ -1,9 +1,15 @@
+import sys, os, inspect
+currentdir = os.path.dirname(os.path.abspath(inspect.getfile(inspect.currentframe())))
+parentdir = os.path.dirname(currentdir)
+sys.path.insert(0, parentdir)
+
+
 import pandas
 import numpy as np
 import networkx as nx
 import datetime
 
-Adress="base_donnee/datas/graph_files/"
+Adress=parentdir+"/base_donnee/datas/graph_files/"
 
 def convert_in_date_time(hhmmss,start_day):
     #hhmmss string format hh:mm:ss

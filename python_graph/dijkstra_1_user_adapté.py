@@ -1,5 +1,12 @@
+import sys, os, inspect
+currentdir = os.path.dirname(os.path.abspath(inspect.getfile(inspect.currentframe())))
+parentdir = os.path.dirname(currentdir)
+sys.path.insert(0, parentdir)
+
+
+
 import numpy as np
-from class_vertice_graph import *
+from python_graph.class_vertice_graph import *
 # Pour que ça fonctionne ne pas oublier de faire clic droit,
 # "définir le répertoire courant en accord avec le fichier ouvert dans l'éditeur"
 from queue import PriorityQueue as priorQ

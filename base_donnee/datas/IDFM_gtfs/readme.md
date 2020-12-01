@@ -1,2 +1,0 @@
-Please download gtfs archive , unzip it and put all txt files directly in this folder :
-https://data.iledefrance-mobilites.fr/api/datasets/1.0/offre-horaires-tc-gtfs-idf/images/736ca2f956a1b6cc102649ed6fd56d45

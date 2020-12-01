@@ -1,6 +1,6 @@
 ***New***
 Exploitation du format gtfs . Nouveau module requis : networkx
-Il est nécessaire de télécharger le gtfs 
+Il est nécessaire de télécharger le gtfs
 
 
 ***Old***

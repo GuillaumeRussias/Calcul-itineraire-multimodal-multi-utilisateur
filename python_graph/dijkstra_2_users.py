@@ -1,5 +1,16 @@
+import sys, os, inspect
+currentdir = os.path.dirname(os.path.abspath(inspect.getfile(inspect.currentframe())))
+parentdir = os.path.dirname(currentdir)
+sys.path.insert(0, parentdir)
+
+
+
+
+
+
+
 import numpy as np
-from dijkstra_1_user_adapté import *
+from python_graph.dijkstra_1_user_adapté import *
 
 def cost_of_path(graph, path):
     """ Returns the cost of a path. A path is an ordered list
@@ -33,5 +44,3 @@ def chose_end_index(graph, start_1_index, start_2_index):
     for i in range (len(user_1)):
         sum.append((user_1[i][0], user_1[i][1] + user_2[i][1]))
     return min(sum, key = lambda t: t[1])[0]
-
-

@@ -1,6 +1,13 @@
+import sys, os, inspect
+currentdir = os.path.dirname(os.path.abspath(inspect.getfile(inspect.currentframe())))
+parentdir = os.path.dirname(currentdir)
+sys.path.insert(0, parentdir)
+
+
+
 import folium
 import flask
-import data_to_graph as buildGraph
+import load_data.data_to_graph as buildGraph
 
 #Utilise Flask et Folium pour afficher sur navigateur une carte d'idf avec son reseau ferre
 app = flask.Flask(__name__)

@@ -1,13 +1,22 @@
-import load_gtfs_graph
-import Display_gtfs
+import sys, os, inspect
+currentdir = os.path.dirname(os.path.abspath(inspect.getfile(inspect.currentframe())))
+parentdir = os.path.dirname(currentdir)
+sys.path.insert(0, parentdir)
+
+
+
+
+import load_data.load_gtfs_graph as load_gtfs_graph
+import display_on_map.Display_gtfs as Display_gtfs
 import folium
 import flask
 import networkx as nx
 import datetime
 
+print("importing")
 date_debut=datetime.datetime.now()
 date_debut=date_debut.replace(hour=15,minute=0,second=0)
-Graph,PandaV,PandaDisp_edges,PandaC,PandaDisp_edgesBus=load_gtfs_graph.load_graph(adress="base_donnee/datas/graph_files/",date_debut=date_debut,limitation_horaire="03:00:00")
+Graph,PandaV,PandaDisp_edges,PandaC,PandaDisp_edgesBus=load_gtfs_graph.load_graph(adress=parentdir+"/base_donnee/datas/graph_files/",date_debut=date_debut,limitation_horaire="03:00:00")
 
 def find_index_station_name(name,PandaV=PandaV,):
     research=PandaV[PandaV["station_name"].map(lambda c:c==name)]

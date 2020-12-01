@@ -5,6 +5,9 @@ import networkx as nx
 import io
 import zipfile
 import requests
+import os, inspect
+
+
 
 GTFS_URL = "https://data.iledefrance-mobilites.fr/api/datasets/1.0/offre-horaires-tc-gtfs-idf/images/736ca2f956a1b6cc102649ed6fd56d45"
 
@@ -83,18 +86,14 @@ class gtfs:
 
 
 #Variables globales
-if __name__ == '__main__':
-    FOLDERS="datas/IDFM_gtfs/"
-    REFLEX="datas/Reflex/REFLEX.csv"
-    TRACE_FER="datas/Trace/traces-du-reseau-ferre-idf.csv"
-    TRACE_BUS="datas/Trace/bus_lignes.csv"
-    REF_LIG="datas/Trace/referentiel-des-lignes.csv"
-else:
-    FOLDERS="base_donnee/datas/IDFM_gtfs/"
-    REFLEX="base_donnee/datas/Reflex/REFLEX.csv"
-    TRACE_FER="base_donnee/datas/Trace/traces-du-reseau-ferre-idf.csv"
-    TRACE_BUS="base_donnee/datas/Trace/bus_lignes.csv"
-    REF_LIG="base_donnee/datas/Trace/referentiel-des-lignes.csv"
+
+currentdir = os.path.dirname(os.path.abspath(inspect.getfile(inspect.currentframe())))
+FOLDERS=currentdir+"/datas/IDFM_gtfs/"
+REFLEX=currentdir+"/datas/Reflex/REFLEX.csv"
+TRACE_FER=currentdir+"/datas/Trace/traces-du-reseau-ferre-idf.csv"
+TRACE_BUS=currentdir+"/datas/Trace/bus_lignes.csv"
+REF_LIG=currentdir+"/datas/Trace/referentiel-des-lignes.csv"
+
 
 ADRESS={"agency":FOLDERS+"agency.txt",
 "calendar_dates":FOLDERS+"calendar_dates.txt",
@@ -206,7 +205,7 @@ class calendar(gtfs):
         days=["monday","tuesday","wednesday","thursday","friday","saturday","sunday"]
         return days[date.weekday()]
     def date_gtfs(date):
-        AAAAMMJJ=str(date.year)+str(date.month)+str(date.day)
+        AAAAMMJJ=str(date.year)+("0"*(date.month<10))+str(date.month)+("0"*(date.day<10))+str(date.day)
         return int(AAAAMMJJ)
     def start_date(c):
         return int(c)<=calendar.date_gtfs(calendar.date)
@@ -328,6 +327,7 @@ def get_trips_data(Routes,date):
     Trips=Trips.merge(Routes,key="route_id")
 
     Calendar=calendar(date=date)
+
     Calendar=Calendar.select_online_services()
 
     Online_Trips=Trips.merge(Calendar,key="service_id")

@@ -11,7 +11,19 @@ Le back-end est écrit en `flask` (utilisation du moteur de templates `jinja`). 
 
 #### Consignes pour le gtfs :
 La base gtfs n'est pas encore interfacée avec le site, vous pouvez faire un test en lançant gtfs_city_mapper.py .
-il faut au préalable télécharger le module networkx : les commandes conda/pip install fonctionnent. 
+il faut au préalable télécharger le module networkx : les commandes conda/pip install fonctionnent.
 Enfin si vous parvenez à lire les pkl, vous pouvez vous épargnez de lancer la précompilation avec data_to_graph_gtfs.py
 sinon il faut lancer data_to_graph_gtfs.py, ce programme va télécharger le gtfs si la base est manquante et la compiler en fichiers pickle. prévoir un temps d'éxecution conséquent
 
+# Installation du code compilé:
+- (1)
+    - **Sur windows** : télécharger au préalable le compilateur msvc : https://visualstudio.microsoft.com/fr/visual-cpp-build-tools/ (laisser toutes les instructions par défaut).
+    - **Sur mac et linux** : aller directement étape (3). (testé sur linux , supposé pour mac).
+
+- (2)
+    - **Avec anaconda** : AnacondaPrompt -> activer un environnement -> aller dans le répertoire du projet -> `pip install ./compiled_graph`  ou  `python -m pip install ./compiled_graph`.
+
+# Tester :
+1. Vérifier que l'environnement dans lequel vous avez installé la bibliothèque possède numpy. sinon : `conda install numpy` ou `pip install numpy` .
+
+2. Exécuter `compiled_graph/test_compiled_graph.py` . S'il n'y a pas d'erreur , l'installation fonctionne.

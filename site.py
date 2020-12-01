@@ -1,10 +1,16 @@
+import sys, os, inspect
+currentdir = os.path.dirname(os.path.abspath(inspect.getfile(inspect.currentframe())))
+parentdir = os.path.dirname(currentdir)
+sys.path.insert(0, parentdir)
+
+
 from flask import Flask,render_template,url_for,request,redirect,json
 
-from data_to_graph import *
-from shortest_path import * #fonctionne tres bien (blibliotheque scipy.csgraph)
-from class_vertice_graph import *
+from load_data.data_to_graph import *
+from python_graph.shortest_path import * #fonctionne tres bien (blibliotheque scipy.csgraph)
+from python_graph.class_vertice_graph import *
 
-import Display
+import display_on_map.Display as Display
 import folium
 
 map = folium.Map(

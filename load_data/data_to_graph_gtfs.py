@@ -1,3 +1,9 @@
+import sys, os, inspect
+currentdir = os.path.dirname(os.path.abspath(inspect.getfile(inspect.currentframe())))
+parentdir = os.path.dirname(currentdir)
+sys.path.insert(0, parentdir)
+
+
 import base_donnee.gtfs_classes as data
 import pandas
 import numpy as np
@@ -26,19 +32,6 @@ def get_STOPPOINTS_from_ZDL(ZDL):
     STOPPOINTS=STOPPOINTS.select_columns(columns=["stop_id","stop_name","stop_lon","stop_lat"])
     return STOPPOINTS.Data_Frame
 
-"""s=0
-for V in G:
-    if V.is_a_station:
-        a=get_STOPPOINTS_from_ZDL(V.id)
-        if a.empty:
-            s+=1
-        print("=============================")
-        print(V.gare_name,V.id,V.coordinates)
-        print(a)
-        print(dist(V,a))
-        print("=============================")
-
-print("nombre d'erreur =", s)"""
 
 
 def create_edges(dfmissions):
@@ -332,23 +325,23 @@ def Graph_files_creator(agencies=RAIL_AGENCIES,date_creation=DATE,bool_excel=Fal
     PandaV=PandaV[["gtfs_id","idfm_zde","station_name","stop_lat","stop_lon"]]
     if bool_excel :
         print( "exporting graph files in excel format (very long)")
-        PandaE.to_excel("base_donnee/datas/graph_files/gtfs_E.xlsx")
-        PandaV.to_excel("base_donnee/datas/graph_files/gtfs_V.xlsx")
-        PandaDisp_edges.to_excel("base_donnee/datas/graph_files/gtfs_PandaDispEdges.xlsx")
-        PandaC.to_excel("base_donnee/datas/graph_files/gtfs_Color.xlsx")
-        transferts.to_excel("base_donnee/datas/graph_files/gtfs_transferts.xlsx")
-        Pandadisp_edge_bus.to_excel("base_donnee/datas/graph_files/gtfs_PandaDispEdgesBus.xlsx")
+        PandaE.to_excel(parentdir+"/base_donnee/datas/graph_files/gtfs_E.xlsx")
+        PandaV.to_excel(parentdir+"/base_donnee/datas/graph_files/gtfs_V.xlsx")
+        PandaDisp_edges.to_excel(parentdir+"/base_donnee/datas/graph_files/gtfs_PandaDispEdges.xlsx")
+        PandaC.to_excel(parentdir+"/base_donnee/datas/graph_files/gtfs_Color.xlsx")
+        transferts.to_excel(parentdir+"/base_donnee/datas/graph_files/gtfs_transferts.xlsx")
+        Pandadisp_edge_bus.to_excel(parentdir+"/base_donnee/datas/graph_files/gtfs_PandaDispEdgesBus.xlsx")
     if bool_pickle:
         print( "exporting graph files in pickle format")
-        PandaE.to_pickle("base_donnee/datas/graph_files/gtfs_E.pkl")
-        PandaV.to_pickle("base_donnee/datas/graph_files/gtfs_V.pkl")
-        PandaDisp_edges.to_pickle("base_donnee/datas/graph_files/gtfs_PandaDispEdges.pkl")
-        PandaC.to_pickle("base_donnee/datas/graph_files/gtfs_Color.pkl")
-        transferts.to_pickle("base_donnee/datas/graph_files/gtfs_transferts.pkl")
-        Pandadisp_edge_bus.to_pickle("base_donnee/datas/graph_files/gtfs_PandaDispEdgesBus.pkl")
+        PandaE.to_pickle(parentdir+"/base_donnee/datas/graph_files/gtfs_E.pkl")
+        PandaV.to_pickle(parentdir+"/base_donnee/datas/graph_files/gtfs_V.pkl")
+        PandaDisp_edges.to_pickle(parentdir+"/base_donnee/datas/graph_files/gtfs_PandaDispEdges.pkl")
+        PandaC.to_pickle(parentdir+"/base_donnee/datas/graph_files/gtfs_Color.pkl")
+        transferts.to_pickle(parentdir+"/base_donnee/datas/graph_files/gtfs_transferts.pkl")
+        Pandadisp_edge_bus.to_pickle(parentdir+"/base_donnee/datas/graph_files/gtfs_PandaDispEdgesBus.pkl")
     print("exporting station name in excel format")
     PandaV = PandaV["station_name"]
-    PandaV.to_excel("base_donnee/datas/graph_files/station_name.xlsx")
+    PandaV.to_excel(parentdir+"/base_donnee/datas/graph_files/station_name.xlsx")
 
 Graph_files_creator(agencies=["ALL"])
 temps_exec=datetime.datetime.now()
