@@ -8,7 +8,8 @@ sys.path.insert(0, parentdir)
 try :
     import fast_graph as fg
 except :
-    print("compiled graph library is not installed : pip install compiled_graph")
+    print("compiled graph library is not installed")
+
 import pandas
 import numpy as np
 import datetime
@@ -31,9 +32,9 @@ PandaE["arrival_time"]=PandaE["arrival_time"].map(lambda hhmmss : 3600*int(hhmms
 print("graph creation")
 G=fg.graph(PandaV["gtfs_id"].size)
 print("scheduled")
-G.build_scheduled_edges(PandaE['departure_stop_index'].to_numpy(),PandaE['arrival_stop_index'].to_numpy(),PandaE["departure_time"].to_numpy(),PandaE["arrival_time"].to_numpy())
+G.build_scheduled_edges(PandaE['departure_stop_index'].to_numpy(),PandaE['arrival_stop_index'].to_numpy(),PandaE["departure_time"].to_numpy(),PandaE["arrival_time"].to_numpy(),PandaE.index.to_numpy())
 print("free")
-G.build_free_edges(transferts['from_stop_id'].to_numpy(),transferts['to_stop_id'].to_numpy(),transferts["min_transfer_time"].to_numpy())
+G.build_free_edges(transferts['from_stop_id'].to_numpy(),transferts['to_stop_id'].to_numpy(),transferts["min_transfer_time"].to_numpy(),transferts.index.to_numpy())
 print("path_finder")
 path=G.time_path_finder(0,300,3600*15)
 print(path)
