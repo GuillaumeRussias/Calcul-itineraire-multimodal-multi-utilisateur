@@ -13,46 +13,50 @@ namespace py = pybind11;
 #include <algorithm>
 #include <vector>
 #include <queue>
+#include <array>
 #include <deque>
+//maths :
+#include <limits>
+
 
 using namespace std;
 
+
 const int day = 3600*24; //nombre de secondes en 1 jour
+const int inf = numeric_limits<int>::max();
 
-class myClass
-{
-public:
-    int number;
+inline int convert_seconds(const array<char,8> * hhmmss) { //convert array<char,8> = ["0","8",":","5","0",":","0","0"] into an integer equals of equivalent time in seconds 31800
+    return 3600 * (10*(int)(*(hhmmss->begin()) - '0') + (int)(*(hhmmss->begin()+1) - '0')) + 60 * (10*(int)(*(hhmmss->begin()+3) - '0') + (int)(*(hhmmss->begin()+4) - '0')) +  (10*(int)(*(hhmmss->begin()+6) - '0') + (int)(*(hhmmss->begin()+7) - '0'));
+}
 
-    myClass();
-    void addOne();
 
-    int getNumber();
-};
 
 class edge {
     string type; //"free","scheduled","mixed"-> mandatory to separate transfers(no schedule constraints) from scheduled transportation (scheduled)
+    vector<int> id; //id : index of appearance of the mission dep,arr in  build_edges functions (same lenght as departure_time and arrival_time)
     vector<int> departure_time; //" departure times . empty if type=="free" . time in seconds
     vector<int> arrival_time; //" arrival times . empty if type=="free" . time in seconds
     int free_cost; // cost in second of the free transfers (equals to 100*day for a sheduled edge)
     int transfers_cost; // cost in seconds of the transfers (define after cost() or cost(t))
     int selected_mission;  //selected mission (define after cost() or cost(t)) = -1 if mission is not sheduled , index of the departure_time arrival_time selected either
-    void mission(int time);//compute the appropriate mission i of this edge (min time_arrival[i]) s.t (time < time departure[i]), throw exception if called for a free edge
+    void mission(int time);//compute the appropriate mission i of this edge (min time_arrival[i]) s.t (time < time departure[i])
 public :
-    int id; //id of the edge (index of its first appearance in build_edges functions)
-    edge(int departure_t, int arrival_t); //scheduled constructor
+    edge(int departure_t, int arrival_t, int index); //scheduled constructor
     edge(int cost); //free constructor
 
-    void push_time(int t_departure, int t_arrival); //push t_departure, t_arrival
+    void push_time(int t_departure, int t_arrival, int index); //push t_departure, t_arrival
     void set_free_cost(int cost);// set free_cost = cost
+    void push_id(int index); // push index in id and check if len(id)==len(departure_time)==len(arrival_time) after
 
     int cost(); //time independent : totaly ignore edges of type scheduled , works with distance graph
     int cost(int time); //time dependent : works with both gtfs,old graph but takes more time to compute.
 
     string get_type(); //returns type
-    pair<int,int> get_selected_mission(); //returns departure_time,arrival_time of selected traject . Intresting after path_finder
+    pair<int,int> get_selected_mission(); //returns departure_time,arrival_time of selected traject . Intresting after path_finder rerurns -1,cost if free edge selected
     int get_transfers_cost(); //returns cost of the transfers. Intresting after path_finder
-    int get_id(); //returns id
+    int get_id(); //returns id of selected traject . Interesting after path finder returns -1 if free edge selected
+
+    void print_missions();
 
     };
 
@@ -91,7 +95,7 @@ public :
 class graph {
     vector<vertex*> v_list; //list of vertices
     vector<edge*> e_list; //list of edges
-    void push_free_edge(int departure_index, int arrival_index, int cost, int id); //push a single free edge
+    void push_free_edge(int departure_index, int arrival_index, int cost); //push a single free edge
     void push_scheduled_edge(int departure_index, int arrival_index, int departure_time, int arrival_time, int id); //push a single scheduled edge
     void push_vertex(int index); //push a vertex
 public :
@@ -99,9 +103,13 @@ public :
     graph(int size_v); //constructor
     ~graph();//destructor
     void build_scheduled_edges(py::array_t<int> departure_index, py::array_t<int> arrival_index, py::array_t<int> departure_time, py::array_t<int> arrival_time , py::array_t<int> edge_id); //construct all scheduled edges
-    void build_free_edges(py::array_t<int> departure_index, py::array_t<int> arrival_index, py::array_t<int> cost, py::array_t<int> edge_id); //construct all free edges
+    void build_free_edges(py::array_t<int> departure_index, py::array_t<int> arrival_index, py::array_t<int> cost); //construct all free edges
+
+    void build_scheduled_edges_string(py::array_t<int> departure_index, py::array_t<int> arrival_index, py::array_t<array<char,8>> departure_time, py::array_t<array<char,8>> arrival_time, py::array_t<int> edge_id); //construct all scheduled edges
+
+
     vertex* operator[](int i); //safe access to the ith vertex of the graph !return_value_policy::reference! we want c++ to be in charge of the destruction of this object
-    void initialised(); //set all (visited,time) at (false,7*day)
+    void initialised(); //set all (visited,time) at (false,inf)
 
     //algorithms : carefull : graph needs to be re-initialised (visited, time) after the execution of these 4 algorithms
     void basic_djikstra(int start_vertex_index); //basic djikstra
@@ -110,9 +118,10 @@ public :
     void stop_time_djikstra(int start_vertex_index, int end_vertex_index, int t); //time dependant djikstra , with stop condition
 
     //user interface
-    vector<int> path_finder(int start_vertex_index, int end_vertex_index); //returns path from start to end (index of vertex) trow exception if no path is find , graph re-initialised after execution
-    vector<int> path_finder_time(int start_vertex_index, int end_vertex_index, int t); //TIME . returns path from start to end (index of vertex) trow exception if no path is find , graph re-initialised after execution
-
+    vector<int> path_finder(int start_vertex_index, int end_vertex_index); //With stop condition returns path from start to end (index of vertex) trow exception if no path is find , graph re-initialised after execution
+    vector<int> path_finder_time(int start_vertex_index, int end_vertex_index, int t); //With stop condition + TIME . returns path from start to end (index of vertex) trow exception if no path is find , graph re-initialised after execution
+    vector<int> complete_path_finder(int start_vertex_index, int end_vertex_index); //path_finder but with a complete basic djikstra
+    vector<int> complete_path_finder_time(int start_vertex_index, int end_vertex_index, int t); //time_path_finder but with a complete time djikstra
 };
 
 class comparetime {

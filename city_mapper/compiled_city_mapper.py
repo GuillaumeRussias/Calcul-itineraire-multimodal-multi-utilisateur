@@ -11,7 +11,7 @@ import flask
 
 
 print("importing")
-heure_debut = 3600 *15 #15h
+heure_debut = 3600 *19 #19h
 
 
 def find_index_station_name(name,PandaV=load_graph.PandaV):
@@ -24,6 +24,7 @@ j = find_index_station_name("GARE DE NOISY CHAMPS")
 
 #i = 10000
 #j = 20000 #resultats bizarres
+
 
 print("building graph")
 graph = load_graph.load_graph()

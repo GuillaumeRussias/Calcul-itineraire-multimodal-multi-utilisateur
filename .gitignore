@@ -7,6 +7,8 @@ base_donnee/datas/IDFM_gtfs/stop_times.txt
 base_donnee/datas/IDFM_gtfs/stops.txt
 base_donnee/datas/IDFM_gtfs/transfers.txt
 base_donnee/datas/IDFM_gtfs/trips.txt
+compiled_graph/.vs
+compiled_graph/CppProperties.json
 
 # Byte-compiled / optimized / DLL files
 __pycache__/

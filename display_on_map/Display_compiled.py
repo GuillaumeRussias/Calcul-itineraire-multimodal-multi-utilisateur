@@ -54,6 +54,7 @@ def draw_line(FoliumMap,physical_track,metadata):
 
 def plot_edge(FoliumMap, VertexData, EdgeData , DisplayFer , DisplayBus , LineData , CompiledGraph , precedent_vertex_index , vertex_index):
     edge = CompiledGraph[precedent_vertex_index][vertex_index]
+    #edge.print_missions()
     edge_id = edge.id()
     time_departure , time_arrival = edge.selected_mission()
     edge_type = edge.type()

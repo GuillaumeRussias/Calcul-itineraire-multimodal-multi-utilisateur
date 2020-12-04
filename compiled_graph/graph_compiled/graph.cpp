@@ -2,19 +2,9 @@
 
 #include "graph.h"
 
-myClass::myClass() {
-    number = 1;
-}
-void myClass::addOne() {
-    number = number + 1;
-}
-
-int myClass::getNumber() {
-    return number;
-}
 
 vertex::vertex(int index) {
-    time = 7*day;
+    time = inf;
     visited = false;
     i = index;
 }
@@ -53,18 +43,29 @@ int vertex::get_predecessor(){
 }
 
 
-
+void edge::print_missions(){
+  cout<<endl;
+  cout<<"================================="<<endl;
+  cout<<"type : "<<type<<endl;
+  for(int i=0;i<departure_time.size();i++){
+    cout<<i<<" departure : "<< departure_time[i] <<" arrival : "<< arrival_time[i] <<" id : "<<id[i]<<endl;
+  }
+  cout<<"selected mission : " << selected_mission <<endl;
+  cout<<"cost : "<< transfers_cost <<endl;
+  cout<<"================================="<<endl;
+}
 
 edge::edge(int cost) {
     type = "free";
     free_cost = cost;
 }
 
-edge::edge(int departure_t, int arrival_t) {
+edge::edge(int departure_t, int arrival_t, int index) {
     departure_time.push_back(departure_t);
     arrival_time.push_back(arrival_t);
+    push_id(index); //on rajoute l'identifiant
     type = "scheduled";
-    free_cost = 100 * day;
+    free_cost = inf;
 }
 
 
@@ -72,10 +73,15 @@ void edge::set_free_cost(int cost) {
     if (type == "scheduled")type = "mixed";
     free_cost = cost;
 }
-void edge::push_time(int t_departure, int t_arrival) {
+void edge::push_id(int index){
+    id.push_back(index);
+    assertm(id.size() == departure_time.size() && id.size() == arrival_time.size(), "id, departure_time, arrival_time must have same lenght");
+}
+void edge::push_time(int t_departure, int t_arrival, int index) {
     if (type == "free")type = "mixed";
     departure_time.push_back(t_departure);
     arrival_time.push_back(t_arrival);
+    push_id(index); //on rajoute l'identifiant
 }
 
 
@@ -114,6 +120,7 @@ void edge::mission(int time){
     }
     transfers_cost = min;
     selected_mission = i_min;
+    assertm(transfers_cost>=0,"no negative cost allowed");
 }
 
 string edge::get_type(){
@@ -130,7 +137,8 @@ int edge::get_transfers_cost(){
 }
 
 int edge::get_id(){
-    return id;
+    if (selected_mission == -1) return selected_mission;
+    return id.at(selected_mission);
 }
 
 graph::graph(int size_v) {
@@ -166,20 +174,19 @@ void graph::push_vertex(int index) {
 void graph::push_scheduled_edge(int departure_index, int arrival_index, int departure_time, int arrival_time, int id) {
     assertm(arrival_time>=departure_time, "negative cost not allowed");
     try {
-        this->operator[](departure_index)->operator[](arrival_index)->push_time(departure_time, arrival_time); //on ajoute les horaires departs et arrivee si l'edge est deja definie
+        this->operator[](departure_index)->operator[](arrival_index)->push_time(departure_time, arrival_time, id); //on ajoute les horaires departs et arrivee si l'edge est deja definie et l'identifiant
     }
     catch (invalid_argument) { //sinon on cree une nouvelle edge
-        push_vertex(departure_index);//si le sommet n'est pas deja defini, alors on le defini. siil est deja defini cette fonction ne fait rien
+        push_vertex(departure_index);//si le sommet n'est pas deja defini, alors on le defini. si il est deja defini cette fonction ne fait rien
         push_vertex(arrival_index);
         if (departure_index >= int(v_list.size()) || departure_index < 0 || arrival_index >= int(v_list.size()) || arrival_index < 0) throw out_of_range("can't push an edge with vertices not in the graph");//petit test
-        e_list.push_back(new edge(departure_time, arrival_time));
+        e_list.push_back(new edge(departure_time, arrival_time, id));
         v_list[departure_index]->push_neihghbour(v_list[arrival_index]);
         v_list[departure_index]->push_edge(e_list.back());
-        e_list.back()->id = id;
     }
 }
 
-void graph::push_free_edge(int departure_index, int arrival_index, int cost, int id) {
+void graph::push_free_edge(int departure_index, int arrival_index, int cost) {
     assertm(cost>=0, "negative cost not allowed");
     try {
         this->operator[](departure_index)->operator[](arrival_index)->set_free_cost(cost); //on ajoute la liaison libre si l'edge est deja definie
@@ -191,7 +198,6 @@ void graph::push_free_edge(int departure_index, int arrival_index, int cost, int
         e_list.push_back(new edge(cost));
         v_list[departure_index]->push_neihghbour(v_list[arrival_index]);
         v_list[departure_index]->push_edge(e_list.back());
-        e_list.back()->id = id;
     }
 }
 
@@ -207,16 +213,30 @@ void graph::build_scheduled_edges(py::array_t<int> departure_index, py::array_t<
         push_scheduled_edge(int(departure(i)), int(arrival(i)), int(departure_t(i)), int(arrival_t(i)), int(id(i)));
     }
 }
-void graph::build_free_edges(py::array_t<int> departure_index, py::array_t<int> arrival_index, py::array_t<int> cost , py::array_t<int> edge_id) {
+void graph::build_free_edges(py::array_t<int> departure_index, py::array_t<int> arrival_index, py::array_t<int> cost ) {
     auto departure = departure_index.unchecked<1>();
     auto arrival = arrival_index.unchecked<1>();
     auto cost_w = cost.unchecked<1>();
-    auto id = edge_id.unchecked<1>();
-    assertm((departure.shape(0) == arrival.shape(0) && cost.shape(0) == arrival.shape(0), cost.shape(0)==id.shape(0)), "departure_index, arrival_index,cost must have same shape(0)");
+    assertm((departure.shape(0) == arrival.shape(0) && cost.shape(0) == arrival.shape(0)), "departure_index, arrival_index,cost must have same shape(0)");
     for (int i = 0; i < departure.shape(0); i++) {
-        push_free_edge(int(departure(i)), int(arrival(i)), int(cost_w(i)), int(id(i)));
+        push_free_edge(int(departure(i)), int(arrival(i)), int(cost_w(i)));
     }
 }
+
+void graph::build_scheduled_edges_string(py::array_t<int> departure_index, py::array_t<int> arrival_index, py::array_t<array<char,8>> departure_time, py::array_t<array<char,8>> arrival_time, py::array_t<int> edge_id){
+    int dep, arr;
+    auto departure = departure_index.unchecked<1>();
+    auto arrival = arrival_index.unchecked<1>();
+    auto departure_t = departure_time.unchecked<1>();
+    auto arrival_t = arrival_time.unchecked<1>();
+    auto id = edge_id.unchecked<1>();
+    assertm((departure.shape(0) == arrival.shape(0) && departure_t.shape(0) == arrival_t.shape(0) && arrival.shape(0) == departure_t.shape(0), departure_t.shape(0) == id.shape(0)), "departure_index ,arrival_index,departure_time,arrival_time must have same shape(0)");
+    for (int i = 0; i < departure.shape(0); i++) {
+        push_scheduled_edge(int(departure(i)), int(arrival(i)), convert_seconds(departure_t.data(i)), convert_seconds(arrival_t.data(i)), int(id(i)));
+    }
+
+}
+
 
 vertex* graph::operator[](int i){
     try { return v_list.at(i); }
@@ -225,7 +245,7 @@ vertex* graph::operator[](int i){
 
 void graph::initialised(){
     for (unsigned i = 0; i < v_list.size(); i++) {
-        v_list[i]->time = 7 * day;
+        v_list[i]->time = inf;
         v_list[i]->visited = false;
     }
 }
@@ -361,7 +381,6 @@ vector<int> graph::path_finder(int start_vertex_index, int end_vertex_index) {
     }
     path.push_back(index);
     reverse(path.begin(), path.end());
-    cout << "arrival_time " << v_list[end_vertex_index]->time << endl;
     return path;
 
 }
@@ -377,6 +396,34 @@ vector<int> graph::path_finder_time(int start_vertex_index, int end_vertex_index
     }
     path.push_back(index);
     reverse(path.begin(), path.end());
-    cout << "arrival_time " << v_list[end_vertex_index]->time << endl;
     return path;
 }
+
+vector<int> graph:: complete_path_finder(int start_vertex_index, int end_vertex_index) {
+    initialised();
+    vector<int> path;
+    basic_djikstra(start_vertex_index);
+    int index = end_vertex_index;
+    while (index != start_vertex_index) {
+        if (v_list[index]->visited == false) throw invalid_argument("no path found between start and end");
+        path.push_back(index);
+        index = v_list[index]->predecessor->get_index();
+    }
+    path.push_back(index);
+    reverse(path.begin(), path.end());
+    return path;
+};
+vector<int> graph::complete_path_finder_time(int start_vertex_index, int end_vertex_index, int t) {
+    initialised();
+    vector<int> path;
+    time_djikstra(start_vertex_index, t);
+    int index = end_vertex_index;
+    while (index != start_vertex_index) {
+        if (v_list[index]->visited == false) throw invalid_argument("no path found between start and end");
+        path.push_back(index);
+        index = v_list[index]->predecessor->get_index();
+    }
+    path.push_back(index);
+    reverse(path.begin(), path.end());
+    return path;
+};
