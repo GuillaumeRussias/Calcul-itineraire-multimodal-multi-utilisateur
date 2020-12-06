@@ -9,8 +9,9 @@ import os, inspect
 
 
 
-GTFS_URL = "https://data.iledefrance-mobilites.fr/api/datasets/1.0/offre-horaires-tc-gtfs-idf/images/736ca2f956a1b6cc102649ed6fd56d45"
+GTFS_URL_old = "https://data.iledefrance-mobilites.fr/api/datasets/1.0/offre-horaires-tc-gtfs-idf/images/736ca2f956a1b6cc102649ed6fd56d45"
 
+GTFS_URL = "https://data.iledefrance-mobilites.fr/api/v2/catalog/datasets/offre-horaires-tc-gtfs-idf/files/736ca2f956a1b6cc102649ed6fd56d45"
 ##### Rappel langue du gtfs
 #cf doc RATP : il est super
 
@@ -200,7 +201,9 @@ class calendar(gtfs):
     def __init__(self,copy=DATA["calendar"],date=None):
         super().__init__(df=copy.Data_Frame)
         assert (date!=None ), "no date given in calendar"
-        calendar.date=date
+        calendar.date = date
+        calendar.dateint = calendar.date_gtfs(date)
+        print(calendar.dateint)
     def day_gtfs(date):
         days=["monday","tuesday","wednesday","thursday","friday","saturday","sunday"]
         return days[date.weekday()]
@@ -208,9 +211,9 @@ class calendar(gtfs):
         AAAAMMJJ=str(date.year)+("0"*(date.month<10))+str(date.month)+("0"*(date.day<10))+str(date.day)
         return int(AAAAMMJJ)
     def start_date(c):
-        return int(c)<=calendar.date_gtfs(calendar.date)
+        return int(c)<=calendar.dateint
     def end_date(c):
-        return int(c)>=calendar.date_gtfs(calendar.date)
+        return int(c)>=calendar.dateint
     def select_online_services(self):
         online=self.select_lines(column=calendar.day_gtfs(calendar.date) ,criterion_values= [1])
         online=online.select_lines_on_function('start_date',calendar.start_date)
@@ -293,6 +296,43 @@ class trace_fer(gtfs):
             G.add_edge( v1 , v2 , weight = grp_route["SHAPE_Leng"][i] , index = i )
         return G
 
+def add_edges_graph_from_geo_shape(G,Geo_shape):
+    type = Geo_shape["type"][0]
+    Ligne = Geo_shape["coordinates"]
+    if type=="LineString":
+        for i in range (len(Ligne)-1):
+            bool1,v1=is_vertice_in_list_based_on_coords_with_epsilon(tuple(Ligne[i]),G.nodes,eps=10)
+            bool2,v2=is_vertice_in_list_based_on_coords_with_epsilon(tuple(Ligne[i+1]),G.nodes,eps=10)
+            G.add_edge(v1,v2)
+    else : #=multiLineString
+        for subLigne in Ligne :
+            for i in range (len(subLigne)-1):
+                bool1,v1=is_vertice_in_list_based_on_coords_with_epsilon(tuple(subLigne[i]),G.nodes,eps=10)
+                bool2,v2=is_vertice_in_list_based_on_coords_with_epsilon(tuple(subLigne[i+1]),G.nodes,eps=10)
+                G.add_edge(v1,v2)
+    return G
+
+
+class trace_fer2(gtfs):
+    def __init__(self,copy=DATA["trace_fer"]):
+        super().__init__(df=copy.Data_Frame)
+
+    def group_by_line(self):
+        pandas.set_option('mode.chained_assignment', None)
+        self.Data_Frame=self.Data_Frame[["Geo Shape","id_fmt_tem","OBJECTID","extcode"]]
+        self.Data_Frame['Geo Shape']=self.Data_Frame['Geo Shape'].map(lambda c:pandas.read_json(c))
+        pandas.set_option('mode.chained_assignment', 'warn')
+        return self.Data_Frame.groupby("extcode")
+
+    def builds_graph_of_single_line(self,grp_route):
+        if grp_route.empty:
+            raise KeyError("empty dataframe after research on route_id")
+        G = nx.Graph()
+        for i in grp_route.index :
+            Geo_shape = grp_route["Geo Shape"][i]
+            G = add_edges_graph_from_geo_shape(G,Geo_shape)
+        return G
+
 class ref_lig(gtfs):
     def __init__(self,copy=DATA["ref_lig"]):
         super().__init__(df=copy.Data_Frame)
@@ -300,12 +340,19 @@ class ref_lig(gtfs):
 class trace_bus(gtfs):
     def __init__(self,copy=DATA["trace_bus"]):
         super().__init__(df=copy.Data_Frame)
+
     def get_connected_table(self,ref_lig):
         self = self.merge(ref_lig,key="ID_GroupOfLines")
         self = self.select_columns(columns=["ExternalCode_Line","Geo Shape"])
-        to_return = self.Data_Frame
-        to_return["Geo Shape"] = to_return["Geo Shape"].map(lambda c : pandas.read_json(c))
-        return to_return
+        self.Data_Frame["Geo Shape"] = self.Data_Frame["Geo Shape"].map(lambda c : pandas.read_json(c))
+        return self.Data_Frame
+
+    def builds_graph_of_single_line(self,grp_route,index_route):
+        G = nx.Graph()
+        Geo_shape = grp_route["Geo Shape"][index_route]
+        G = add_edges_graph_from_geo_shape(G,Geo_shape)
+        return G
+
 
 
 
@@ -331,11 +378,11 @@ def get_trips_data(Routes,date):
     Calendar=Calendar.select_online_services()
 
     Online_Trips=Trips.merge(Calendar,key="service_id")
-    Online_Trips=Online_Trips.clean(Columns_to_select=["agency_name","route_short_name","trip_id","start_date","end_date","route_id"])
+    Online_Trips=Online_Trips.clean(Columns_to_select=["agency_name","route_short_name","trip_id","start_date","end_date","route_id","trip_headsign"])
 
     Stop_times=stop_times()
     Stop_times=Stop_times.merge(Online_Trips,key="trip_id")
-    Stop_times=Stop_times.clean(Columns_to_select=["agency_name","route_short_name","trip_id","start_date","end_date","arrival_time","departure_time","stop_id","stop_sequence","route_id"])
+    Stop_times=Stop_times.clean(Columns_to_select=["agency_name","route_short_name","trip_id","start_date","end_date","arrival_time","departure_time","stop_id","stop_sequence","route_id","trip_headsign"])
 
     return Stop_times
 

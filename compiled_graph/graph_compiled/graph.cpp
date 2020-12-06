@@ -268,13 +268,13 @@ void graph::basic_djikstra(int start_vertex_index) { // time independent
         PQ.pop();
         //on explore ses voisins
         for (unsigned i = 0; i < top->number_neighbour(); i++) {
-            neighbour = top->get_neighbour(i);
+            neighbour = top->get_neighbour(i);          
+            cost = top->time + top->cost_of_travel(i); // calcul du cout pour aller chez ce voisin depuis l'origine si le trajet passe par top . Dj basique independant du temps
+            if (cost <= neighbour->time) {
+                neighbour->time = cost;
+                neighbour->predecessor = top;
+            }
             if (neighbour->visited == false) { // si ce voisin n'est pas deja visite, (ie est deja sorti de la file de priorite et est donc deja atteint par l'algorithme
-                cost = top->time + top->cost_of_travel(i); // calcul du cout pour aller chez ce voisin depuis l'origine si le trajet passe par top . Dj basique independant du temps
-                if (cost <= neighbour->time) {
-                    neighbour->time = cost;
-                    neighbour->predecessor = top;
-                }
                 neighbour->visited = true;
                 PQ.push(neighbour);//on met ce voisin dans la file
             }
@@ -296,16 +296,15 @@ void graph::time_djikstra(int start_vertex_index, int t) { // time dependent
         //on retire le premier element de la file de priorite
         top = PQ.top();
         PQ.pop();
-
         //on explore ses voisins
         for (unsigned i = 0; i < top->number_neighbour(); i++) {
             neighbour = top->get_neighbour(i);
+            cost = top->time + top->cost_of_travel(i,top->time); // calcul du cout pour aller chez ce voisin depuis l'origine si le trajet passe par top . dependant du temps
+            if (cost <= neighbour->time) {
+                neighbour->time = cost;
+                neighbour->predecessor = top;
+            }
             if (neighbour->visited == false) { // si ce voisin n'est pas deja visite, (ie est deja sorti de la file de priorite et est donc deja atteint par l'algorithme
-                cost = top->time + top->cost_of_travel(i,top->time); // calcul du cout pour aller chez ce voisin depuis l'origine si le trajet passe par top . dependant du temps
-                if (cost <= neighbour->time) {
-                    neighbour->time = cost;
-                    neighbour->predecessor = top;
-                }
                 neighbour->visited = true;
                 PQ.push(neighbour);//on met ce voisin dans la file
             }
@@ -325,16 +324,16 @@ void graph::stop_basic_djikstra(int start_vertex_index, int end_vertex_index){
         //on retire le premier element de la file de priorite
         top = PQ.top(); //cout constant
         PQ.pop();//cout logaritmique
-
         //on explore ses voisins
         for (unsigned i = 0; i < top->number_neighbour(); i++) {
             neighbour = top->get_neighbour(i);
-            if (neighbour->visited == false) { // si ce voisin n'est pas deja visite, (ie est deja sorti de la file de priorite et est donc deja atteint par l'algorithme
-                cost = top->time + top->cost_of_travel(i); // calcul du cout pour aller chez ce voisin depuis l'origine si le trajet passe par top . Dj basique independant du temps
-                if (cost <= neighbour->time) {
-                    neighbour->time = cost;
-                    neighbour->predecessor = top;
-                }
+            // si ce voisin n'est pas deja visite, (ie est deja sorti de la file de priorite et est donc deja atteint par l'algorithme
+            cost = top->time + top->cost_of_travel(i); // calcul du cout pour aller chez ce voisin depuis l'origine si le trajet passe par top . Dj basique independant du temps
+            if (cost <= neighbour->time) {
+                neighbour->time = cost;
+                neighbour->predecessor = top;
+            }
+            if (neighbour->visited == false) {
                 neighbour->visited = true;
                 PQ.push(neighbour);//on met ce voisin dans la file //cout logaritmique
             }
@@ -357,12 +356,12 @@ void graph::stop_time_djikstra(int start_vertex_index, int end_vertex_index, int
         //on explore ses voisins
         for (unsigned i = 0; i < top->number_neighbour(); i++) {
             neighbour = top->get_neighbour(i);
+            cost = top->time + top->cost_of_travel(i, top->time); // calcul du cout pour aller chez ce voisin depuis l'origine si le trajet passe par top . dependant du temps
+            if (cost <= neighbour->time) {
+                neighbour->time = cost;
+                neighbour->predecessor = top;
+            }
             if (neighbour->visited == false) { // si ce voisin n'est pas deja visite, (ie est deja sorti de la file de priorite et est donc deja atteint par l'algorithme
-                cost = top->time + top->cost_of_travel(i, top->time); // calcul du cout pour aller chez ce voisin depuis l'origine si le trajet passe par top . dependant du temps
-                if (cost <= neighbour->time) {
-                    neighbour->time = cost;
-                    neighbour->predecessor = top;
-                }
                 neighbour->visited = true;
                 PQ.push(neighbour);//on met ce voisin dans la file
             }

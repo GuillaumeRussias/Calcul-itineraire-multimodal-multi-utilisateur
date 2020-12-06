@@ -1,3 +1,8 @@
+
+
+##############DEPRECIATED use load_compiled_graph_2.py##############
+print("##############DEPRECIATED use load_compiled_graph_2.py##############")
+
 import sys, os, inspect
 currentdir = os.path.dirname(os.path.abspath(inspect.getfile(inspect.currentframe())))
 parentdir = os.path.dirname(currentdir)
@@ -14,7 +19,7 @@ except :
     print("compiled graph library is not installed : please install it with pip install ./compiled_graph")
     exit(2)
 
-exceptions.check_compiled_graph_version("0.0.2")
+exceptions.check_compiled_graph_version("0.0.3")
 
 
 import pandas

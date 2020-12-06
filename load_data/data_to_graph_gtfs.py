@@ -1,3 +1,9 @@
+
+##############DEPRECIATED use data_to_graph_2.py##############
+print("##############DEPRECIATED use data_to_graph_2.py##############")
+
+
+
 import sys, os, inspect
 currentdir = os.path.dirname(os.path.abspath(inspect.getfile(inspect.currentframe())))
 parentdir = os.path.dirname(currentdir)

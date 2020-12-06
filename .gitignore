@@ -9,6 +9,11 @@ base_donnee/datas/IDFM_gtfs/transfers.txt
 base_donnee/datas/IDFM_gtfs/trips.txt
 compiled_graph/.vs
 compiled_graph/CppProperties.json
+base_donnee/datas/graph_files/gtfs_Color.xlsx
+base_donnee/datas/graph_files/gtfs_Disp.xlsx
+base_donnee/datas/graph_files/gtfs_E.xlsx
+base_donnee/datas/graph_files/gtfs_Ef.xlsx
+base_donnee/datas/graph_files/gtfs_V.xlsx
 
 # Byte-compiled / optimized / DLL files
 __pycache__/
