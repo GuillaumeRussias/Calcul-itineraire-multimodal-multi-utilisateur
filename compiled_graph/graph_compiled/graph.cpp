@@ -2,8 +2,19 @@
 
 #include "graph.h"
 
+int time_cost(int time,int time_d,int time_a){
+  time_d = time_d - (time_d/day) * day ; //reste division euclidienne : time_d in [0,24*3600[
+  time_a = time_a - (time_a/day) * day ; //reste division euclidienne : time_a in [0,24*3600[
+  int q = 0;
+  int r = time - (time/day) * day ; //heure au jour j in [0,24*3600[
+  if (time_d<r || time_a<r) q++;
+  //if (q>0) cout<<time_d<<""<<time_a<<" "<<r<<endl;
+  return q*day + time_a - r;
 
+
+}
 vertex::vertex(int index) {
+    assertm(index >= 0, "index must be an positiv integer");
     time = inf;
     visited = false;
     i = index;
@@ -56,13 +67,15 @@ void edge::print_missions(){
 }
 
 edge::edge(int cost) {
+    assertm(cost >= 0, "cost must non negative");
     type = "free";
     free_cost = cost;
 }
 
-edge::edge(int departure_t, int arrival_t, int index) {
-    departure_time.push_back(departure_t);
-    arrival_time.push_back(arrival_t);
+edge::edge(int t_departure, int t_arrival, int index) {
+    assertm(t_departure >= 0 && t_arrival >= 0 && t_departure < 48 * 3600 && t_arrival < 48 * 3600 && index>=0, "times must be in [0,3600*24) and index non negative");
+    departure_time.push_back(t_departure);
+    arrival_time.push_back(t_arrival);
     push_id(index); //on rajoute l'identifiant
     type = "scheduled";
     free_cost = inf;
@@ -70,14 +83,17 @@ edge::edge(int departure_t, int arrival_t, int index) {
 
 
 void edge::set_free_cost(int cost) {
+    assertm(cost >= 0, "cost must non negative");
     if (type == "scheduled")type = "mixed";
     free_cost = cost;
 }
 void edge::push_id(int index){
+    assertm(index >= 0, "index must be non negative");
     id.push_back(index);
     assertm(id.size() == departure_time.size() && id.size() == arrival_time.size(), "id, departure_time, arrival_time must have same lenght");
 }
 void edge::push_time(int t_departure, int t_arrival, int index) {
+    assertm(t_departure >= 0 && t_arrival >= 0 && t_departure < 48 * 3600 && t_arrival < 48 * 3600 && index>=0, "times must be in [0,3600*24) and index non negative");
     if (type == "free")type = "mixed";
     departure_time.push_back(t_departure);
     arrival_time.push_back(t_arrival);
@@ -111,8 +127,14 @@ void edge::mission(int time){
     int min = free_cost;
     int i_min = -1;
     for (unsigned i = 0; i < departure_time.size(); i++) {
-        if (departure_time[i] < time) cost = arrival_time[i] - time + day;
-        else cost = arrival_time[i] - time;
+        //if (departure_time[i] < time || arrival_time[i] < time){
+          //cost = arrival_time[i] - time + day;
+          //while (cost<0){
+          //  cost = cost + day;
+          //}
+        //}
+        //else cost = arrival_time[i] - time;
+        cost = time_cost(time,departure_time[i],arrival_time[i]);
         if (cost <= min) {
             min = cost;
             i_min = int(i);
@@ -120,7 +142,11 @@ void edge::mission(int time){
     }
     transfers_cost = min;
     selected_mission = i_min;
-    assertm(transfers_cost>=0,"no negative cost allowed");
+    if (transfers_cost<0){
+      cout<<time<<endl;
+      print_missions();
+      throw invalid_argument("no negative cost allowed");
+    }
 }
 
 string edge::get_type(){
@@ -253,8 +279,9 @@ void graph::initialised(){
 //alogorithms
 
 void graph::basic_djikstra(int start_vertex_index) { // time independent
+    assertm(start_vertex_index >= 0 && start_vertex_index < v_list.size(), "Invalid argument in basic_djikstra : start_vertex_index out of range");
     //initialisation
-    vertex* top = v_list[start_vertex_index];
+    vertex* top = v_list.at(start_vertex_index);
     vertex* neighbour;
     int cost;
     top->time = 0;
@@ -268,7 +295,7 @@ void graph::basic_djikstra(int start_vertex_index) { // time independent
         PQ.pop();
         //on explore ses voisins
         for (unsigned i = 0; i < top->number_neighbour(); i++) {
-            neighbour = top->get_neighbour(i);          
+            neighbour = top->get_neighbour(i);
             cost = top->time + top->cost_of_travel(i); // calcul du cout pour aller chez ce voisin depuis l'origine si le trajet passe par top . Dj basique independant du temps
             if (cost <= neighbour->time) {
                 neighbour->time = cost;
@@ -283,8 +310,9 @@ void graph::basic_djikstra(int start_vertex_index) { // time independent
 }
 
 void graph::time_djikstra(int start_vertex_index, int t) { // time dependent
+    assertm(start_vertex_index >= 0 && start_vertex_index < v_list.size() && t >= 0 && t < 24 * 3600, "Invalid argument in time_djikstra : start_vertex_index or time out of range");
     //initialisation
-    vertex* top = v_list[start_vertex_index];
+    vertex* top = v_list.at(start_vertex_index);
     vertex* neighbour;
     int cost;
     top->time = t;
@@ -312,7 +340,8 @@ void graph::time_djikstra(int start_vertex_index, int t) { // time dependent
     }
 }
 void graph::stop_basic_djikstra(int start_vertex_index, int end_vertex_index){
-    vertex* top = v_list[start_vertex_index];
+    assertm(start_vertex_index >= 0 && start_vertex_index < v_list.size() && end_vertex_index >= 0 && end_vertex_index < v_list.size(), "Invalid argument in stop_basic_djikstra : start_vertex_index or end_vertex_index out of range");
+    vertex* top = v_list.at(start_vertex_index);
     vertex* neighbour;
     int cost;
     top->time = 0;
@@ -341,7 +370,8 @@ void graph::stop_basic_djikstra(int start_vertex_index, int end_vertex_index){
     }
 }
 void graph::stop_time_djikstra(int start_vertex_index, int end_vertex_index, int t ){
-    vertex* top = v_list[start_vertex_index];
+    assertm(start_vertex_index >= 0 && start_vertex_index < v_list.size() && t >= 0 && t < 24 * 3600 && end_vertex_index >= 0 && end_vertex_index < v_list.size(), "Invalid argument in stop_time_djikstra : start_vertex_index or time or end_vertex_index out of range");
+    vertex* top = v_list.at(start_vertex_index);
     vertex* neighbour;
     int cost;
     top->time = t;

@@ -14,12 +14,18 @@ except :
     print("compiled graph library is not installed : please install it with pip install ./compiled_graph")
     exit(2)
 
-exceptions.check_compiled_graph_version("0.0.3")
+exceptions.check_compiled_graph_version("0.0.4")
 
 
 import pandas
 import numpy as np
 import datetime
+
+if os.path.exists(parentdir+"/base_donnee/datas/graph_files")==False:
+    os.makedirs(parentdir+"/base_donnee/datas/graph_files")
+
+if input("Do you want to update graph (15min approx)? y/n ") == "y" :
+    import load_data.data_to_graph_gtfs_2
 
 try :
     print("reading pickle files")
@@ -28,9 +34,9 @@ try :
     PandaDisp=pandas.read_pickle(parentdir+"/base_donnee/datas/graph_files/2gtfs_PandaDisp.pkl")
     PandaC=pandas.read_pickle(parentdir+"/base_donnee/datas/graph_files/2gtfs_Color.pkl")
     PandaEf=pandas.read_pickle(parentdir+"/base_donnee/datas/graph_files/2gtfs_Ef.pkl")
+    station_names=pandas.read_pickle(parentdir+"/base_donnee/datas/graph_files/station_name.pkl").to_list()
 except :
-    print("can't read pickle files, do you want to re-create it ? (15min approx) [y]/n")
-    if input()=="y":
+    if input("can't read pickle files, do you want to re-create graph ? (15min approx) y/n" )=="y":
         import load_data.data_to_graph_gtfs_2
         print("reading pickle files")
         PandaE=pandas.read_pickle(parentdir+"/base_donnee/datas/graph_files/2gtfs_E.pkl")
@@ -38,6 +44,7 @@ except :
         PandaDisp=pandas.read_pickle(parentdir+"/base_donnee/datas/graph_files/2gtfs_PandaDisp.pkl")
         PandaC=pandas.read_pickle(parentdir+"/base_donnee/datas/graph_files/2gtfs_Color.pkl")
         PandaEf=pandas.read_pickle(parentdir+"/base_donnee/datas/graph_files/2gtfs_Ef.pkl")
+        station_names=pandas.read_pickle(parentdir+"/base_donnee/datas/graph_files/station_name.pkl").to_list()
     else :
         exit(2)
 

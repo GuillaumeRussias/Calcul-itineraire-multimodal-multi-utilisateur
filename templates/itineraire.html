@@ -15,33 +15,15 @@
 {% block article%}
 
 <br/>
-
-<div class = container>
-    <div class = row>
-        <div class=col-auto mr-auto>
-            <iframe id="affichage carte"
-                title="Affichage carte"
-                width="600"
-                height="600"
-                src = '/affichagecarteactualisee'>
-            </iframe>
-        </div>
-    
-        <div class=col-auto ml-auto>
-            <p>
-                <p>
-                    Voici votre itinéraire :
-                </p> 
-                {% for gare in feuille_route %}
-                {{gare}} <br/>
-                {% endfor %}
-            </p>   
-        </div>
-    
-    </div>
+<div class="container-fluid bg-dark text-white">
+  <div id="map-container" class="z-depth-1-half map-container" style="height: 500px">
+    <iframe src="/route_display_single_user" frameborder="0"style="border:0" allowfullscreen></iframe>
+  </div>
 </div>
-
-
-
+<div class="container-fluid bg-dark text-white">
+  <div id="map-container" class="z-depth-1-half map-container" style="height: 500px">
+    <iframe src="/route_description_single_user" frameborder="0"style="border:0" allowfullscreen></iframe>
+  </div>
+</div>
 
 {% endblock %}

@@ -1,4 +1,5 @@
 // cppimport
+#undef NDEBUG
 
 //linker
 #include <pybind11/pybind11.h>
@@ -25,7 +26,7 @@ using namespace std;
 const int day = 3600*24; //nombre de secondes en 1 jour
 const int inf = numeric_limits<int>::max();
 
-inline int convert_seconds(const array<char,8> * hhmmss) { //convert array<char,8> = ["0","8",":","5","0",":","0","0"] into an integer equals of equivalent time in seconds 31800
+inline int convert_seconds(const array<char,8> * hhmmss) {//convert array<char,8> = ["0","8",":","5","0",":","0","0"] into an integer equals of equivalent time in seconds 31800
     return 3600 * (10*(int)(*(hhmmss->begin()) - '0') + (int)(*(hhmmss->begin()+1) - '0')) + 60 * (10*(int)(*(hhmmss->begin()+3) - '0') + (int)(*(hhmmss->begin()+4) - '0')) +  (10*(int)(*(hhmmss->begin()+6) - '0') + (int)(*(hhmmss->begin()+7) - '0'));
 }
 
@@ -41,7 +42,7 @@ class edge {
     int selected_mission;  //selected mission (define after cost() or cost(t)) = -1 if mission is not sheduled , index of the departure_time arrival_time selected either
     void mission(int time);//compute the appropriate mission i of this edge (min time_arrival[i]) s.t (time < time departure[i])
 public :
-    edge(int departure_t, int arrival_t, int index); //scheduled constructor
+    edge(int t_departure, int t_arrival, int index); //scheduled constructor
     edge(int cost); //free constructor
 
     void push_time(int t_departure, int t_arrival, int index); //push t_departure, t_arrival

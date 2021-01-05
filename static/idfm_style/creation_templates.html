@@ -1,0 +1,94 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <!-- Required meta tags -->
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <!-- Bootstrap CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta1/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-giJF6kkoqNQ00vy+HMDP7azOuL0xtbfIcaT9wjKHr8RbDVddVHyTfAAsrekwKmP1" crossorigin="anonymous">
+    <link rel="stylesheet" href="idfm_style.css">
+    <title>Hello, world!</title>
+  </head>
+  <body>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta1/dist/js/bootstrap.bundle.min.js" integrity="sha384-ygbV9kiqUc6oa4msXn9868pTtWMgiQaeYH7/t7LECLbyPA2x65Kgf80OJFdroafW" crossorigin="anonymous"></script>
+    <div class="container-fluid idfm">
+      <table>
+        <thead>
+          <tr>
+            <th rowspan="2"><img src="agencies/RER.png" alt="AGENCY" style="width:50px;height:50px;"></th>
+            <th rowspan="2"><img src="lines/RER_B_fc.png" alt="ROUTE_NAME" style="width:50px;height:50px;"></th>
+            <td> <div class="idfm_bold">Saint Rémy lès Chevreuses</div></td>
+            <td> <div class="idfm_bold">Gare du Nord</div></td>
+          </tr>
+          <tr>
+            <td>08:00:00</td>
+            <td>09:00:00</td>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td colspan="3"><div class="idfm_bold">Direction</div>Mitry-Claye</td>
+            <td><div class="idfm_bold">Nombre d'arrêts</div>18</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+    <div class="container-fluid idfm">
+      <table>
+        <thead>
+          <tr>
+            <th rowspan="2"><img src="agencies/BUS.png" alt="AGENCY" style="width:50px;height:50px;"></th>
+            <style>
+            .bus{
+                background-color: green;
+                color : black;
+                text-align: center;
+            }
+            </style>
+            <style>
+            .agency{
+                background-color: #333F48;
+                color : white;
+                text-align: center;
+            }
+            </style>
+            <td rowspan="2">
+              <div class="rounded agency">SKYBUS</div><div class="rounded bus">464</div>
+            </td>
+            <td> <div class="idfm_bold">Saint Rémy lès Chevreuses</div></td>
+            <td> <div class="idfm_bold">Gare du Nord</div></td>
+          </tr>
+          <tr>
+            <td>08:00:00</td>
+            <td>09:00:00</td>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td colspan="3"><div class="idfm_bold">Direction</div>Mitry-Claye</td>
+            <td><div class="idfm_bold">Nombre d'arrêts</div>18</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+    <div class="container-fluid idfm">
+      <table>
+        <thead>
+          <tr>
+            <th colspan="3">Connection Multimodale</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td><img src="agencies/pieton.svg" alt="AGENCY" style="width:60px;height:60px;"></td>
+            <td>depart</td>
+            <td>arrivee</td>
+          </tr>
+          <tr>
+            <td colspan="3">temps de trajet</td>
+          </tr>
+        </tbody>
+    </div>
+    </body>
+</html>
