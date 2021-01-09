@@ -8,7 +8,7 @@ from flask import Flask,render_template,url_for,request,redirect,json
 
 import load_data.load_compiled_graph2 as load_graph
 import display_on_map.Display_geojson as display_geo
-import static.idfm_style.xlsx_to_json
+
 
 
 
@@ -52,11 +52,11 @@ def city_mapper_single_user(request):
     try :
         i = extract_index(origine)
         j = extract_index(destination)
-        path = graph.time_path_finder(i,j,h_debut)
+        path = graph.time_changement_path_finder(i,j,h_debut)
     except Exception as e:
         i = default_origine
         j = default_destination
-        path = graph.time_path_finder(default_origine,default_destination,default_time)
+        path = graph.time_changement_path_finder(default_origine,default_destination,default_time)
         print(e)
 
     print("==============================")

@@ -1,3 +1,6 @@
+""" module which provides tools for automatically download databases"""
+
+
 import io
 import zipfile
 import requests

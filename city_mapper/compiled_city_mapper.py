@@ -35,8 +35,9 @@ while n<1000 :
     j = np.random.randint(low=0, high=load_graph.PandaV["station_name"].size-1)
     i = np.random.randint(low=0, high=load_graph.PandaV["station_name"].size-1)
     h = np.random.randint(low=0, high=3600*24)
-    #i = 29733
-    #j = 1582
+    #i = 32608
+    #j = 27509
+    #h= 8*3600
 
     #i = find_index_station_name("Olympiades")
     #j = find_index_station_name("Mairie de Saint-Ouen")
@@ -52,17 +53,31 @@ while n<1000 :
     print("From",load_graph.PandaV["station_name"][i],"to",load_graph.PandaV["station_name"][j])
     T = time.time()
     try :
-        path = graph.time_path_finder(i,j,h)
+        path = graph.complete_time_changement_path_finder(i,j,h)
         TT = time.time()
         dep = display.seconds_to_hours(graph[path[0]].time())
         arr = display.seconds_to_hours(graph[path[-1]].time())
         print("Departure time =",dep,"| Arrival time =",arr)
         print("temps d'execution :", TT-T,"(s)")
         print("==============================")
+        T = time.time()
+        path2 = graph.complete_time_path_finder(i,j,h)
+        TT = time.time()
+        dep = display.seconds_to_hours(graph[path[0]].time())
+        arr = display.seconds_to_hours(graph[path[-1]].time())
+        print("Departure time =",dep,"| Arrival time =",arr)
+        print("temps d'execution :", TT-T,"(s)")
+        print("==============================")
+        """for i in range(len(path)-1):
+            graph[path[i]][path[i+1]].print_missions()
+            print(graph[path[i]][path[i+1]].get_selected_trip_id())
+            print("===============")"""
     except :
         TT = time.time()
         print("path not found")
         print("temps d'execution :", TT-T,"(s)")
+
+
 
 
 
@@ -77,13 +92,15 @@ while n<1000 :
 
     #map = display.plot_traject(FoliumMap = map , VertexData = load_graph.PandaV , EdgeData = load_graph.PandaE , DisplayFer = load_graph.PandaDisp_edges , DisplayBus = load_graph.PandaDisp_edgesBus , LineData = load_graph.PandaC, Path = path , CompiledGraph = graph )
     #map = display.plot_traject2(FoliumMap = map , VertexData = load_graph.PandaV , EdgeData = load_graph.PandaE , Display = load_graph.PandaDisp ,LineData = load_graph.PandaC, Path = path , CompiledGraph = graph )
-
-    geo_features = geo.geojson_traject(VertexData = load_graph.PandaV , EdgeData = load_graph.PandaE , Display = load_graph.PandaDisp ,LineData = load_graph.PandaC, Path = path , CompiledGraph = graph )
-    a=geojson.dumps(geo_features)
-    file = open("result_city_mapper.js","w")
-    file.write("var traject = ")
-    file.write(a)
-    file.close()
+    try :
+        geo_features = geo.geojson_traject(VertexData = load_graph.PandaV , EdgeData = load_graph.PandaE , Display = load_graph.PandaDisp ,LineData = load_graph.PandaC, Path = path , CompiledGraph = graph )
+        a=geojson.dumps(geo_features)
+        file = open("result_city_mapper.js","w")
+        file.write("var traject = ")
+        file.write(a)
+        file.close()
+    except:
+        "no path found"
     n+=1
     input()
 

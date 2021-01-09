@@ -4,6 +4,7 @@ atom.bat
 debug_javascript.html
 menutest.html
 *.ai
+base_donnee/datas
 
 
 # Byte-compiled / optimized / DLL files
