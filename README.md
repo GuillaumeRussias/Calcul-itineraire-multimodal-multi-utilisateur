@@ -4,7 +4,8 @@
 Ce projet a pour but de développer une application web capable de calculer des itinéraires multimodaux afin de faciliter les déplacements impliquant plusieurs utilisateurs.
 
 ##### Instructions d'installation
-Le site en question est pour le moment développé en interne, afin de le lancer il faut installer les packages nécessaires en exécutant la commande `pip install -r requirements.txt` à la racine du projet. Il est aussi nécessaire de **compiler le code en C++ :**
+Le site en question est pour le moment développé en interne.
+Dans un environnement contenant `3.8.0 <= python < 3.9.0` , installer les packages nécessaires avec la commande `pip install -r requirements.txt` à la racine du projet. Il est aussi nécessaire de **compiler le code en C++ :**
 - (1)
     - **Sur windows** : télécharger au préalable le compilateur msvc : [lien de téléchargement](https://visualstudio.microsoft.com/fr/visual-cpp-build-tools/)  (laisser toutes les instructions par défaut).
     - **Sur mac et linux** : aller directement étape (2).
