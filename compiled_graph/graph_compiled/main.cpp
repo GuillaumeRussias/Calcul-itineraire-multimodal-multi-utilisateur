@@ -33,6 +33,7 @@ PYBIND11_MODULE(fast_graph, m){
             .def("time_path_finder",&graph::path_finder_time)
             .def("complete_basic_path_finder", &graph::complete_path_finder)
             .def("complete_time_path_finder", &graph::complete_path_finder_time)
+            .def("multi_users_dijkstra", &graph::multi_users_dijkstra)
 
 
         ;

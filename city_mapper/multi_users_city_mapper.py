@@ -24,22 +24,35 @@ def find_index_station_name(name,PandaV=load_graph.PandaV):
 print("building graph")
 graph = load_graph.load_graph()
 
-"""j = np.random.randint(low=0, high=load_graph.PandaV["station_name"].size-1)
-i = np.random.randint(low=0, high=load_graph.PandaV["station_name"].size-1)"""
+#N utilisateurs
 
-i = 15189
-j = 6100
+N = 2
+
+start_indexes = np.zeros((N,), dtype=int)
+for i in range (N):
+    start_indexes[i] = np.random.randint(low=0, high=load_graph.PandaV["station_name"].size-1)
+    print(start_indexes[i])
+
 
 print("applying path finder")
 
+best_end_index = graph.multi_users_dijkstra(start_indexes,heure_debut)
 
-path = graph.time_path_finder(i,j,heure_debut)
+print(best_end_index)
+
+print(graph.time_path_finder(15189,6120,heure_debut))
+
+"""path = np.zeros(N)
+for i in range(N):
+    path[i] = graph.time_path_finder(start_indexes[i],best_end_index,heure_debut)
 
 print("==============================")
-print("From",load_graph.PandaV["station_name"][i],"to",load_graph.PandaV["station_name"][j])
-dep = display.seconds_to_hours(graph[path[0]].time())
-arr = display.seconds_to_hours(graph[path[-1]].time())
-print("Departure time =",dep,"| Arrival time =",arr)
+for i in range (N):
+    print("From",load_graph.PandaV["station_name"][i],"to",load_graph.PandaV["station_name"][best_end_index])
+    dep = display.seconds_to_hours(graph[path[i][0]].time())
+    arr = display.seconds_to_hours(graph[path[i][-1]].time())
+    print("Departure time =",dep,"| Arrival time =",arr)
+    print("------")
 print("==============================")
 
 map = folium.Map(
@@ -57,4 +70,4 @@ if __name__ == '__main__':
     @app2.route('/')
     def plot_on_web():
         return map._repr_html_()
-    app2.run(debug=False)
+    app2.run(debug=False)"""

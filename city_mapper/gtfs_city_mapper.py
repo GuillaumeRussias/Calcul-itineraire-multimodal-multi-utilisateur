@@ -6,7 +6,7 @@ sys.path.insert(0, parentdir)
 
 
 
-import load_data.load_gtfs_graph as load_gtfs_graph
+import load_data.load_compiled_graph2 as load_gtfs_graph
 import display_on_map.Display_gtfs as Display_gtfs
 import folium
 import flask
@@ -22,10 +22,12 @@ def find_index_station_name(name,PandaV=PandaV,):
     research=PandaV[PandaV["station_name"].map(lambda c:c==name)]
     return research.index[0]
 
-i = find_index_station_name("LYCEE MONOD")
+"""i = find_index_station_name("LYCEE MONOD")
 j = find_index_station_name("Gare de Versailles Chantiers Gare Routière")
-h = find_index_station_name("Hauts de Chevreuse")
+h = find_index_station_name("Hauts de Chevreuse")"""
 
+j = 6100
+h = 15189
 
 path=nx.shortest_path(Graph,source=h,target=j,weight="weight")
 

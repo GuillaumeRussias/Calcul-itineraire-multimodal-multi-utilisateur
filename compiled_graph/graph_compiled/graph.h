@@ -111,8 +111,10 @@ public :
     vertex* operator[](int i); //safe access to the ith vertex of the graph !return_value_policy::reference! we want c++ to be in charge of the destruction of this object
     void initialised(); //set all (visited,time) at (false,inf)
 
+
     //algorithms : carefull : graph needs to be re-initialised (visited, time) after the execution of these 4 algorithms
     void basic_djikstra(int start_vertex_index); //basic djikstra
+    int multi_users_dijkstra(py::array_t<int> start_indexes,int t); //Dijkstra plusieurs utilisateurs, renvoie le somme d'arrivée optimal
     void time_djikstra(int start_vertex_index, int t); //time dependant djikstra
     void stop_basic_djikstra(int start_vertex_index, int end_vertex_index); //basic djikstra , with stop condition
     void stop_time_djikstra(int start_vertex_index, int end_vertex_index, int t); //time dependant djikstra , with stop condition
