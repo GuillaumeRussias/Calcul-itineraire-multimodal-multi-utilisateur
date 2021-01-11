@@ -35,13 +35,10 @@ PYBIND11_MODULE(fast_graph, m){
             .def("time_path_finder",&graph::path_finder_time)
             .def("complete_basic_path_finder", &graph::complete_path_finder)
             .def("complete_time_path_finder", &graph::complete_path_finder_time)
-<<<<<<< HEAD
             .def("multi_users_dijkstra", &graph::multi_users_dijkstra)
-=======
             .def("complete_time_changement_path_finder", &graph::complete_path_finder_time_changement)
             .def("time_changement_path_finder", &graph::path_finder_time_changement)
 
->>>>>>> 8030c28c0eb1f27bbb8f74ca1a32655867a0a4e5
 
 
         ;

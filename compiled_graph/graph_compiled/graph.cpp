@@ -406,7 +406,6 @@ void graph::time_djikstra(int start_vertex_index, int t) { // time dependent
         }
     }
 }
-<<<<<<< HEAD
 
 int graph::multi_users_dijkstra(py::array_t<int> start_indexes,int t){ //en entrée un vecteur contenant l'indice de début de chaque utilisateur ainsi que l'heure
     vector<int> cost_sum(v_list.size(),0);
@@ -422,7 +421,6 @@ int graph::multi_users_dijkstra(py::array_t<int> start_indexes,int t){ //en entr
     return best_end_vertex_index;
 }
 
-=======
 void graph::time_changements_djikstra(int start_vertex_index, int t){
   assertm(start_vertex_index >= 0 && start_vertex_index < v_list.size() && t >= 0 && t < 24 * 3600, "Invalid argument in time_djikstra : start_vertex_index or time out of range");
   //initialisation
@@ -458,7 +456,6 @@ void graph::time_changements_djikstra(int start_vertex_index, int t){
       }
   }
 }
->>>>>>> 8030c28c0eb1f27bbb8f74ca1a32655867a0a4e5
 void graph::stop_basic_djikstra(int start_vertex_index, int end_vertex_index){
     assertm(start_vertex_index >= 0 && start_vertex_index < v_list.size() && end_vertex_index >= 0 && end_vertex_index < v_list.size(), "Invalid argument in stop_basic_djikstra : start_vertex_index or end_vertex_index out of range");
     vertex* top = v_list.at(start_vertex_index);
