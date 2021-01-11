@@ -21,21 +21,23 @@
     <div class="autocomplete" style="width:300px;">
         <i class="fas fa-search" aria-hidden="true"></i>
         <label for="origine"></label><input class="form-control form-control-sm ml-3 w-75" type="text" name="origine" placeholder="Vous êtes" aria-label="Search" id="Search">
-        <div><br/></div>
-        <label for="destination"></label><input class="form-control form-control-sm ml-3 w-75" type="text" name="destination" placeholder="Vous allez" aria-label="Search" id="Search_2">      
+        <div><br></div>
+        <div class="timepicker">
+        <label for="time"></label><input class="form-control form-control-sm ml-3 w-75" name="time" placeholder="hh:mm" type="text" id=time_departure></input>
+        </div>
+        <div><br></div>
+        <label for="destination"></label><input class="form-control form-control-sm ml-3 w-75" type="text" name="destination" placeholder="Vous allez" aria-label="Search" id="Search_2">
     </div>
-
     <input type="submit" value="Envoyer" />
 </form>
 
 <br><br/>
 
-<iframe id="affichage carte"
-    title="Affichage carte"
-    width="600"
-    height="600"
-    src = '/affichagecarte'>
-</iframe>
+<div class="container-fluid bg-dark text-white">
+  <div id="map-container" class="z-depth-1-half map-container" style="height: 500px">
+    <iframe src="/affichagecarte" frameborder="0"style="border:0" allowfullscreen></iframe>
+  </div>
+</div>
 
 
 {% endblock %}

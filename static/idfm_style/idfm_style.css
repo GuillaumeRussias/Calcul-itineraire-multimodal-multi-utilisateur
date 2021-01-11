@@ -1,0 +1,31 @@
+@font-face {font-family: IDFVoyageur; font-weight: bold;src: url("polices/IDFVoyageur-Bold.otf") format("opentype");}
+@font-face {font-family: IDFVoyageur; font-weight: medium;src: url("polices/IDFVoyageur-Medium.otf") format("opentype");}
+@font-face {font-family: IDFVoyageur; font-weight: regular;src: url("polices/IDFVoyageur-Regular.otf") format("opentype");}
+
+
+.idfm{
+  background-color : #FFFFFF;
+  font-family : IDFVoyageur;
+  font-weight : regular;
+}
+
+.idfm_bold{
+  background-color : #FFFFFF;
+  font-family : IDFVoyageur;
+  font-weight : bold;
+}
+
+.agency{
+    background-color: #333F48;
+    color : white;
+    text-align: center;
+}
+.dark_idfm{
+  background-color : #333F48;
+  font-family : IDFVoyageur;
+  color : #FFFFFF;
+}
+
+td,th {
+  padding: 3px;
+}

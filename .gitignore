@@ -1,19 +1,11 @@
-base_donnee/datas/IDFM_gtfs/agency.txt
-base_donnee/datas/IDFM_gtfs/calendar.txt
-base_donnee/datas/IDFM_gtfs/calendar_dates.txt
-base_donnee/datas/IDFM_gtfs/routes.txt
-base_donnee/datas/IDFM_gtfs/stop_extensions.txt
-base_donnee/datas/IDFM_gtfs/stop_times.txt
-base_donnee/datas/IDFM_gtfs/stops.txt
-base_donnee/datas/IDFM_gtfs/transfers.txt
-base_donnee/datas/IDFM_gtfs/trips.txt
 compiled_graph/.vs
 compiled_graph/CppProperties.json
-base_donnee/datas/graph_files/gtfs_Color.xlsx
-base_donnee/datas/graph_files/gtfs_Disp.xlsx
-base_donnee/datas/graph_files/gtfs_E.xlsx
-base_donnee/datas/graph_files/gtfs_Ef.xlsx
-base_donnee/datas/graph_files/gtfs_V.xlsx
+atom.bat
+debug_javascript.html
+menutest.html
+*.ai
+base_donnee/datas
+
 
 # Byte-compiled / optimized / DLL files
 __pycache__/
