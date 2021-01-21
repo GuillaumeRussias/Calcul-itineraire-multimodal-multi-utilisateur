@@ -77,11 +77,6 @@ def create_geojson_file(path):
 
 
 
-
-
-
-
-
 # Affichage des résultats d'une recherche
 @app.route('/affichagecarte/')
 def affiche():
@@ -106,9 +101,6 @@ def render_geojson_single_user():
 def affichagereseaRER():
     return render_template("reseauRER.html")
 
-@app.route('/affichagereseauBus')
-def affichagereseauBus():
-    return render_template("reseauBus.html")
 
 
 # Onglets de la barre de navigation
@@ -133,10 +125,6 @@ def carte():
         path = city_mapper_single_user(request)
         create_geojson_file(path)
         return redirect(url_for ('itineraire'))
-
-
-
-
 
 
 if __name__ == "__main__":

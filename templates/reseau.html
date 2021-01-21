@@ -14,33 +14,10 @@
 
 {% block article%}
 
-<div class="row">
-    <div class="col-4">
-      <div class="list-group" id="list-tab" role="tablist">
-        <a class="list-group-item list-group-item-action active" id="list-rer-list" data-toggle="list" href="#list-rer" role="tab" aria-controls="rer">Métro & RER</a>
-        <a class="list-group-item list-group-item-action" id="list-bus-list" data-toggle="list" href="#list-bus" role="tab" aria-controls="bus">Bus</a>
-      </div>
-    </div>
-    <div class="col-8">
-      <div class="tab-content" id="nav-tabContent">
-        <div class="tab-pane fade show active" id="list-rer" role="tabpanel" aria-labelledby="list-rer-list">
-            <iframe id="affichage carte"
-                title="Affichage carte"
-                width="600"
-                height="600"
-                src = '/affichagereseauRER'>
-            </iframe>
-        </div>
-        <div class="tab-pane fade" id="list-bus" role="tabpanel" aria-labelledby="list-bus-list">
-            <iframe id="affichage carte"
-                title="Affichage carte"
-                width="600"
-                height="600"
-                src = '/affichagereseauBus'>
-            </iframe>
-        </div>
-      </div>
-    </div>
+<div class="container-fluid bg-dark text-white">
+  <div id="map-container" class="z-depth-1-half map-container" style="height: 500px">
+    <iframe src="/affichagereseauRER" frameborder="0"style="border:0" allowfullscreen></iframe>
   </div>
+</div>
 
 {% endblock %}

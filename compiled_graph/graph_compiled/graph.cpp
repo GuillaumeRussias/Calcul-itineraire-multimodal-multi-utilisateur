@@ -346,7 +346,9 @@ void graph::initialised(){
 //alogorithms
 
 void graph::basic_djikstra(int start_vertex_index) { // time independent
-    assertm(start_vertex_index >= 0 && start_vertex_index < v_list.size(), "Invalid argument in basic_djikstra : start_vertex_index out of range");
+    if ((start_vertex_index >= 0 && start_vertex_index < v_list.size()) == false) {
+        throw invalid_argument("Invalid argument in basic_djikstra : start_vertex_index out of range");
+    }
     //initialisation
     vertex* top = v_list.at(start_vertex_index);
     vertex* neighbour;
@@ -377,7 +379,9 @@ void graph::basic_djikstra(int start_vertex_index) { // time independent
 }
 
 void graph::time_djikstra(int start_vertex_index, int t) { // time dependent
-    assertm(start_vertex_index >= 0 && start_vertex_index < v_list.size() && t >= 0 && t < 24 * 3600, "Invalid argument in time_djikstra : start_vertex_index or time out of range");
+    if ((start_vertex_index >= 0 && start_vertex_index < v_list.size() && t >= 0 && t < 24 * 3600) == false) {
+        throw invalid_argument("Invalid argument in time_djikstra : start_vertex_index or time out of range");
+    }
     //initialisation
     vertex* top = v_list.at(start_vertex_index);
     vertex* neighbour;
@@ -422,7 +426,9 @@ int graph::multi_users_dijkstra(py::array_t<int> start_indexes,int t){ //en entr
 }
 
 void graph::time_changements_djikstra(int start_vertex_index, int t){
-  assertm(start_vertex_index >= 0 && start_vertex_index < v_list.size() && t >= 0 && t < 24 * 3600, "Invalid argument in time_djikstra : start_vertex_index or time out of range");
+  if ((start_vertex_index >= 0 && start_vertex_index < v_list.size() && t >= 0 && t < 24 * 3600) == false) {
+        throw invalid_argument("Invalid argument in time_djikstra : start_vertex_index or time out of range");
+  }
   //initialisation
   vertex* top = v_list.at(start_vertex_index);
   vertex* neighbour;
@@ -457,7 +463,9 @@ void graph::time_changements_djikstra(int start_vertex_index, int t){
   }
 }
 void graph::stop_basic_djikstra(int start_vertex_index, int end_vertex_index){
-    assertm(start_vertex_index >= 0 && start_vertex_index < v_list.size() && end_vertex_index >= 0 && end_vertex_index < v_list.size(), "Invalid argument in stop_basic_djikstra : start_vertex_index or end_vertex_index out of range");
+    if ((start_vertex_index >= 0 && start_vertex_index < v_list.size() && end_vertex_index >= 0 && end_vertex_index < v_list.size()) == false) {
+        throw invalid_argument("Invalid argument in stop_basic_djikstra : start_vertex_index or end_vertex_index out of range");
+    }
     vertex* top = v_list.at(start_vertex_index);
     vertex* neighbour;
     int cost;
@@ -487,7 +495,9 @@ void graph::stop_basic_djikstra(int start_vertex_index, int end_vertex_index){
     }
 }
 void graph::stop_time_djikstra(int start_vertex_index, int end_vertex_index, int t ){
-    assertm(start_vertex_index >= 0 && start_vertex_index < v_list.size() && t >= 0 && t < 24 * 3600 && end_vertex_index >= 0 && end_vertex_index < v_list.size(), "Invalid argument in stop_time_djikstra : start_vertex_index or time or end_vertex_index out of range");
+    if ((start_vertex_index >= 0 && start_vertex_index < v_list.size() && t >= 0 && t < 24 * 3600 && end_vertex_index >= 0 && end_vertex_index < v_list.size()) == false) {
+        throw invalid_argument("Invalid argument in stop_time_djikstra : start_vertex_index or time or end_vertex_index out of range");
+    }
     vertex* top = v_list.at(start_vertex_index);
     vertex* neighbour;
     int cost;
@@ -516,7 +526,9 @@ void graph::stop_time_djikstra(int start_vertex_index, int end_vertex_index, int
     }
 }
 void graph::stop_time_changements_djikstra(int start_vertex_index, int end_vertex_index, int t) {
-    assertm(start_vertex_index >= 0 && start_vertex_index < v_list.size() && t >= 0 && t < 24 * 3600, "Invalid argument in time_djikstra : start_vertex_index or time out of range");
+    if ((start_vertex_index >= 0 && start_vertex_index < v_list.size() && t >= 0 && t < 24 * 3600 && end_vertex_index >= 0 && end_vertex_index < v_list.size()) == false) {
+        throw invalid_argument("Invalid argument in stop_time_djikstra : start_vertex_index or time or end_vertex_index out of range");
+    }
     //initialisation
     vertex* top = v_list.at(start_vertex_index);
     vertex* neighbour;

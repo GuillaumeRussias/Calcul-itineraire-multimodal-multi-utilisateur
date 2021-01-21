@@ -1,3 +1,6 @@
+
+#DEPRECIATED - not used by final programm
+
 import folium
 import time
 import numpy as np

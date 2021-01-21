@@ -172,6 +172,13 @@ def link_PandaE_with_disp_edges(PandaE,PandaV,referenciel_des_lignes,trace_bus,t
     return  PandaE , displayable_edges
 
 
+def without_accent(string):
+    """withdraw ' from a string and replace it by a space """
+    string = list(string)
+    for i in range(len(string)) :
+        if string[i]=="'":
+            string[i]=" "
+    return "".join(string)
 
 
 
@@ -222,11 +229,11 @@ def Graph_files_creator(agencies,date_creation,bool_excel = False,bool_pickle = 
 
     print("exporting station name in excel format")
     PandaV["station_name"] = PandaV["station_name"] + " / " + PandaV.index.map(str)
-    PandaV = PandaV["station_name"]
+    PandaV = PandaV["station_name"].map(lambda c: without_accent(c))
     if (bool_pickle):
         PandaV.to_pickle(parentdir+"/base_donnee/datas/graph_files/station_name.pkl")
     PandaV.to_excel(parentdir+"/base_donnee/datas/graph_files/station_name.xlsx")
 
 
 Graph_files_creator(["ALL"],datetime.datetime.now())
-#Graph_files_creator(["METRO"],datetime.datetime.now())
+

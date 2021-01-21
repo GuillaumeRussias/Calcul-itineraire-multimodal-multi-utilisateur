@@ -4,6 +4,7 @@ atom.bat
 debug_javascript.html
 menutest.html
 *.ai
+.vscode
 base_donnee/datas
 
 
