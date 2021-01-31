@@ -14,7 +14,7 @@ except :
     print("compiled graph library is not installed : please install it with pip install ./compiled_graph")
     exit(2)
 
-exceptions.check_compiled_graph_version("0.0.5")
+exceptions.check_compiled_graph_version("0.0.6")
 
 
 import pandas

@@ -6,6 +6,7 @@ menutest.html
 *.ai
 .vscode
 base_donnee/datas
+geojson/*.js
 
 
 # Byte-compiled / optimized / DLL files

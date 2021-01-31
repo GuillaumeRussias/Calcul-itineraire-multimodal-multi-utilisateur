@@ -8,6 +8,7 @@ from flask import Flask,render_template,url_for,request,redirect,json
 
 import load_data.load_compiled_graph2 as load_graph
 import display_on_map.Display_geojson as display_geo
+import numpy as np
 
 
 
@@ -33,7 +34,6 @@ def extract_index(gare_name):
     return index
 
 def time_to_sec(time):
-    print(time,type(time))
     try :
         time=time.split(":")
         time = int(time[0])*3600 + int(time[1])*60
@@ -66,14 +66,67 @@ def city_mapper_single_user(request):
     arr = display_geo.seconds_to_hours(graph[path[-1]].time())
     print("Departure time =",dep,"| Arrival time =",arr)
     print("==============================")
-
     return path
+
+def create_geojson_file_custom(path,name):
+    display_geo.create_geojson_file(VertexData = load_graph.PandaV , EdgeData = load_graph.PandaE , Display = load_graph.PandaDisp ,LineData = load_graph.PandaC, Path = path , CompiledGraph = graph , file_path = currentdir + "/templates/geojson/"+name+".js")
 
 def create_geojson_file(path):
     try :
         display_geo.create_geojson_file(VertexData = load_graph.PandaV , EdgeData = load_graph.PandaE , Display = load_graph.PandaDisp ,LineData = load_graph.PandaC, Path = path , CompiledGraph = graph , file_path = currentdir + "/templates/geojson/geojson_singleuser.js")
     except :
         print("path not displayable")
+
+class requete :
+    #pour utiliser city mapper single user depuis multi_user
+    def __init__(self,dict):
+        self.form = dict
+
+
+def city_mapper_arrival_time(start,end,arrival_time):
+    max = 3600*24
+    min = 0
+    Tmid = np.inf
+    iter = 0
+    while (abs(Tmid - arrival_time)>15*60 and iter<=10):
+        mid = (max+min)//2
+        path = graph.time_changement_path_finder(start,end,mid)
+        Tmid = graph[path[-1]].time()%(3600*24)
+        #print(iter,display_geo.seconds_to_hours(Tmid),display_geo.seconds_to_hours(min),display_geo.seconds_to_hours(max))
+        if Tmid>arrival_time :
+            max = mid
+        else:
+            min = mid
+        iter+=1
+    print("==============================")
+    print("asked arrival time",display_geo.seconds_to_hours(arrival_time))
+    print(start,end)
+    print("From",load_graph.PandaV["station_name"][start],"to",load_graph.PandaV["station_name"][end])
+    dep = display_geo.seconds_to_hours(graph[path[0]].time())
+    arr = display_geo.seconds_to_hours(graph[path[-1]].time())
+    print("Departure time =",dep,"| Arrival time =",arr)
+    print("==============================")
+    return path
+
+
+def city_mapper_multi_user(request,n_users,start_time):
+    start_points = np.array([extract_index(request.form[f"{i}"]) for i in range(int(n_users))])
+    h_debut = time_to_sec(start_time)
+    destination = graph.multi_users_dijkstra(start_points,h_debut)
+    print("==================================================================")
+    print(start_points)
+    print("Meeting point" , load_graph.PandaV["station_name"][destination])
+    dict = {}
+    for i in range(int(n_users)):
+        """dict["origine"] = " / "+str(start_points[i])
+        dict["destination"] = " / "+str(destination)
+        dict["time"] = start_time
+        r = requete(dict)"""
+        path = city_mapper_arrival_time(start_points[i],destination,h_debut)
+        create_geojson_file_custom(path,"meeting_point_"+str(i))
+    print("==================================================================")
+
+
 
 
 
@@ -96,11 +149,23 @@ def render_geojson_single_user():
 
 
 
+#Affichage multi-users
+@app.route('/route_display/<user>')
+def route_display_user(user):
+    return render_template("route_display.html", geojson_url = "/meeting_point_"+str(user))
+
+@app.route('/route_description/<user>')
+def route_description_user(user):
+    return render_template("route_info_display.html", geojson_url = "/meeting_point_"+str(user))
+
+@app.route('/meeting_point_<user>')
+def render_geojson_multi_user(user):
+    return render_template("geojson/meeting_point_"+str(user)+".js")
+
 # Affichage des différents plans de réseaux (RER & métro ou Bus)
 @app.route('/affichagereseauRER')
 def affichagereseaRER():
     return render_template("reseauRER.html")
-
 
 
 # Onglets de la barre de navigation
@@ -113,9 +178,31 @@ def accueil():
 def itineraire():
     return render_template("itineraire.html")
 
+
+@app.route('/meeting_point_traject/<n_users>')
+def meeting_point_itineraire(n_users):
+    return render_template("meeting_point_itineraire.html",n=int(n_users))
+
 @app.route('/reseau/')
 def reseau():
     return render_template("reseau.html")
+
+@app.route('/meeting_point/',methods=['GET','POST'])
+def meeting_point_1():
+    if request.method == "GET":
+        return render_template("meeting_point1.html")
+    if request.method == 'POST':
+        n_users = request.form["n_users"]
+        time = request.form["time"]
+        return redirect(f"/meeting_point_2/{n_users}/{time}")
+
+@app.route('/meeting_point_2/<n_users>/<time>',methods=['GET','POST'])
+def meeting_point_2(n_users,time):
+    if request.method == "GET":
+        return render_template("meeting_point2.html",n=int(n_users),liste_stations = json.dumps(load_graph.station_names))
+    if request.method == 'POST':
+        city_mapper_multi_user(request,n_users,time)
+        return redirect(f"/meeting_point_traject/{n_users}")
 
 @app.route('/carte/', methods=['GET', 'POST'])
 def carte():

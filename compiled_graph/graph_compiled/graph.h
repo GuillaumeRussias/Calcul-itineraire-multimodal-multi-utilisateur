@@ -132,7 +132,7 @@ public :
 
     //algorithms : carefull : graph needs to be re-initialised (visited, time) after the execution of these 4 algorithms
     void basic_djikstra(int start_vertex_index); //basic djikstra
-    int multi_users_dijkstra(py::array_t<int> start_indexes,int t); //Dijkstra plusieurs utilisateurs, renvoie le somme d'arrivée optimal
+    int multi_users_dijkstra(py::array_t<int> start_indexes,int t); //Dijkstra plusieurs utilisateurs, renvoie l'indice du sommet d'arrivée optimal
     void time_djikstra(int start_vertex_index, int t); //time dependant djikstra
     void stop_basic_djikstra(int start_vertex_index, int end_vertex_index); //basic djikstra , with stop condition
     void stop_time_djikstra(int start_vertex_index, int end_vertex_index, int t); //time dependant djikstra , with stop condition

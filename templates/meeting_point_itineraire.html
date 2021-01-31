@@ -1,0 +1,36 @@
+{% extends "squelette.html" %}
+
+{% block nav%}
+<div class="navbar-nav">
+    <a class="nav-link" href="/accueil">Accueil</a>
+</div>
+<div class="navbar-nav">
+    <a class="nav-link" href="/carte">Carte</a>
+</div>
+<div class="navbar-nav">
+    <a class="nav-link" href="/meeting_point">Point de rencontre</a>
+</div>
+<div class="navbar-nav">
+    <a class="nav-link" href="/reseau">Plans du réseau</a>
+</div>
+{% endblock %}
+
+{% block article%}
+
+{% for i in range(n)%}
+<br/>
+<legend>Utilisateur {{i+1}}</legend>
+<div class="row bg-dark text-white">
+  <div class="col bg-dark text-white" style="width: 60%">
+      <div id="map-container" class="z-depth-1-half map-container" style="height: 500px">
+        <iframe src="/route_display/{{i}}" frameborder="0"style="border:0" allowfullscreen></iframe>
+      </div>
+  </div>
+  <div class="col bg-dark text-white" style="width: 40%">
+      <div id="map-container" class="z-depth-1-half map-container" style="height: 500px">
+        <iframe src="/route_description/{{i}}" frameborder="0"style="border:0" allowfullscreen></iframe>
+      </div>
+  </div>
+</div>
+{%endfor%}
+{% endblock %}

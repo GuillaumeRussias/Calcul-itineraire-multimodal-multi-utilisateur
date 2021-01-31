@@ -8,6 +8,9 @@
     <a class="nav-link" href="/carte">Carte</a>
 </div>
 <div class="navbar-nav">
+    <a class="nav-link" href="/meeting_point">Point de rencontre</a>
+</div>
+<div class="navbar-nav">
     <a class="nav-link" href="/reseau">Plans du réseau</a>
 </div>
 {% endblock %}
@@ -29,7 +32,7 @@
                 </a>
             </button>
           </p>
-          <img src={{ url_for('static', filename='bandeau.png') }} alt="bandeau" /></a>    
+          <img src={{ url_for('static', filename='bandeau.png') }} alt="bandeau" /></a>
         </div>
     </section>
 </div>
@@ -41,7 +44,7 @@
     A quoi sert ce site ?
 </h1>
 <p>Il a pour but de <span class="surligner">faciliter</span> les déplacements impliquant plusieurs utilisateurs.</p>
-<p>                       
+<p>
     Vous trouverez deux fonctionnalités : <br/>
     <ul>
         <li>Déterminer l'endroit (ex. un cinéma) le plus pratique pour tous les participants et l'itinéraire de chaque participant vers cet endroit.</li>
@@ -49,5 +52,3 @@
     </ul>
 </p>
 {% endblock %}
-
-

@@ -412,11 +412,12 @@ void graph::time_djikstra(int start_vertex_index, int t) { // time dependent
 }
 
 int graph::multi_users_dijkstra(py::array_t<int> start_indexes,int t){ //en entrée un vecteur contenant l'indice de début de chaque utilisateur ainsi que l'heure
-    vector<int> cost_sum(v_list.size(),0);
+    vector<int> cost_sum(v_list.size(),inf);
     auto start = start_indexes.unchecked<1>();
     //On applique time_dijkstra à tous les utilisateurs et on remplit le vecteur cost_sum
     for (int i = 0 ; i < start.shape(0) ; i++){
-        time_djikstra(start[i],t);
+        initialised();
+        time_djikstra(int(start[i]),t);
         for (int j = 0 ; j < v_list.size() ; j++){
             cost_sum[j] = cost_sum[j] + v_list[j]->time;
         }
