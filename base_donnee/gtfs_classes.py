@@ -80,27 +80,42 @@ class gtfs:
 
 def import_gtfs(ADRESS):
     """ load in DATA dictionnary all gtfs and idfm files"""
-    DATA={"agency":gtfs(adress=ADRESS["agency"]),
+    DATA={
+    "agency":gtfs(adress=ADRESS["agency"]),
     "calendar_dates":gtfs(adress=ADRESS["calendar_dates"]),
     "calendar":gtfs(adress=ADRESS["calendar"]),
     "routes":gtfs(adress=ADRESS["routes"]),
-    "stop_extensions":gtfs(adress=ADRESS["stop_extensions"]),
     "stop_times":gtfs(adress=ADRESS["stop_times"]),
     "stops":gtfs(adress=ADRESS["stops"]),
     "transfers":gtfs(adress=ADRESS["transfers"]),
     "trips":gtfs(adress=ADRESS["trips"],low_memory=False),
-    "reflex":gtfs(adress=ADRESS["reflex"],separator="|"),
-    "trace_fer":gtfs(adress=ADRESS["trace_fer"],separator=";"),
-    "trace_bus":gtfs(adress=ADRESS["trace_bus"],separator=";"),
-    "ref_lig":gtfs(adress=ADRESS["ref_lig"],separator=";")
     }
+    try :
+        DATA["trace_fer"]=gtfs(adress=ADRESS["trace_fer"],separator=";")
+        DATA["trace_bus"]=gtfs(adress=ADRESS["trace_bus"],separator=";")
+        DATA["ref_lig"]=gtfs(adress=ADRESS["ref_lig"],separator=";")
+        DATA["stop_extensions"]=gtfs(adress=ADRESS["stop_extensions"])
+    except :
+        print("une erreur est detectee dans l'importation des bases non essentielles")
+        DATA["trace_fer"]=gtfs(df=pandas.DataFrame())
+        DATA["trace_bus"]=gtfs(df=pandas.DataFrame())
+        DATA["ref_lig"]=gtfs(df=pandas.DataFrame())
+        DATA["stop_extensions"]=gtfs(df=pandas.DataFrame())
+    try :
+        DATA["reflex"]= gtfs(adress=ADRESS["reflex"],separator="|")
+    except :
+        print("erreur reflex fichier corrompu")
+        DATA["reflex"]= gtfs(df=pandas.DataFrame())
+
     return DATA
 
 
 print("Importing gtfs datas")
+bool_other_data = False #NYC
 bool_gtfs = input("Do you want to (re-)download gtfs ? y/n ")=="y"
 #succes = downloader.download_check(downloader.force_download(gtfs=bool_gtfs,ref_lig=bool_gtfs,trace=False,reflex=False))
-succes = downloader.download_check(downloader.force_download(gtfs=bool_gtfs,ref_lig=bool_gtfs,trace=bool_gtfs,reflex=bool_gtfs))
+if bool_other_data==False :
+    succes = downloader.download_check(downloader.force_download(gtfs=bool_gtfs,ref_lig=bool_gtfs,trace=bool_gtfs,reflex=bool_gtfs))
 if succes == False :
     print("Download Failure")
     exit(2)

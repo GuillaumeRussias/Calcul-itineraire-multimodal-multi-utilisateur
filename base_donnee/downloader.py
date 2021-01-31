@@ -14,7 +14,6 @@ URL={
 "trace_bus":"https://data.iledefrance-mobilites.fr/explore/dataset/bus_lignes/download/?format=csv&timezone=Europe/Berlin&lang=fr&use_labels_for_header=true&csv_separator=%3B",
 "reflex_key":"https://data.iledefrance-mobilites.fr/explore/dataset/referentiel-arret-tc-idf/download/?format=csv&timezone=Europe/Berlin&lang=fr&use_labels_for_header=true&csv_separator=%3B",
 }
-
 currentdir = os.path.dirname(os.path.abspath(inspect.getfile(inspect.currentframe())))
 
 FOLDERS = {
