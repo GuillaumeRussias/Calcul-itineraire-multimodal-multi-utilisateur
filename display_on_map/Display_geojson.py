@@ -145,7 +145,6 @@ def map_from_geojson(geojson_features, map , css_style_tool = None , css_style_p
     style_function = lambda feature: style_feature(feature,False),
     highlight_function = lambda feature: style_feature(feature,True),
     tooltip =  folium.GeoJsonTooltip(["route_name"],labels=False, style=css_style_tool ,localize=True),
-    #f"""Ligne : {metadata["route_name"]} , Direction : {metadata["trip_headsign"]} , Station de départ : {metadata["departure_name"]} à {metadata["departure_time"]}, Station d'arrivée : {metadata["arrival_name"]} à {metadata["arrival_time"]} , ({len(MultiLine)} Stations(s))"""}
     popup = folium.GeoJsonPopup(fields=["route_name","trip_headsign","departure_name","departure_time","arrival_name","arrival_time","len"],aliases=["Ligne","Direction","Station de départ","à","Station d'arrivée","à","Nombre d'arrêts"], style=css_style_popup,localize=True),
     ).add_to(map)
     folium.plugins.Fullscreen().add_to(map)

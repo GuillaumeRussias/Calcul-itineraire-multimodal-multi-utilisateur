@@ -13,11 +13,20 @@
 <div class="navbar-nav">
     <a class="nav-link" href="/reseau">Plans du réseau</a>
 </div>
+<div class="navbar-nav">
+    <a class="nav-link" href="/isochrones">Isochrones</a>
+</div>
 {% endblock %}
 
 {% block article%}
 
 <br><br/>
+
+<script src="/static/autocomplete.js"></script>
+<script>
+      let list = {{ liste_stations | safe }};
+      autocomplete(document.getElementById("Search_3"), list);
+</script>
 
 <form method="POST" class="form-inline active-pink-3 active-pink-4">
     {%for i in range (n)%}

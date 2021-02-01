@@ -11,7 +11,7 @@
     <a class="nav-link" href="/meeting_point">Point de rencontre</a>
 </div>
 <div class="navbar-nav">
-    <a class="nav-link" href="#">Plans du réseau</a>
+    <a class="nav-link" href="/reseau">Plans du réseau</a>
 </div>
 <div class="navbar-nav">
     <a class="nav-link" href="/isochrones">Isochrones</a>
@@ -20,10 +20,10 @@
 
 {% block article%}
 
+<br/>
 <div class="container-fluid bg-dark text-white">
   <div id="map-container" class="z-depth-1-half map-container" style="height: 500px">
-    <iframe src="/affichagereseauRER" frameborder="0"style="border:0" allowfullscreen></iframe>
+    <iframe src="/isochrone_display" frameborder="0"style="border:0" allowfullscreen></iframe>
   </div>
 </div>
-
 {% endblock %}

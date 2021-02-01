@@ -149,6 +149,8 @@ public :
     vector<int> complete_path_finder_time_changement(int start_vertex_index, int end_vertex_index, int t);
     vector<int> path_finder_time_changement(int start_vertex_index, int end_vertex_index, int t);
 
+    vector<int> isochrones(int start_vertex_index,int t,py::array_t<int> groups); // returns a vector of group that each summit belongs to
+
 };
 
 class comparetime {

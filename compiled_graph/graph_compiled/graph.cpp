@@ -649,3 +649,22 @@ vector<int> graph::path_finder_time_changement(int start_vertex_index, int end_v
     reverse(path.begin(), path.end());
     return path;
 }
+
+
+vector<int> graph::isochrones(int start_vertex_index,int t,py::array_t<int> groups){
+  initialised();
+  time_djikstra(start_vertex_index,t);
+  int T;
+  auto Groups = groups.unchecked<1>();
+  vector<int> isochrones(v_list.size(),Groups.shape(0));
+  for (unsigned i=0;i<v_list.size();i++){
+    T = v_list[i]->time - t;
+    for (unsigned j=0;j<Groups.shape(0);j++){
+      if (T<=int(Groups[j])){
+        isochrones[i]=j;
+        break;
+      }
+    }
+  }
+  return isochrones;
+}

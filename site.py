@@ -8,6 +8,7 @@ from flask import Flask,render_template,url_for,request,redirect,json
 
 import load_data.load_compiled_graph2 as load_graph
 import display_on_map.Display_geojson as display_geo
+import isochrones.compute_iso as compute_iso
 import numpy as np
 
 
@@ -74,13 +75,9 @@ def create_geojson_file_custom(path,name):
 def create_geojson_file(path):
     try :
         display_geo.create_geojson_file(VertexData = load_graph.PandaV , EdgeData = load_graph.PandaE , Display = load_graph.PandaDisp ,LineData = load_graph.PandaC, Path = path , CompiledGraph = graph , file_path = currentdir + "/templates/geojson/geojson_singleuser.js")
-    except :
+    except Exception as e:
+        print(e)
         print("path not displayable")
-
-class requete :
-    #pour utiliser city mapper single user depuis multi_user
-    def __init__(self,dict):
-        self.form = dict
 
 
 def city_mapper_arrival_time(start,end,arrival_time):
@@ -127,10 +124,16 @@ def city_mapper_multi_user(request,n_users,start_time):
     print("==================================================================")
 
 
+def build_isochrones(request):
+    start = extract_index(request.form["start"])
+    time = time_to_sec(request.form["time"])
+    geojson_isochrones = compute_iso.create_isochrones_hulls(graph,start,time,load_graph.PandaV)
+    compute_iso.create_geojson_file(file_path = currentdir + "/templates/geojson/geojson_isochrones.js", geojson_feature = geojson_isochrones)
 
 
 
-# Affichage des résultats d'une recherche
+
+## Affichage des résultats d'une recherche
 @app.route('/affichagecarte/')
 def affiche():
     return render_template("carte_accueil.html")
@@ -147,9 +150,17 @@ def route_description_single_user():
 def render_geojson_single_user():
     return render_template("geojson/geojson_singleuser.js")
 
+##Affichage isochrones
 
+@app.route('/isochrone_display/')
+def isochrone_display():
+    return render_template("isochrones_display.html", geojson_url = "/geojson_isochrone")
 
-#Affichage multi-users
+@app.route('/geojson_isochrone/')
+def render_geojson_isochrone():
+    return render_template("geojson/geojson_isochrones.js")
+
+##Affichage multi-users
 @app.route('/route_display/<user>')
 def route_display_user(user):
     return render_template("route_display.html", geojson_url = "/meeting_point_"+str(user))
@@ -177,6 +188,11 @@ def accueil():
 @app.route('/itineraire/')
 def itineraire():
     return render_template("itineraire.html")
+
+
+@app.route('/isochrones_map/')
+def isochrones_map():
+    return render_template("isochrones_map.html")
 
 
 @app.route('/meeting_point_traject/<n_users>')
@@ -212,6 +228,14 @@ def carte():
         path = city_mapper_single_user(request)
         create_geojson_file(path)
         return redirect(url_for ('itineraire'))
+
+@app.route('/isochrones/', methods=['GET','POST'])
+def isochrones():
+    if request.method == "GET":
+        return render_template("isochrones.html",liste_stations = json.dumps(load_graph.station_names))
+    if request.method == 'POST':
+        build_isochrones(request)
+        return redirect(url_for ('isochrones_map'))
 
 
 if __name__ == "__main__":

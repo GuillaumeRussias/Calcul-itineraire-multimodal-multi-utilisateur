@@ -38,6 +38,7 @@ PYBIND11_MODULE(fast_graph, m){
             .def("multi_users_dijkstra", &graph::multi_users_dijkstra)
             .def("complete_time_changement_path_finder", &graph::complete_path_finder_time_changement)
             .def("time_changement_path_finder", &graph::path_finder_time_changement)
+            .def("isochrones",&graph::isochrones)
 
 
 

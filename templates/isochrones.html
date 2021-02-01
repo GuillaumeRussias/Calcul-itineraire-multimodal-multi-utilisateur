@@ -1,0 +1,43 @@
+{% extends "squelette.html" %}
+
+{% block nav%}
+<div class="navbar-nav">
+    <a class="nav-link" href="/accueil">Accueil</a>
+</div>
+<div class="navbar-nav">
+    <a class="nav-link" href="/carte">Carte</a>
+</div>
+<div class="navbar-nav">
+    <a class="nav-link" href="/meeting_point">Point de rencontre</a>
+</div>
+<div class="navbar-nav">
+    <a class="nav-link" href="/reseau">Plan du réseau</a>
+</div>
+<div class="navbar-nav">
+    <a class="nav-link" href="#">Isochrones</a>
+</div>
+{% endblock %}
+
+{% block article%}
+
+<br><br/>
+
+<form method="POST" class="form-inline active-pink-3 active-pink-4">
+    <legend>Entrer centre des isochrones et heure</legend>
+    <div class="autocomplete" style="width:300px;">
+        <i class="fas fa-search" aria-hidden="true"></i>
+        <label for="start"></label><input class="form-control form-control-sm ml-3 w-75" type="text" name="start" placeholder="Centre" aria-label="Search" id="Search">
+        <div><br></div>
+        <div class="timepicker">
+        <label for="time"></label><input class="form-control form-control-sm ml-3 w-75" name="time" placeholder="hh:mm" type="text" id=time></input>
+        </div>
+    </div>
+    <input type="submit" value="Envoyer" />
+</form>
+<script src="/static/autocomplete.js"></script>
+<script>
+    let list = {{ liste_stations | safe }};
+    autocomplete(document.getElementById("Search"), list);
+</script>
+
+{% endblock %}

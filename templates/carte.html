@@ -13,11 +13,15 @@
 <div class="navbar-nav">
     <a class="nav-link" href="/reseau">Plans du réseau</a>
 </div>
+<div class="navbar-nav">
+    <a class="nav-link" href="/isochrones">Isochrones</a>
+</div>
 {% endblock %}
 
 {% block article%}
 
 <br><br/>
+
 
 <form method="POST" class="form-inline active-pink-3 active-pink-4">
     <legend>Rechercher un itinéraire</legend>
@@ -41,6 +45,13 @@
     <iframe src="/affichagecarte" frameborder="0"style="border:0" allowfullscreen></iframe>
   </div>
 </div>
+
+<script src="/static/autocomplete.js"></script>
+<script>
+    let list = {{ liste_stations | safe }};
+    autocomplete(document.getElementById("Search"), list);
+    autocomplete(document.getElementById("Search_2"), list);
+</script>
 
 
 {% endblock %}
