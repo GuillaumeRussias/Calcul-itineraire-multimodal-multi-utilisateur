@@ -25,7 +25,6 @@
 <script src="/static/autocomplete.js"></script>
 <script>
       let list = {{ liste_stations | safe }};
-      autocomplete(document.getElementById("Search_3"), list);
 </script>
 
 <form method="POST" class="form-inline active-pink-3 active-pink-4">
@@ -39,7 +38,8 @@
         autocomplete(document.getElementById("{{i}}"), list);
     </script>
     {%endfor%}
-    <input type="submit" value="Envoyer" />
+    <button type="button" class="btn btn-danger" id="rd" onclick="random_complete_with_summit_range(true,{{n}},list)">Random</button>
+    <input type="submit" value="Envoyer" class="btn btn-primary" />
 </form>
 
 {% endblock %}

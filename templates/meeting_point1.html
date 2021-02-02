@@ -25,11 +25,12 @@
 <form method="POST" class="form-inline active-pink-3 active-pink-4">
     <legend>Entrer le nombre d'utilisateurs et l'heure du rendez-vous</legend>
     <div>
-        <label for="n_users"></label><input class="form-control form-control-sm ml-3 w-75" type="text" name="n_users" placeholder="Nombre d'utilisateurs"></input>
+        <label for="n_users"></label><input class="form-control form-control-sm ml-3 w-75" type="text" name="n_users" id="n" placeholder="Nombre d'utilisateurs"></input>
         <div><br></div>
-        <label for="time"></label><input class="form-control form-control-sm ml-3 w-75" type="text" name="time" placeholder="hh:mm"></input>
+        <label for="time"></label><input class="form-control form-control-sm ml-3 w-75" type="text" name="time" id="t" placeholder="hh:mm"></input>
     </div>
-    <input type="submit" value="Envoyer" />
+    <button type="button" class="btn btn-danger" id="rd" onclick="complete_without_summit(true,'n',['t'])">Random</button>
+    <input type="submit" value="Envoyer" class="btn btn-primary" />
 </form>
 
 

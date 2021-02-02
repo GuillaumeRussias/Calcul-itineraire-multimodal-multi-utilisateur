@@ -21,7 +21,9 @@
 {% block article%}
 
 <br><br/>
-
+<script>
+    let list = {{ liste_stations | safe }};
+</script>
 
 <form method="POST" class="form-inline active-pink-3 active-pink-4">
     <legend>Rechercher un itinéraire</legend>
@@ -35,7 +37,8 @@
         <div><br></div>
         <label for="destination"></label><input class="form-control form-control-sm ml-3 w-75" type="text" name="destination" placeholder="Vous allez" aria-label="Search" id="Search_2">
     </div>
-    <input type="submit" value="Envoyer" />
+    <button type="button" class="btn btn-danger" id="rd" onclick="random_complete_with_summit(true,['Search','Search_2'],['time_departure'],list)">Random</button>
+    <input type="submit" value="Envoyer" class="btn btn-primary" />
 </form>
 
 <br><br/>
@@ -48,7 +51,6 @@
 
 <script src="/static/autocomplete.js"></script>
 <script>
-    let list = {{ liste_stations | safe }};
     autocomplete(document.getElementById("Search"), list);
     autocomplete(document.getElementById("Search_2"), list);
 </script>
