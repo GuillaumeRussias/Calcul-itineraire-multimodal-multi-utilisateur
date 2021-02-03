@@ -5,8 +5,8 @@ sys.path.insert(0, parentdir)
 
 from display_on_map.Display_compiled import *
 import geojson
-import folium
-import folium.plugins
+"""import folium
+import folium.plugins"""
 
 
 
@@ -117,7 +117,7 @@ def geojson_traject(VertexData , EdgeData, Display, LineData , Path , CompiledGr
         geojson_edge(Point_list,MultiLine_list, VertexData, EdgeData , Display, LineData , CompiledGraph , Path[-2] , Path[-1], True , previous_metadata , MultiLine)
     return geojson.FeatureCollection(MultiLine_list+Point_list)
 
-
+"""
 def style_point(feature,bool_highlight):
     return {
     "color" : feature["properties"]["color"],
@@ -149,7 +149,7 @@ def map_from_geojson(geojson_features, map , css_style_tool = None , css_style_p
     ).add_to(map)
     folium.plugins.Fullscreen().add_to(map)
     map.get_root().html.save("Folium.html")
-    return map
+    return map"""
 
 def create_geojson_file(VertexData , EdgeData, Display, LineData , Path , CompiledGraph, file_path):
     geo_features = geojson.dumps(geojson_traject(VertexData , EdgeData, Display, LineData , Path , CompiledGraph))

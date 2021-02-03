@@ -85,7 +85,7 @@ def get_download_file_from_csv_key(csv_file_url,bool_gtfs,bool_reflex):
         download_and_display_gtfs_pdf(df)
         return True,df[1][1] #[col][row]
     if bool_reflex:
-        return True,df[2][2]
+        return True,df[2][3]
     print("base_donnee.downloader.get_download_file_from_csv_key : only one of bool_gtfs and bool_reflex must be set equals to True")
 
 def download_file(key):

@@ -57,7 +57,7 @@ function table_fill (fields,aliases,layer,handleObject){
       (v,i)=>
       `<tr>
           <th>${aliases[i]}</th>
-          <td>${handleObject(layer.feature.properties[v]).toLocaleString()}</td>
+          <td>${handleObject(layer.feature.properties[v].split("####").join(" ")).toLocaleString()}</td>
       </tr>`).join(''))
   +'</table>';
 }
