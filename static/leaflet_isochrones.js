@@ -1,5 +1,31 @@
 var weight = 3;
+
+
+function point_to_circle (feature,latlng) {
+  if (feature.properties.type=="stop"){
+    var layer = L.circle(latlng,10)
+    layer.feature = feature ;
+    layer.interactive = false;
+    layer.stroke = false;
+    return  layer;
+  }
+  else {
+    return L.marker(latlng);
+  }
+}
+
+
+
 //
+function style_circle(feature,bool) {
+  return {
+    fillColor : feature.properties.color,
+    opacity : 0.7 + 0.2*bool,
+    color : feature.properties.color,
+    weight : weight*(1+0.5*bool),
+    fillOpacity : 0.7 + 0.2*bool,
+  };
+}
 function style_polygon(feature,bool) {
   return {
     fillColor : feature.properties.color,
@@ -12,24 +38,30 @@ function style_polygon(feature,bool) {
 function style(feature) {
   switch (feature.geometry.type){
     case "Polygon" : return style_polygon(feature,0);
+    case "MultiPoint" : return style_circle(feature,0);
   };
 }
 
 function highlight(feature) {
   switch (feature.geometry.type){
     case "Polygon" : return style_polygon(feature,1);
+    case "MultiPoint" : return style_circle(feature,1);
   };
 }
 
 function On_Each_Feature(feature, layer) {
-    layer.on({
-        mouseout: function(e) {
-            plotted_traject.resetStyle(e.target);
-        },
-        mouseover: function(e) {
-            e.target.setStyle(highlight(e.target.feature));
-        },
-    });
+    switch(feature.properties.type){
+      case "center" :
+          layer.on({
+              mouseout: function(e) {
+                  plotted_traject.resetStyle(e.target);
+              },
+              mouseover: function(e) {
+                  e.target.setStyle(highlight(e.target.feature));
+              },
+          });
+          break;
+    }
 }
 
 function add_data(data){
@@ -54,22 +86,24 @@ function tool_tip(layer){
   let handleObject = feature=>typeof(feature)=='object' ? JSON.stringify(feature) : feature;
   let fields = ["isochrone"];
   let aliases = [""];
-  let table = table_fill(fields,aliases,layer,handleObject);
+  switch(layer.feature.properties.type){
+    case "center":
+      let table = table_fill(fields,aliases,layer,handleObject);
+      break;
+  }
   div.innerHTML=table;
   return div;
 }
+
 function pop_up(layer){
   let div = L.DomUtil.create('div');
   let handleObject = feature=>(typeof(feature)=='object') ? JSON.stringify(feature) : feature;
   let fields = ["isochrone"];
   let aliases = ["Zone accessible pour un temps"];
   let table;
-  switch(layer.feature.geometry.type){
-    case "Point":
+  switch(layer.feature.properties.type){
+    case "center":
       table = table_fill(["centre"],["Centre des isochrones"],layer,handleObject);
-      break;
-    default :
-      table = table_fill(fields,aliases,layer,handleObject);
       break;
   }
   div.innerHTML = table;
