@@ -7,7 +7,7 @@ import time
 
 partitions_min = np.array([10,20,30,45,60,90,120,180])
 partitions_sec = partitions_min*60
-palette = ["#0000FF","#FF0000","#FFFF00","#008000","#DC143C","#4682B4","#800000","#1E90FF"]
+palette = ["#FE2E2E","#F7FE2E","#2EFE2E","#2EFEF7","#2E2EFE","#FE2EC8","#A4A4A4","#090A00"]
 
 def seconds_to_hours(sec):
     ty_res = time.gmtime(sec)

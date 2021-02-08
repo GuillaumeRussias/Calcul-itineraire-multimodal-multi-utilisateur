@@ -3,7 +3,7 @@ var weight = 3;
 
 function point_to_circle (feature,latlng) {
   if (feature.properties.type=="stop"){
-    var layer = L.circle(latlng,10)
+    var layer = L.circleMarker(latlng,0.1)
     layer.feature = feature ;
     layer.interactive = false;
     layer.stroke = false;
@@ -19,11 +19,12 @@ function point_to_circle (feature,latlng) {
 //
 function style_circle(feature,bool) {
   return {
+    radius : 5,
     fillColor : feature.properties.color,
-    opacity : 0.7 + 0.2*bool,
+    opacity : 0.9,
     color : feature.properties.color,
-    weight : weight*(1+0.5*bool),
-    fillOpacity : 0.7 + 0.2*bool,
+    weight : 0,
+    fillOpacity : 0.8,
   };
 }
 function style_polygon(feature,bool) {
@@ -86,11 +87,7 @@ function tool_tip(layer){
   let handleObject = feature=>typeof(feature)=='object' ? JSON.stringify(feature) : feature;
   let fields = ["isochrone"];
   let aliases = [""];
-  switch(layer.feature.properties.type){
-    case "center":
-      let table = table_fill(fields,aliases,layer,handleObject);
-      break;
-  }
+  let table = table_fill(fields,aliases,layer,handleObject);
   div.innerHTML=table;
   return div;
 }
@@ -99,11 +96,14 @@ function pop_up(layer){
   let div = L.DomUtil.create('div');
   let handleObject = feature=>(typeof(feature)=='object') ? JSON.stringify(feature) : feature;
   let fields = ["isochrone"];
-  let aliases = ["Zone accessible pour un temps"];
+  let aliases = ["Arrêt accessible pour un temps"];
   let table;
   switch(layer.feature.properties.type){
     case "center":
       table = table_fill(["centre"],["Centre des isochrones"],layer,handleObject);
+      break;
+    default:
+      table = table_fill(fields,aliases,layer,handleObject);
       break;
   }
   div.innerHTML = table;
