@@ -5,7 +5,7 @@
     <a class="nav-link" href="/accueil">Accueil</a>
 </div>
 <div class="navbar-nav">
-    <a class="nav-link" href="/carte">Carte</a>
+    <a class="nav-link" href="/carte">Itinéraire</a>
 </div>
 <div class="navbar-nav">
     <a class="nav-link" href="/meeting_point">Point de rencontre</a>
@@ -20,23 +20,50 @@
 
 {% block article%}
 <script>
-      let list = {{ liste_stations | safe }};
+    let list = {{liste_stations | safe}};
 </script>
-<br><br/>
+<br><br />
+
 
 <form method="POST" class="form-inline active-pink-3 active-pink-4">
-    <legend>Entrer centre des isochrones et heure</legend>
-    <div class="autocomplete" style="width:300px;">
-        <i class="fas fa-search" aria-hidden="true"></i>
-        <label for="start"></label><input class="form-control form-control-sm ml-3 w-75" type="text" name="start" placeholder="Centre" aria-label="Search" id="Search">
-        <div><br></div>
-        <div class="timepicker">
-        <label for="time"></label><input class="form-control form-control-sm ml-3 w-75" name="time" placeholder="hh:mm" type="text" id=time></input>
+    <div class="autocomplete" style="width:750px;
+    margin-left: auto;
+    margin-right: auto;">
+        <div class="py-5 text-center">
+            <img class="d-block mx-auto mb-4" src="/static/maps_logo2.png" alt="" width="80" height="80">
+            <h2>Isochrones</h2>
+            <p class="lead">Le formulaire présenté ci-dessous permet de représenter l'ensemble des arrêts de transports en
+                commun qui peuvent être atteints pour un même temps de trajet à partir du centre.</p>
         </div>
-    </div>
-    <button type="button" class="btn btn-danger" id="rd" onclick="random_complete_with_summit(true,['Search'],['time'],list)">Random</button>
-    <input type="submit" value="Envoyer" class="btn btn-primary" />
+        <div class="col-md-7 col-md-10">
+            <div class="row g-3">
+
+                <div class="col-md-4">
+                    <i class="fas fa-search" aria-hidden="true"></i>
+                    <label for="start" class="form-label">Centre</label>
+                    <input class="form-control form-control-sm ml-3 w-75" type="text" name="start" placeholder="Centre"
+                        aria-label="Search" id="Search">
+                </div>
+
+                <div class="col-md-4">
+                    <div class="timepicker">
+                        <label for="time" class="form-label">Heure</label>
+                        <input class="form-control form-control-sm ml-3 w-75" name="time" placeholder="hh:mm"
+                            type="text" id=time>
+                    </div>
+                </div>
+                <div class="col-md-3">
+                    <button type="button" class="btn btn-danger" id="rd"
+                        onclick="random_complete_with_summit(true,['Search'],['time'],list)">Remplissage
+                        aléatoire</button>
+                </div>
+            </div>
+        </div>
+        <hr class="my-4">
+        <button class="w-100 btn btn-primary btn-lg" type="submit">Recherche</button>
+        <hr class="my-4">
 </form>
+
 <script src="/static/autocomplete.js"></script>
 <script>
     autocomplete(document.getElementById("Search"), list);

@@ -5,7 +5,7 @@
     <a class="nav-link" href="/accueil">Accueil</a>
 </div>
 <div class="navbar-nav">
-    <a class="nav-link" href="/carte">Carte</a>
+    <a class="nav-link" href="/carte">Itinéraire</a>
 </div>
 <div class="navbar-nav">
     <a class="nav-link" href="#">Point de rencontre</a>
@@ -20,18 +20,45 @@
 
 {% block article%}
 
-<br><br/>
+<br><br />
 
 <form method="POST" class="form-inline active-pink-3 active-pink-4">
-    <legend>Entrer le nombre d'utilisateurs et l'heure du rendez-vous</legend>
-    <div>
-        <label for="n_users"></label><input class="form-control form-control-sm ml-3 w-75" type="text" name="n_users" id="n" placeholder="Nombre d'utilisateurs"></input>
-        <div><br></div>
-        <label for="time"></label><input class="form-control form-control-sm ml-3 w-75" type="text" name="time" id="t" placeholder="hh:mm"></input>
-    </div>
-    <button type="button" class="btn btn-danger" id="rd" onclick="complete_without_summit(true,'n',['t'])">Random</button>
-    <input type="submit" value="Envoyer" class="btn btn-primary" />
+    <div class="autocomplete" style="width:750px;
+    margin-left: auto;
+    margin-right: auto;">
+        <div class="py-5 text-center">
+            <img class="d-block mx-auto mb-4" src="/static/maps_logo2.png" alt="" width="80" height="80">
+            <h2>Point de rencontre</h2>
+            <p class="lead">Le formulaire présenté ci-dessous présente les itinéraires à suivre par plusieurs utilisateurs qui
+                cherchent à se rejoindre.</p>
+        </div>
+        <div class="col-md-7 col-md-10">
+            <div class="row g-3">
+
+                <div class="col-md-5">
+                    <i class="fas fa-search" aria-hidden="true"></i>
+                    <label for="n_users">Nombre d'utilisateurs</label>
+                    <input class="form-control form-control-sm ml-3 w-75" type="text" name="n_users" id="n"
+                        placeholder="Nombre d'utilisateurs"></input>
+                </div>
+
+                <div class="col-md-4">
+                    <div class="timepicker">
+                        <label for="time" class="form-label">Heure</label>
+                        <input class="form-control form-control-sm ml-3 w-75" type="text" name="time" id="t"
+                            placeholder="hh:mm"></input>
+                    </div>
+                </div>
+                <div class="col-md-3">
+                    <button type="button" class="btn btn-danger" id="rd" onclick="complete_without_summit(true,'n',['t'])">Remplissage aléatoire</button>
+                </div>
+            </div>
+        </div>
+        <hr class="my-4">
+        <button class="w-100 btn btn-primary btn-lg" type="submit">Rechercher</button>
+        <hr class="my-4">
 </form>
+
 
 
 {% endblock %}

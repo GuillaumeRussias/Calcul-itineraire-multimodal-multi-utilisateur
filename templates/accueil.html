@@ -5,13 +5,13 @@
     <a class="nav-link" href="#">Accueil</a>
 </div>
 <div class="navbar-nav">
-    <a class="nav-link" href="/carte">Carte</a>
+    <a class="nav-link" href="/carte">Itinéraire</a>
 </div>
 <div class="navbar-nav">
     <a class="nav-link" href="/meeting_point">Point de rencontre</a>
 </div>
 <div class="navbar-nav">
-    <a class="nav-link" href="/reseau">Plans du réseau</a>
+    <a class="nav-link" href="/reseau">Plan du réseau</a>
 </div>
 <div class="navbar-nav">
     <a class="nav-link" href="/isochrones">Isochrones</a>
@@ -20,38 +20,118 @@
 
 
 {% block div%}
-<div id="banniere_image">
-    <section class="jumbotron text-center">
-        <div class="container">
-          <h1>Calcul d'itinéraires multimodaux</h1>
-          <p class="lead text-muted">Cet outil a été développé dans le cadre d'un projet MOPSI et permet de calculer des itinéraires prenant en compte les préférences de plusieurs utilisateurs de manière simultanée.</p>
-          <p>
-            <button type="button" class="btn btn-outline-primary">
-                <a href="/carte">
-                    Lancer une recherche
-                    <svg width="1em" height="1em" viewBox="0 0 16 16" class="bi bi-geo-fill" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
-                    <path fill-rule="evenodd" d="M4 4a4 4 0 1 1 4.5 3.969V13.5a.5.5 0 0 1-1 0V7.97A4 4 0 0 1 4 3.999zm2.493 8.574a.5.5 0 0 1-.411.575c-.712.118-1.28.295-1.655.493a1.319 1.319 0 0 0-.37.265.301.301 0 0 0-.057.09V14l.002.008a.147.147 0 0 0 .016.033.617.617 0 0 0 .145.15c.165.13.435.27.813.395.751.25 1.82.414 3.024.414s2.273-.163 3.024-.414c.378-.126.648-.265.813-.395a.619.619 0 0 0 .146-.15.148.148 0 0 0 .015-.033L12 14v-.004a.301.301 0 0 0-.057-.09 1.318 1.318 0 0 0-.37-.264c-.376-.198-.943-.375-1.655-.493a.5.5 0 1 1 .164-.986c.77.127 1.452.328 1.957.594C12.5 13 13 13.4 13 14c0 .426-.26.752-.544.977-.29.228-.68.413-1.116.558-.878.293-2.059.465-3.34.465-1.281 0-2.462-.172-3.34-.465-.436-.145-.826-.33-1.116-.558C3.26 14.752 3 14.426 3 14c0-.599.5-1 .961-1.243.505-.266 1.187-.467 1.957-.594a.5.5 0 0 1 .575.411z"/>
-                    </svg>
-                </a>
-            </button>
-          </p>
-          <img src={{ url_for('static', filename='bandeau.png') }} alt="bandeau" /></a>
+<div id="myCarousel" class="carousel slide" data-bs-ride="carousel">
+    <ol class="carousel-indicators">
+        <li data-bs-target="#myCarousel" data-bs-slide-to="0" class="active"></li>
+        <li data-bs-target="#myCarousel" data-bs-slide-to="1"></li>
+        <li data-bs-target="#myCarousel" data-bs-slide-to="2"></li>
+    </ol>
+    <div class="carousel-inner">
+        <div class="carousel-item active">
+            <svg class="bd-placeholder-img" width="100%" height="100%" xmlns="http://www.w3.org/2000/svg"
+                aria-hidden="true" preserveAspectRatio="xMidYMid slice" focusable="false">
+                <image
+                    href="https://www.plandeparis.info/plans-de-metro/plan-de-metro-bonne-definition.gif"
+                    style="opacity: 0.3;">
+            </svg>
+
+            <div class="container">
+                <div class="carousel-caption text-start">
+                    <h1 style="color:dimgrey">Calcul d'itinéraires multimodaux</h1>
+                    <p style="color:dimgray">Ce projet a pour ambition de permettre de calculer des itinéraires
+                        multimodaux multi-utilisateurs et contient plusieurs fonctionnalités présentées ci-dessous.</p>
+                    <p><a class="btn btn-lg btn-primary" href="/meeting_point" role="button">Lancer une recherche &#128640;</a>
+                    </p>
+                </div>
+            </div>
         </div>
-    </section>
+        <div class="carousel-item">
+            <svg class="bd-placeholder-img" width="100%" height="100%" xmlns="http://www.w3.org/2000/svg"
+                aria-hidden="true" preserveAspectRatio="xMidYMid slice" focusable="false">
+                <image
+                    href="https://www.ecoledesponts.fr/sites/ecoledesponts.fr/files/styles/home_direct_access/public/blocks/_mg_9773_c_david_delaporte_-_ecole_des_ponts_paristech-1920x600.jpg?itok=x8Jgrd9p"
+                    style="opacity: 0.5;">
+            </svg>
+
+            <div class="container">
+                <div class="carousel-caption">
+                    <h1 style="color:dimgrey">Cadre du projet</h1>
+                    <p style="color:dimgray">Ce projet est un projet TDLOG/MOPSI réalisé par des élèves du département IMI de l'École des
+                        Ponts ParisTech.</p>
+                    <p><a class="btn btn-lg btn-primary" href="https://www.ecoledesponts.fr/en" role="button">Site de
+                            l'École</a></p>
+                </div>
+            </div>
+        </div>
+        <div class="carousel-item">
+            <svg class="bd-placeholder-img" width="100%" height="100%" xmlns="http://www.w3.org/2000/svg"
+                aria-hidden="true" preserveAspectRatio="xMidYMid slice" focusable="false">
+                <rect width="100%" height="100%" fill="#777" /></svg>
+
+            <div class="container">
+                <div class="carousel-caption text-end">
+                    <h1>Réalisation du projet</h1>
+                    <p>Ce projet a été encadré par Guillaume DALLE et réalisé par Emma BEUZE, Guillaume RUSSIAS et Aubin
+                        TCHOÏ.</p>
+                    <p><a class="btn btn-lg btn-primary" href="#" role="button">Nous contacter</a></p>
+                </div>
+            </div>
+        </div>
+    </div>
+    <a class="carousel-control-prev" href="#myCarousel" role="button" data-bs-slide="prev">
+        <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+        <span class="visually-hidden">Previous</span>
+    </a>
+    <a class="carousel-control-next" href="#myCarousel" role="button" data-bs-slide="next">
+        <span class="carousel-control-next-icon" aria-hidden="true"></span>
+        <span class="visually-hidden">Next</span>
+    </a>
 </div>
+
+
 {% endblock %}
 
 
 {% block article%}
-<h1>
-    A quoi sert ce site ?
-</h1>
-<p>Il a pour but de <span class="surligner">faciliter</span> les déplacements impliquant plusieurs utilisateurs.</p>
-<p>
-    Vous trouverez deux fonctionnalités : <br/>
-    <ul>
-        <li>Déterminer l'endroit (ex. un cinéma) le plus pratique pour tous les participants et l'itinéraire de chaque participant vers cet endroit.</li>
-        <li>Comment organiser le plus efficacement un trajet à plusieurs utilisateurs avec le même point de départ et différents points d'arrivées.</li>
-    </ul>
-</p>
-{% endblock %}
+<div class="container marketing">
+
+    <!-- Three columns of text below the carousel -->
+    <div class="row">
+        <div class="col-lg-4">
+            <svg class="bd-placeholder-img rounded-circle" width="140" height="140" xmlns="http://www.w3.org/2000/svg"
+                role="img" aria-label="Placeholder: 140x140" preserveAspectRatio="xMidYMid slice" focusable="false">
+                <title>Placeholder</title>
+                <rect width="100%" height="100%" fill="#777" /><text x="50%" y="50%" fill="#777"
+                    dy=".3em">140x140</text>
+            </svg>
+
+            <h2>Itinéraire</h2>
+            <p>Calculer un itinéraire départ-arrivée à un utilisateur.</p>
+            <p><a class="btn btn-secondary" href="/carte" role="button">Plus de détails &raquo;</a></p>
+        </div><!-- /.col-lg-4 -->
+        <div class="col-lg-4">
+            <svg class="bd-placeholder-img rounded-circle" width="140" height="140" xmlns="http://www.w3.org/2000/svg"
+                role="img" aria-label="Placeholder: 140x140" preserveAspectRatio="xMidYMid slice" focusable="false">
+                <title>Placeholder</title>
+                <rect width="100%" height="100%" fill="#777" /><text x="50%" y="50%" fill="#777"
+                    dy=".3em">140x140</text>
+            </svg>
+
+            <h2>Point de rencontre</h2>
+            <p>Rechercher le point de rencontre optimal entre plusieurs utilisateurs.</p>
+            <p><a class="btn btn-secondary" href="/meeting_point" role="button">Plus de détails &raquo;</a></p>
+        </div><!-- /.col-lg-4 -->
+        <div class="col-lg-4">
+            <svg class="bd-placeholder-img rounded-circle" width="140" height="140" xmlns="http://www.w3.org/2000/svg"
+                role="img" aria-label="Placeholder: 140x140" preserveAspectRatio="xMidYMid slice" focusable="false">
+                <title>Placeholder</title>
+                <rect width="100%" height="100%" fill="#777" /><text x="50%" y="50%" fill="#777"
+                    dy=".3em">140x140</text>
+            </svg>
+
+            <h2>Isochrones</h2>
+            <p>Visualiser les stations accessibles pour différents temps de trajet.</p>
+            <p><a class="btn btn-secondary" href="/isochrones" role="button">Plus de détails &raquo;</a></p>
+        </div><!-- /.col-lg-4 -->
+    </div><!-- /.row -->
+    {% endblock %}
