@@ -20,6 +20,7 @@
 
 
 {% block div%}
+
 <div id="myCarousel" class="carousel slide" data-bs-ride="carousel">
     <ol class="carousel-indicators">
         <li data-bs-target="#myCarousel" data-bs-slide-to="0" class="active"></li>
@@ -30,17 +31,19 @@
         <div class="carousel-item active">
             <svg class="bd-placeholder-img" width="100%" height="100%" xmlns="http://www.w3.org/2000/svg"
                 aria-hidden="true" preserveAspectRatio="xMidYMid slice" focusable="false">
-                <image
-                    href="https://www.plandeparis.info/plans-de-metro/plan-de-metro-bonne-definition.gif"
+                <image href="https://www.plandeparis.info/plans-de-metro/plan-de-metro-bonne-definition.gif"
                     style="opacity: 0.3;">
             </svg>
 
             <div class="container">
                 <div class="carousel-caption text-start">
-                    <h1 style="color:dimgrey">Calcul d'itinéraires multimodaux</h1>
-                    <p style="color:dimgray">Ce projet a pour ambition de permettre de calculer des itinéraires
+                    <h1 style="color:midnightblue; font-family: 'Nunito Sans', sans-serif; font-size:42px;">Calcul
+                        d'itinéraires multimodaux</h1>
+                    <p style="color:dimgray; font-family: 'Nunito Sans', sans-serif;">Ce projet a pour ambition de
+                        permettre de calculer des itinéraires
                         multimodaux multi-utilisateurs et contient plusieurs fonctionnalités présentées ci-dessous.</p>
-                    <p><a class="btn btn-lg btn-primary" href="/meeting_point" role="button">Lancer une recherche &#128640;</a>
+                    <p><a class="btn btn-lg btn-primary" href="/meeting_point" role="button">Lancer une recherche
+                            &#128640;</a>
                     </p>
                 </div>
             </div>
@@ -55,8 +58,10 @@
 
             <div class="container">
                 <div class="carousel-caption">
-                    <h1 style="color:dimgrey">Cadre du projet</h1>
-                    <p style="color:dimgray">Ce projet est un projet TDLOG/MOPSI réalisé par des élèves du département IMI de l'École des
+                    <h1 style="color:dimgrey; font-family: 'Nunito Sans', sans-serif; font-size:42px;">Cadre du projet
+                    </h1>
+                    <p style="color:dimgray; font-family: 'Nunito Sans', sans-serif;">Ce projet est un projet
+                        TDLOG/MOPSI réalisé par des élèves du département IMI de l'École des
                         Ponts ParisTech.</p>
                     <p><a class="btn btn-lg btn-primary" href="https://www.ecoledesponts.fr/en" role="button">Site de
                             l'École</a></p>
@@ -71,7 +76,8 @@
             <div class="container">
                 <div class="carousel-caption text-end">
                     <h1>Réalisation du projet</h1>
-                    <p>Ce projet a été encadré par Guillaume DALLE et réalisé par Emma BEUZE, Guillaume RUSSIAS et Aubin
+                    <p>Ce projet a été encadré par Guillaume DALLE, il est à l'initiative d'Emma BEUZE qui l'a réalisé
+                        avec Guillaume RUSSIAS et Aubin
                         TCHOÏ.</p>
                     <p><a class="btn btn-lg btn-primary" href="#" role="button">Nous contacter</a></p>
                 </div>
@@ -88,11 +94,11 @@
     </a>
 </div>
 
-
 {% endblock %}
 
 
 {% block article%}
+
 <div class="container marketing">
 
     <!-- Three columns of text below the carousel -->
@@ -101,8 +107,7 @@
             <svg class="bd-placeholder-img rounded-circle" width="140" height="140" xmlns="http://www.w3.org/2000/svg"
                 role="img" aria-label="Placeholder: 140x140" preserveAspectRatio="xMidYMid slice" focusable="false">
                 <title>Placeholder</title>
-                <rect width="100%" height="100%" fill="#777" /><text x="50%" y="50%" fill="#777"
-                    dy=".3em">140x140</text>
+                <image href="/static/itinerary.png" width="146" height="146">
             </svg>
 
             <h2>Itinéraire</h2>
@@ -112,9 +117,7 @@
         <div class="col-lg-4">
             <svg class="bd-placeholder-img rounded-circle" width="140" height="140" xmlns="http://www.w3.org/2000/svg"
                 role="img" aria-label="Placeholder: 140x140" preserveAspectRatio="xMidYMid slice" focusable="false">
-                <title>Placeholder</title>
-                <rect width="100%" height="100%" fill="#777" /><text x="50%" y="50%" fill="#777"
-                    dy=".3em">140x140</text>
+                <image href="/static/meetingPoint.png" width="150" height="150">
             </svg>
 
             <h2>Point de rencontre</h2>
@@ -124,9 +127,7 @@
         <div class="col-lg-4">
             <svg class="bd-placeholder-img rounded-circle" width="140" height="140" xmlns="http://www.w3.org/2000/svg"
                 role="img" aria-label="Placeholder: 140x140" preserveAspectRatio="xMidYMid slice" focusable="false">
-                <title>Placeholder</title>
-                <rect width="100%" height="100%" fill="#777" /><text x="50%" y="50%" fill="#777"
-                    dy=".3em">140x140</text>
+                <image href="/static/Isochron.png" width="180" height="145">
             </svg>
 
             <h2>Isochrones</h2>
@@ -134,4 +135,5 @@
             <p><a class="btn btn-secondary" href="/isochrones" role="button">Plus de détails &raquo;</a></p>
         </div><!-- /.col-lg-4 -->
     </div><!-- /.row -->
+
     {% endblock %}
