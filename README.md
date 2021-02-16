@@ -1,5 +1,8 @@
 # Projet MOPSI-TDLOG 2020
 
+Projet réalisé par Emma BEUZE, Guillaume RUSSIAS, Aubin TCHOI
+encadré par Guillaume DALLE
+
 ##### Objectif
 Ce projet a pour but de développer une application web capable de calculer des itinéraires multimodaux afin de faciliter les déplacements impliquant plusieurs utilisateurs.
 
@@ -24,4 +27,4 @@ Exécuter le fichier `site.py` . A chaque lancement , une instruction demande si
 
 Pour des soucis de rapidité , le back est composé d'une dernière couche codée en `C++` et interfacée avec `python` avec la bilbiothèque `pybind11`.
 
-Enfin certains fichiers sont réservés à la parties MOPSI.
+
