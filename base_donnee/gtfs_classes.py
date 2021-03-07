@@ -269,7 +269,7 @@ class trace_fer2(gtfs):
 
     def group_by_line(self):
         pandas.set_option('mode.chained_assignment', None)
-        self.Data_Frame=self.Data_Frame[["Geo Shape","id_fmt_tem","OBJECTID","extcode"]]
+        self.Data_Frame=self.Data_Frame[["Geo Shape","extcode"]]
         self.Data_Frame['Geo Shape']=self.Data_Frame['Geo Shape'].map(lambda c:pandas.read_json(c))
         pandas.set_option('mode.chained_assignment', 'warn')
         return self.Data_Frame.groupby("extcode")
